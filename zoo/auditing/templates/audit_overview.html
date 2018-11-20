@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load utils %}
+
+{% block menu %}
+  {% with selected='audit_overview' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'audit_overview.css' %}">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+  <div class="ui loading segment app">
+    <main-header></main-header>
+    <matrix :services="services" :issues="issues"></matrix>
+  </div>
+  <div class="ui basic tiny modal">
+    <div class="ui icon header">
+      <i class="question circle icon"></i>
+      <span id="issue-modal-text">You are going to create %s issues, is this action intended?</span>
+    </div>
+    <div class="actions centered-text">
+      <div class="ui red basic cancel inverted button">
+        <i class="remove icon"></i>
+        Oops, my bad
+      </div>
+      <div class="ui green ok basic inverted button" data-action="">
+        <i class="checkmark icon"></i>
+        Yeah, I'm sure
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    const auditOverviewCsrfToken = '{{ csrf_token }}'
+    const auditOverviewEndpoint = '{% url "bulk_create_issues" %}'
+    const auditOverviewUrl = '{% url "audit_overview" %}'
+  </script>
+  <script src="{% static 'audit_overview.js' %}"></script>
+{% endblock %}

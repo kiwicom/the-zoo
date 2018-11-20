@@ -1,0 +1,98 @@
+[all]
+files = zoo/**.py, *.(yml|yaml), *.md, *requirements.txt, .coafile, Dockerfile
+ignore = zoo/**/migrations/**.py
+
+indent_size = 4
+use_spaces = yes
+max_line_length = 120
+max_lines_per_file = 1000
+file_naming_convention = snake
+
+[all.filename]
+bears = FilenameBear
+ignore += Dockerfile
+
+[all.long-files]
+bears = LineCountBear
+
+[all.python]
+language = python
+files = zoo/**.py
+
+[all.python.keywords]
+language = python
+bears = KeywordBear
+keywords =
+  import zoo,
+  from zoo,
+  FIXME,
+  pdb.set_trace(),
+  sys.path.insert,
+  sys.path.append,
+
+[all.python.spacing]
+bears = SpaceConsistencyBear
+
+[all.python.pep8]
+bears = PEP8Bear
+
+[all.python.quotes]
+enabled = nope  # https://github.com/coala/coala-bears/issues/1103
+bears = QuotesBear
+preferred_quotation = '
+
+[all.python.imports]
+bears = PyImportSortBear
+force_single_line_imports = no
+known_first_party_imports = zoo
+isort_multi_line_output = 5  # 5 means 'Hanging Grid Grouped'
+default_import_section = THIRDPARTY
+
+[all.python.docs]
+bears = PyDocStyleBear
+pydocstyle_ignore =
+  D100, D101, D102, D103, D104, D105,  # Missing docstrings
+  D203,  # 1 blank line required before class docstring
+  D213,  # Multi-line docstring summary should start at the second line
+
+[all.python.linelength]
+bears = LineLengthBear
+
+[all.python.unused-code]
+bears = PyUnusedCodeBear
+ignore += **/__init__.py
+
+[all.python.complexity]
+bears = RadonBear
+
+[all.python.commented-code]
+bears = PyCommentedCodeBear
+
+[all.requirements]
+files = *requirements.txt
+
+[all.requirements.safety]
+bears = PySafetyBear
+
+[all.requirements.pinning]
+bears = PinRequirementsBear
+
+[all.yaml]
+files = *.(yml|yaml)
+
+[all.yaml.spacing]
+bears = SpaceConsistencyBear
+indent_size = 2
+
+[all.yaml.lint]
+bears = YAMLLintBear
+
+[markdown]
+files = *.md
+bears = MarkdownBear
+
+[commit]
+bears = GitCommitBear
+shortlog_length = 72
+shortlog_trailing_period = no
+ignore_length_regex = https?://

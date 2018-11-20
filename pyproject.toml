@@ -1,0 +1,17 @@
+[tool.black]
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+
+  # All of the above are the default values for black exclude. Specify custom bellow.
+  | test\/.*\/snapshots\/*
+)/
+'''

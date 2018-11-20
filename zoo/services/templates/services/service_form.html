@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'service_form.css' %}">
+{% endblock %}
+
+{% block menu %}
+  {% with selected='service_list' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+<div class="ui centered stackable grid">
+  <div class="ui ten wide column column">
+    <div class="ui piled segment">
+      <h2 class="ui header">
+        {% if service %}Update {{ service }}{% else %}New service{% endif %}
+      </h2>
+      <form class="ui form" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          {% with field.field.widget.input_type as type %}
+          <div class="field">
+            <label>{{ field.label }}</label>
+            {{ field }}
+          </div>
+          {% endwith %}
+        {% endfor %}
+
+        <div class="ui stackable centered grid">
+          <div class="ui six wide column">
+            <button class="ui green vertical animated fluid button" type="submit">
+              <div class="hidden content">
+                {% if service %}Update service{% else %}Create service{% endif %}
+              </div>
+              <div class="visible content">
+                <i class="check icon"></i>
+              </div>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'service_form.js' %}"></script>
+{% endblock %}

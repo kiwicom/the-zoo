@@ -1,0 +1,7 @@
+- repo: local
+  hooks:
+    - id: black
+      name: black-code-formatter
+      language: docker_image
+      entry: --entrypoint black kiwicom/black:18.9b0
+      types: [python]

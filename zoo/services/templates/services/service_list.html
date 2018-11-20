@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load utils %}
+
+{% block menu %}
+  {% with selected='service_list' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block navtitle %}
+  {% with icon='cogs' header='Service list' %}
+    {{ block.super }}
+    <div class="ui right aligned category fluid search service-filter">
+      <div class="ui left labeled icon fluid input">
+        <div class="ui basic label" data-html='<h5>Filter services like</h5><p><code>name="vaporizer"</code><br><code>owner="booking" and status="production"</code><br>or<br><a href="https://github.com/ivelum/djangoql#language-reference" target="_blank" rel="noopener noreferrer">Check language reference</a><br></p>'>
+          <i class="info icon"></i>
+        </div>
+        <input class="prompt" type="text" placeholder="Search services..." tabindex="1">
+        <i class="search icon"></i>
+      </div>
+      <div class="results"></div>
+    </div>
+  {% endwith %}
+{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'service_list.css' %}">
+{% endblock %}
+
+{% block content %}
+{% for service in object_list %}
+<div class="ui service segment">
+  <h3 class="ui header">
+    <a href="{{ service.get_absolute_url }}">{{ service.name }}</a>
+    <div class="sub header">
+      owned by
+      {% if service.owner_url %}
+        <a href="{{ service.owner_url }}">{{ service.owner }}</a>
+        {% else %}
+        {{ service.owner }}
+      {% endif %}
+    </div>
+  </h3>
+  <div class="flex-horizontal tags-wrapper">
+    {% if service.status %}
+    <a class="ui {% label_color "status" service.status %} circular label">status:{{ service.status }}</a>
+    {% endif %}
+    {% if service.impact %}
+    <a class="ui {% label_color "impact" service.impact %} circular label">impact:{{ service.impact }}</a>
+    {% endif %}
+    {% if service.datacenter %}
+    <a class="ui {% label_color "datacenter" service.datacenter.provider %} circular label">datacenter:{{ service.datacenter }}</a>
+    {% endif %}
+  </div>
+  <div class="separator"></div>
+  <div class="flex-horizontal actions-wrapper">
+    {% service_link 'chat' service.slack_url icon='comment alternate' %}
+    {% service_link 'repo' service.gitlab_url icon='code' %}
+    {% service_link 'dash' service.dashboard_url icon='chart pie' %}
+    {% service_link 'alerts' service.pagerduty_url icon='warning' %}
+    {% service_link 'docs' service.docs_url icon='graduation cap' %}
+  </div>
+</div>
+{% empty %}
+  <div class="ui basic segment flex-horizontal">
+    <br>
+    <h1 class="ui header">
+      <i class="frown icon"></i>
+      <div class="content">
+        No results found
+        <div class="sub header">
+          Make sure the query is correct or try with a different one
+        </div>
+      </div>
+    </h1>
+  </div>
+{% endfor %}
+{% if is_paginated %}
+<div class="ui basic center aligned segment">
+  <div class="ui pagination menu">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="item">
+      <i class="chevron left icon"></i>
+    </a>
+    {% else %}
+    <div class="active item">
+      <i class="chevron left icon"></i>
+    </div>
+    {% endif %}
+    <div class="item">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="item">
+      <i class="chevron right icon"></i>
+    </a>
+    {% else %}
+    <div class="active item">
+      <i class="chevron right icon"></i>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<a href="{% url 'service_create' %}">
+  <button class="ui huge yellow corner circular icon button">
+    <i class="ui plus icon"></i>
+  </button>
+</a>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'service_list.js' %}"></script>
+{% endblock %}

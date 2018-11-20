@@ -1,0 +1,13 @@
+
+namespace: something
+category: Something written here
+---
+- id: check_dummy_function
+  title: This checks something dummy
+  description: |
+    Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.
+
+- id: check_another_dummy_function
+  title: This checks another dummy function
+  description: |
+    Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.

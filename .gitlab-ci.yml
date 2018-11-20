@@ -1,0 +1,35 @@
+stages:
+  - build
+  - test
+  - release
+
+variables:
+  SONARQUBE_TARGET: zoo,test
+  SAST_TARGET: zoo
+  PYLINT_TARGET: zoo
+  PYTEST_COVERAGE_TARGET: zoo
+
+include:
+  - 'https://ci-files.skypicker.com/templates/build/black.yml'
+  - 'https://ci-files.skypicker.com/templates/build/coala.yml'
+  - 'https://ci-files.skypicker.com/templates/build/docker_build.yml'
+  - 'https://ci-files.skypicker.com/templates/build/zoo.yml'
+  - 'https://ci-files.skypicker.com/templates/test/container_scanning.yml'
+  - 'https://ci-files.skypicker.com/templates/test/dependency_scanning.yml'
+  - 'https://ci-files.skypicker.com/templates/test/pylint.yml'
+  - 'https://ci-files.skypicker.com/templates/test/pytest.yml'
+  - 'https://ci-files.skypicker.com/templates/test/sast.yml'
+  - 'https://ci-files.skypicker.com/templates/release/sonarqube_preview.yml'
+  - 'https://ci-files.skypicker.com/templates/release/sonarqube_scan.yml'
+
+release_latest:
+  stage: release
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - master

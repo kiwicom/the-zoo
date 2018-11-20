@@ -1,0 +1,64 @@
+version: '2'
+services:
+  app:
+    build: .
+    environment:
+      - DATABASE_URL
+      - SECRET_KEY
+      - SENTRY_DSN
+      - SENTRY_PUBLIC_DSN
+      - ZOO_DEBUG
+      - ZOO_SLACK_URL
+      - ZOO_GITLAB_URL
+      - ZOO_GITLAB_TOKEN
+      - ZOO_SENTRY_URL
+      - ZOO_SENTRY_ORGANIZATION
+      - ZOO_GITHUB_TOKEN
+      - WEB_CONCURRENCY
+    ports:
+      - '8080'
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:10.1-alpine
+
+  redis:
+    image: redis:4.0-alpine
+
+  scheduler:
+    build: .
+    command: [celery, beat, -A, zoo, -s, /tmp/celerybeat-schedule/celerybeat-schedule, --pidfile, '']
+    environment:
+      - ZOO_DEBUG
+      - SECRET_KEY
+    volumes:
+      - /tmp/celerybeat-schedule
+    depends_on:
+      - redis
+
+  worker:
+    build: .
+    command: [celery, worker, -A, zoo]
+    environment:
+      - DATABASE_URL
+      - SECRET_KEY
+      - SENTRY_DSN
+      - SENTRY_PUBLIC_DSN
+      - ZOO_SENTRY_URL
+      - ZOO_SENTRY_ORGANIZATION
+      - ZOO_SENTRY_API_KEY
+      - ZOO_DATADOG_API_KEY
+      - ZOO_DATADOG_APP_KEY
+      - ZOO_DEBUG
+      - ZOO_GITLAB_URL
+      - ZOO_GITLAB_DB_URL
+      - ZOO_GITLAB_TOKEN
+      - ZOO_PINGDOM_EMAIL
+      - ZOO_PINGDOM_PASS
+      - ZOO_PINGDOM_APP_KEY
+      - ZOO_GITHUB_TOKEN
+      - ZOO_AUDITING_CHECKS
+    depends_on:
+      - postgres
+      - redis

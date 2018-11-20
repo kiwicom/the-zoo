@@ -1,0 +1,17 @@
+<div id="repo-input" class="repo-input-container">
+  <repo-input></repo-input>
+</div>
+
+<script>
+  const repoList = [
+    {% for repo in repos %}
+    {id: {{ repo.pk }}, reference: '{{ repo.provider }} - {{ repo }}'},
+    {% endfor %}
+  ];
+  const inputInfo = {
+    id: '{{ widget.attrs.id }}',
+    required: '{{ widget.required }}' == 'True',
+    name: '{{ widget.name }}',
+    initialValue: '{{ widget.value|default:"" }}'
+  };
+</script>

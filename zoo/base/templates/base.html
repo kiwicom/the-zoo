@@ -1,0 +1,71 @@
+{% extends 'skeleton.html' %}
+
+{% block body %}
+  <div class="ui small brown inverted top fixed pointing main menu">
+    <div class="ui container">
+    <a class="branding item" href="/">The Zoo</a>
+    <div class="right menu">
+      {% block menu %}
+      <a href="{% url 'service_list' %}" class="{% if selected == 'service_list' %}active {% endif %}item">
+        <i class="settings icon"></i>
+        Services
+      </a>
+      <a href="{% url 'audit_overview' %}" class="{% if selected == 'audit_overview' %}active {% endif %}item">
+        <i class="heartbeat icon"></i>
+        Auditing
+      </a>
+      <a href="{% url 'objective_list' %}" class="{% if selected == 'objective_list' %}active {% endif %}item">
+        <i class="chart bar icon"></i>
+        Objectives
+      </a>
+      <a href="{% url 'analytics_overview' %}" class="{% if selected == 'analytics_overview' %}active {% endif %}item">
+          <i class="chart pie icon"></i>
+          Analytics
+        </a>
+      <div class="ui link item user-actions">
+        <i class="user icon"></i>
+        <span class="text">{{ request.user }}</span>
+        <i class="dropdown icon"></i>
+      </div>
+      <div class="ui popup" style="padding: .5rem;">
+        <div class="menu">
+          <a href="{% url 'account_logout' %}" class="item">
+            <i class="hand peace icon"></i>
+            Log out
+          </a>
+        </div>
+      </div>
+      {% endblock %}
+    </div>
+    </div>
+  </div>
+  <div class="ui container">
+    <div class="flex-horizontal page-header">
+    {% block navtitle %}
+      {% if header %}
+        <div class="flex-horizontal">
+          {% if to_url %}
+          <a href="{{ to_url }}" class="ui transparent circular icon button">
+            <i class="left arrow icon"></i>
+          </a>
+          {% endif %}
+          <h2 class="ui header">
+            {% if icon %}
+            <i class="{{ icon }} icon"></i>
+            {% endif %}
+            <div class="content">
+              {{ header }}
+              {% if subheader %}
+              <div class="sub header">
+                {{ subheader }}
+              </div>
+              {% endif %}
+            </div>
+          </h2>
+        </div>
+      {% endif %}
+    {% endblock %}
+  </div>
+  {% block content %}{% endblock %}
+</div>
+{% endblock %}

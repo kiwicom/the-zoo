@@ -5,6 +5,10 @@ import Mustache from 'mustache'
 
 $(document).ready(() => {
   const repoDetailsContainer = $('#repository-details-container')
+  const serviceDeleteForm = $('#service-delete-form')
+  const confirmationModal = $('.ui.basic.modal')
+  let serviceDeleteFormProcessed = false
+
   $.get(repoDetailsContainer.data('url'))
   .done((response) => {
     let template = $('#repository-details').html()
@@ -43,5 +47,23 @@ $(document).ready(() => {
       show: 250,
       hide: 0
     }
+  })
+
+  $('.ui.service-actions.dropdown').dropdown({
+    action: 'hide',
+    position: 'right',
+    transition: 'fade up'
+  })
+
+  serviceDeleteForm.submit((event) => {
+    if(!serviceDeleteFormProcessed) {event.preventDefault()}
+
+    confirmationModal.modal({
+      transition: 'fade up',
+      onApprove () {
+        serviceDeleteFormProcessed = true
+        serviceDeleteForm.submit()
+      }
+    }).modal('show')
   })
 })

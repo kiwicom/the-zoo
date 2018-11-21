@@ -15,5 +15,10 @@ urlpatterns = [
         views.ServiceUpdate.as_view(),
         name="service_update",
     ),
+    path(
+        "<str:owner_slug>/<str:name_slug>/delete",
+        views.ServiceDelete.as_view(),
+        name="service_delete",
+    ),
     path("new", views.ServiceCreate.as_view(), name="service_create"),
 ]

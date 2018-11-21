@@ -4,9 +4,10 @@ import re
 from typing import Dict, List
 
 from django.db.models import Q, query, Sum
-from django.http import Http404
+from django.http import Http404, HttpResponseBadRequest
+from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views import generic as generic_views
 from djangoql.exceptions import DjangoQLError
 from djangoql.queryset import apply_search
 import structlog
@@ -32,12 +33,32 @@ class ServiceMixin:
             raise Http404("Service.DoesNotExist")
 
 
-class ServiceCreate(CreateView):
+class ServiceCreate(generic_views.CreateView):
     form_class = forms.ServiceForm
     model = form_class.Meta.model
 
 
-class ServiceDetail(ServiceMixin, DetailView):
+class ServiceDelete(generic_views.DeleteView):
+    model = models.Service
+    success_url = reverse_lazy("service_list")
+
+    def get_object(self):
+        owner_slug = self.kwargs.get("owner_slug")
+        name_slug = self.kwargs.get("name_slug")
+        queryset = self.get_queryset()
+
+        if owner_slug is None or name_slug is None:
+            raise HttpResponseBadRequest(
+                f"ServiceDelete view must be called with owner_slug and name_slug"
+            )
+
+        try:
+            return queryset.get(owner_slug=owner_slug, name_slug=name_slug)
+        except self.model.DoesNotExist:
+            raise Http404(f"Service {owner_slug}/{name_slug} does not exist")
+
+
+class ServiceDetail(ServiceMixin, generic_views.DetailView):
     model = models.Service
 
     def generate_sentry_histogram(
@@ -130,7 +151,7 @@ class ServiceDetail(ServiceMixin, DetailView):
         return context
 
 
-class ServiceList(ListView):
+class ServiceList(generic_views.ListView):
     model = models.Service
     paginate_by = 50
 
@@ -168,6 +189,6 @@ class ServiceList(ListView):
         return queryset.order_by("name")
 
 
-class ServiceUpdate(ServiceMixin, UpdateView):
+class ServiceUpdate(ServiceMixin, generic_views.UpdateView):
     form_class = forms.ServiceForm
     model = form_class.Meta.model

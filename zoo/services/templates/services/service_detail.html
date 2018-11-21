@@ -32,6 +32,17 @@
     <i class="warning circle icon"></i>
     Create incident
   </a>
+  <div class="ui transparent service-actions floating dropdown icon button">
+    <i class="ellipsis vertical icon"></i>
+    <div class="left menu">
+        <div class="item">
+          <form method="post" id="service-delete-form" action="{% url 'service_delete' object.owner_slug object.name_slug %}">
+            {% csrf_token %}
+            <button class="ui invisible button" type="submit"><i class="red trash icon"></i> Delete</button>
+          </form>
+        </div>
+    </div>
+  </div>
 </div>
 {% endwith %}
 {% endblock %}
@@ -218,6 +229,25 @@
     <i class="ui edit icon"></i>
   </button>
 </a>
+
+<div class="ui basic tiny modal">
+  <div class="ui icon header">
+    <i class="exclamation triangle icon"></i>
+    Are you sure?
+  </div>
+  <div class="centered-text content">
+    <label>The service <b>{{ object.owner }}/{{ object.name }}</b> will be permanently removed.</label>
+  </div>
+  <div class="actions centered-text">
+    <div class="ui red ok inverted button">
+      <i class="trash icon"></i>
+      Yeah, I'm sure
+    </div>
+    <div class="ui cancel inverted button">
+      Cancel
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

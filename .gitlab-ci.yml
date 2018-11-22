@@ -13,10 +13,9 @@ services:
   - docker:18.06-dind
 
 include:
+  - 'https://ci-files.skypicker.com/templates/build/docker_build.yml'
   - 'https://ci-files.skypicker.com/templates/build/black.yml'
   - 'https://ci-files.skypicker.com/templates/build/coala.yml'
-  - 'https://ci-files.skypicker.com/templates/build/docker_build.yml'
-  - 'https://ci-files.skypicker.com/templates/build/zoo.yml'
   - 'https://ci-files.skypicker.com/templates/test/container_scanning.yml'
   - 'https://ci-files.skypicker.com/templates/test/dependency_scanning.yml'
   - 'https://ci-files.skypicker.com/templates/test/pylint.yml'

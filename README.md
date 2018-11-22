@@ -1,9 +1,31 @@
 # zoo
 
-| What       | Where                                                              |
-| ---------- | ------------------------------------------------------------------ |
-| Discussion | [#the-zoo on Slack](https://skypicker.slack.com/messages/the-zoo/) |
-| Maintainer | [Alex Viscreanu](https://gitlab.skypicker.com/aexvir/)             |
+A smart service catalogue providing an overview of your services' development and
+operations.
+
+[![Python: 3.6](https://img.shields.io/badge/python-3.7-blue.svg)](https://python.org)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-black.svg)](https://github.com/ambv/black)
+[![Discord](https://img.shields.io/discord/427417507276783616.svg)](https://discord.gg/Tx9FkEz)
+[![Gitlab pipeline status (branch)](https://img.shields.io/gitlab/pipeline/kiwicom/the-zoo/master.svg)](https://gitlab.com/kiwicom/the-zoo/pipelines)
+
+![Service Detail](docs/screenshot-service-details.png)
+
+| What       | Where                                             |
+| ---------- | ------------------------------------------------- |
+| Discussion | [#the-zoo on Discord](https://discord.gg/Tx9FkEz) |
+| Maintainer | [Alex Viscreanu](https://github.com/aexvir/)      |
+
+## What is The Zoo?
+
+A microservice catalogue that allows performing static code checks and integrates with
+third party services like Sentry, Datadog or Pingdom.
+
+On top of that we have built a configurable static code analysis module that allows writing
+your own code checks and The Zoo will keep track of the evolution of those issues. The checks
+can also be integrated in CI so it can show how the Pull Request affects the status of the
+issues.
+
+The Zoo also provides analytics about how dependency usage and its versions evolve.
 
 ## Development
 
@@ -38,7 +60,7 @@ parameters.
 
 Run all tests: `$ make test`
 
-Tests are run by `tox`. In order to run only unit tests or a specific test file 
+Tests are run by `tox`. In order to run only unit tests or a specific test file
 you need to use the `pytest` binary from the `.tox/tests/bin/` folder. This
 folder will be created after running tests for the first time.
 
@@ -62,7 +84,7 @@ you can run: `TEST_DATABASE_URL=postgres://... TOX_TESTENV_PASSENV=TEST_DATABASE
 
 ### Architecture Decision Records
 
-We document architecture decisions like it's described in 
+We document architecture decisions like it's described in
 [this article](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions).
 
 Records are in dir `adr`. We are using [ADR Tools](https://github.com/npryce/adr-tools)
@@ -77,4 +99,4 @@ Setup virtual enviroment and install there `docs-requirements.txt`. Then you can
 use shortcuts:
 
 - Build docs: `$ make build-docs`
-- Open docs: `$ make read-docs` 
+- Open docs: `$ make read-docs`

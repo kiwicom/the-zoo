@@ -9,6 +9,9 @@ variables:
   PYLINT_TARGET: zoo
   PYTEST_COVERAGE_TARGET: zoo
 
+services:
+  - docker:18.06-dind
+
 include:
   - 'https://ci-files.skypicker.com/templates/build/black.yml'
   - 'https://ci-files.skypicker.com/templates/build/coala.yml'
@@ -21,15 +24,9 @@ include:
   - 'https://ci-files.skypicker.com/templates/test/sast.yml'
   - 'https://ci-files.skypicker.com/templates/release/sonarqube_preview.yml'
   - 'https://ci-files.skypicker.com/templates/release/sonarqube_scan.yml'
+  - 'https://ci-files.skypicker.com/templates/release/release_latest.yml'
 
-release_latest:
-  stage: release
-  variables:
-    GIT_STRATEGY: none
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
-    - docker push $CI_REGISTRY_IMAGE:latest
-  only:
-    - master
+pytest:
+  services:
+    - docker:18.06-dind
+    - postgres:10.0

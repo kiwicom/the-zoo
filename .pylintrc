@@ -1,6 +1,5 @@
 [MASTER]
-# jobs=0 means 'use all CPUs'
-jobs=0
+jobs=2
 
 [MESSAGES CONTROL]
 disable =

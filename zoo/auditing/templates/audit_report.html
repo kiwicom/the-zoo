@@ -20,11 +20,14 @@
 
 {% block content %}
 {% for category, category_issues in issues.items %}
-<h3 class="ui dividing header">{{ category }}</h3>
+<h3 class="ui block header category-header">{{ category }}</h3>
   {% for issue in category_issues %}
-  <div class="flex-horizontal--space-between">
+  <div class="flex-horizontal--space-between issue-wrapper">
     <h4 class="ui marginless header">
       {{ issue.kind.title }}
+      <div class="sub header">
+        Last checked on {{ issue.last_check }}
+      </div>
     </h4>
     <div class="flex-horizontal">
       <div class="ui circular {% label_color 'issue_effort' issue.kind.effort.value %} label">

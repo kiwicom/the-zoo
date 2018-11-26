@@ -46,6 +46,19 @@
     }
   }
 
+  .ui.service-link.disabled.button {
+    opacity: .25 !important;
+  }
+
+  .ui.service-link.button:not(.disabled) {
+    color: @brown;
+
+    &:hover {
+      background: @brown;
+      color: @white;
+    }
+  }
+
   @media only screen and (max-width: @largestMobileScreen) {
     .flex-vertical();
 

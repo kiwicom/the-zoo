@@ -1,7 +1,7 @@
 from django.template.response import TemplateResponse
 
 
-def not_found(request, exception):
+def not_found(request, exception=None):
     """404 error handler which includes ``request`` in the context."""
     return TemplateResponse(
         request, "status/404.html", {"request": request}, status=404

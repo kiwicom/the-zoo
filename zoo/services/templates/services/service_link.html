@@ -1,4 +1,3 @@
-<a class="ui mini yellow icon {% if not url %}disabled {% endif %} button" {% if url %}href="{{ url }}"{% endif %}>
+<a class="ui transparent icon {% if not url %}disabled {% endif %} button" {% if url %}href="{{ url }}"{% endif %} data-content="{{ name }}">
     <i class="{{ icon }} icon"></i>
-    &nbsp;{{ name }}
 </a>

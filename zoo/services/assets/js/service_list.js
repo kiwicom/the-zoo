@@ -28,3 +28,9 @@ $('.service-filter .ui.basic.label').popup({
     variation: 'inverted',
     position: 'left center'
 })
+
+$('.actions-wrapper a').popup({
+    transition: 'fade down',
+    variation: 'inverted',
+    position: 'left center'
+})

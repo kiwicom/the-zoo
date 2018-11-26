@@ -32,34 +32,40 @@
 {% for service in object_list %}
 <div class="ui service segment">
   <h3 class="ui header">
-    <a href="{{ service.get_absolute_url }}">{{ service.name }}</a>
-    <div class="sub header">
-      owned by
-      {% if service.owner_url %}
-        <a href="{{ service.owner_url }}">{{ service.owner }}</a>
-        {% else %}
-        {{ service.owner }}
+    <span>
+      <a href="{{ service.get_absolute_url }}">{{ service.name }}</a>
+      <small>
+        ·
+        owned by
+        {% if service.owner_url %}
+          <a href="{{ service.owner_url }}">{{ service.owner }}</a>
+          {% else %}
+          {{ service.owner }}
+        {% endif %}
+      </small>
+    </span>
+
+    {% spaceless %}
+    <div class="flex-horizontal tags-wrapper">
+      {% if service.status %}
+      <a class="ui {% label_color "status" service.status %} circular label">status:{{ service.status }}</a>
+      {% endif %}
+      {% if service.impact %}
+      <a class="ui {% label_color "impact" service.impact %} circular label">impact:{{ service.impact }}</a>
+      {% endif %}
+      {% if service.datacenter %}
+      <a class="ui {% label_color "datacenter" service.datacenter.provider %} circular label">datacenter:{{ service.datacenter }}</a>
       {% endif %}
     </div>
+    {% endspaceless %}
+
   </h3>
-  <div class="flex-horizontal tags-wrapper">
-    {% if service.status %}
-    <a class="ui {% label_color "status" service.status %} circular label">status:{{ service.status }}</a>
-    {% endif %}
-    {% if service.impact %}
-    <a class="ui {% label_color "impact" service.impact %} circular label">impact:{{ service.impact }}</a>
-    {% endif %}
-    {% if service.datacenter %}
-    <a class="ui {% label_color "datacenter" service.datacenter.provider %} circular label">datacenter:{{ service.datacenter }}</a>
-    {% endif %}
-  </div>
-  <div class="separator"></div>
   <div class="flex-horizontal actions-wrapper">
-    {% service_link 'chat' service.slack_url icon='comment alternate' %}
-    {% service_link 'repo' service.gitlab_url icon='code' %}
-    {% service_link 'dash' service.dashboard_url icon='chart pie' %}
-    {% service_link 'alerts' service.pagerduty_url icon='warning' %}
-    {% service_link 'docs' service.docs_url icon='graduation cap' %}
+    {% service_link 'Support' service.slack_url icon='comment alternate' %}
+    {% service_link 'Repository' service.gitlab_url icon='code' %}
+    {% service_link 'Dashboard' service.dashboard_url icon='chart pie' %}
+    {% service_link 'Alerts' service.pagerduty_url icon='warning' %}
+    {% service_link 'Documentation' service.docs_url icon='graduation cap' %}
   </div>
 </div>
 {% empty %}

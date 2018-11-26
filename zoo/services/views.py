@@ -3,8 +3,9 @@ from datetime import timedelta
 import re
 from typing import Dict, List
 
+from django.core.exceptions import SuspiciousOperation
 from django.db.models import Q, query, Sum
-from django.http import Http404, HttpResponseBadRequest
+from django.http import Http404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic as generic_views
@@ -42,13 +43,15 @@ class ServiceDelete(generic_views.DeleteView):
     model = models.Service
     success_url = reverse_lazy("service_list")
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         owner_slug = self.kwargs.get("owner_slug")
         name_slug = self.kwargs.get("name_slug")
-        queryset = self.get_queryset()
+
+        if queryset is None:
+            queryset = self.get_queryset()
 
         if owner_slug is None or name_slug is None:
-            raise HttpResponseBadRequest(
+            raise SuspiciousOperation(
                 f"ServiceDelete view must be called with owner_slug and name_slug"
             )
 

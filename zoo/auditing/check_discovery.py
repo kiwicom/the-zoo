@@ -11,11 +11,6 @@ import attr
 from django.conf import settings
 import yaml
 
-CHECK_REGEX = r"^check\w*"
-
-KINDS = {}
-CHECKS = []
-
 
 class Severity(Enum):
     UNDEFINED = "undefined"
@@ -60,6 +55,20 @@ class Kind:
 
     def format_description(self, details):
         return self.description.format_map(defaultdict(str, details or {}))
+
+
+CHECK_REGEX = r"^check\w*"
+
+KINDS = defaultdict(
+    lambda: Kind(
+        id="deleted",
+        namespace="deleted",
+        category="deleted",
+        title="[deleted issue]",
+        description="This issue has been deleted so there is no description available for it.",
+    )
+)
+CHECKS = []
 
 
 class IncorrectCheckMetadataError(Exception):

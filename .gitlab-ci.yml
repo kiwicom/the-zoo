@@ -21,7 +21,6 @@ include:
   - 'https://ci-files.skypicker.com/templates/test/pylint.yml'
   - 'https://ci-files.skypicker.com/templates/test/pytest.yml'
   - 'https://ci-files.skypicker.com/templates/test/sast.yml'
-  - 'https://ci-files.skypicker.com/templates/release/sonarqube_preview.yml'
   - 'https://ci-files.skypicker.com/templates/release/sonarqube_scan.yml'
   - 'https://ci-files.skypicker.com/templates/release/release_latest.yml'
 

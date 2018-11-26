@@ -102,7 +102,6 @@ SILKY_AUTHORISATION = True
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware",
     "raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware",
     "silk.middleware.SilkyMiddleware",
     "stronghold.middleware.LoginRequiredMiddleware",

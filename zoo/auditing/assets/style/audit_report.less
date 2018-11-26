@@ -1,4 +1,5 @@
 @import '~zoo:base/style/code.less';
+@import '~zoo:base/style/_variables.less';
 @import (inline) "~highlight.js/styles/solarized-light.css";
 
 .modal .content {
@@ -8,4 +9,13 @@
   .red.pointing.label {
     font-weight: 400;
   }
+}
+
+.ui.block.header.category-header {
+  background: @brown;
+  color: @white;
+}
+
+.issue-wrapper {
+  margin-top: 2.5em;
 }

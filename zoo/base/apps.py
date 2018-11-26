@@ -26,3 +26,6 @@ class BaseConfig(AppConfig):
         celery_app.add_periodic_task(
             timedelta(days=1), analytics_tasks.take_dependency_snapshots
         )
+        celery_app.add_periodic_task(
+            timedelta(days=1), analytics_tasks.check_python_lib_licenses
+        )

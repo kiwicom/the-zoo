@@ -2,6 +2,7 @@ from collections import namedtuple
 from functools import partial
 
 from ..models import DependencyType
+from .licenses import check_python_lib_licenses
 from .snapshots import take_dependency_snapshots
 
 Hit = namedtuple("Hit", ["name", "version", "for_production", "health_status", "type"])

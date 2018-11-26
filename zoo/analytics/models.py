@@ -29,6 +29,7 @@ class Dependency(models.Model):
         null=True, blank=True, default=None, verbose_name="health"
     )
     timestamp = models.DateTimeField(default=timezone.now)
+    license = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.type})"

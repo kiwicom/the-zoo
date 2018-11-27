@@ -44,6 +44,7 @@
     "snarkdown": "^1.2.2",
     "stylelint": "^8.4.0",
     "stylelint-webpack-plugin": "^0.10.5",
+    "synp": "^1.3.2",
     "urijs": "^1.19.1",
     "url-loader": "^1.0.1",
     "vue": "^2.5.16",
@@ -56,6 +57,7 @@
   },
   "scripts": {
     "production": "webpack --config webpack.build.js",
-    "development": "nodemon --watch config --exec 'webpack --watch --config webpack.dev.js'"
+    "development": "nodemon --watch config --exec 'webpack --watch --config webpack.dev.js'",
+    "audit": "synp --source-file yarn.lock; npm audit; rm -f package-lock.json"
   }
 }

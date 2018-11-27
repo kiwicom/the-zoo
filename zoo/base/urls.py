@@ -23,7 +23,7 @@ urlpatterns = [
     path("", RedirectView.as_view(pattern_name="service_list")),
     path("repos/", include("zoo.repos.urls")),
     path("services/", include("zoo.services.urls")),
-    path("auditing/", include("zoo.auditing.urls")),
+    path("", include("zoo.auditing.urls")),
     path("objectives/", include("zoo.objectives.urls")),
     path("analytics/", include("zoo.analytics.urls")),
     path("accounts/", include("allauth.urls")),

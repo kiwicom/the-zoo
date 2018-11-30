@@ -32,8 +32,9 @@ urlpatterns = [
     path("graphql", include("zoo.api.urls")),
     path(
         "robots.txt",
-        lambda _: HttpResponse("User-agent: *\nDisallow: /", mimetype="text/plain"),
+        lambda _: HttpResponse("User-agent: *\nDisallow: /", content_type="text/plain"),
     ),
+    path("ping", lambda _: HttpResponse("200 Pong", content_type="text/plain")),
 ]
 
 

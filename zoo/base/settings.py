@@ -181,6 +181,7 @@ STRONGHOLD_PUBLIC_URLS = (
     r"^/accounts/gitlab.*?$",
     r"^/accounts/social/signup/$",
     r"^/robots.txt$",
+    r"^/ping$",
     ZOO_API_URL,
 )
 

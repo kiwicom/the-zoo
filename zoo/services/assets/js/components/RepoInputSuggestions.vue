@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  data: function() {
+  data () {
     return {
       cursor: 0
     };
@@ -27,19 +27,19 @@ export default {
   template: "#repo-input-suggestions-markup",
   props: ["inputHasFocus"],
   computed: {
-    suggestions: function() {
+    suggestions () {
       this.cursor = 0;
       return this.$store.getters.getFilteredSuggestions;
     },
-    count: function() {
+    count () {
       return this.suggestions.length;
     },
-    visible: function() {
+    visible () {
       return this.$store.state.enteredText.length > 0 && this.inputHasFocus;
     }
   },
   methods: {
-    selectSuggestion: function() {
+    selectSuggestion () {
       if (this.visible) {
         this.$store.commit(
           "selectSuggestion",
@@ -52,15 +52,15 @@ export default {
       if (this.visible)
         this.cursor = parseInt(event.target.getAttribute("index"));
     },
-    goUp: function() {
+    goUp () {
       if (this.visible) this.cursor = Math.max(this.cursor - 1, 0);
     },
-    goDown: function() {
+    goDown () {
       if (this.visible)
         this.cursor = Math.min(this.cursor + 1, this.suggestions.length - 1);
     }
   },
-  created: function() {
+  created () {
     this.$parent.$on("select", this.selectSuggestion);
     this.$parent.$on("decreaseCursor", this.goUp);
     this.$parent.$on("increaseCursor", this.goDown);

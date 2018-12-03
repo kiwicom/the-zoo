@@ -22,7 +22,7 @@ service_urls = [
 urlpatterns = [
     path("auditing/", include(global_urls)),
     path(
-        "services/<str:service_owner_slug>/<str:service_name_slug>/auditing",
+        "services/<str:service_owner_slug>/<str:service_name_slug>/auditing/",
         include(service_urls),
     ),
 ]

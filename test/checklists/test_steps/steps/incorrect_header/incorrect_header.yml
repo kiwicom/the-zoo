@@ -1,0 +1,5 @@
+whatever: wrong
+something_else: more wrong
+---
+- id: valid-step
+  title: Valid step

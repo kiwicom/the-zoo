@@ -59,13 +59,13 @@ def django_db_modify_db_settings(db_url):
 
 
 @pytest.fixture
-def repo_dir(tmpdir):
+def fake_dir(tmpdir):
     return tmpdir.mkdir(fake.pystr())
 
 
 @pytest.fixture
-def repo_path(repo_dir):
-    return Path(repo_dir.dirname)
+def fake_path(fake_dir):
+    return Path(fake_dir.dirname)
 
 
 @pytest.fixture
@@ -86,8 +86,8 @@ def repo_archive(tmpdir):
 
 
 @pytest.fixture
-def check_context(repository, repo_path):
-    return CheckContext(repository, repo_path)
+def check_context(repository, fake_path):
+    return CheckContext(repository, fake_path)
 
 
 @pytest.fixture(scope="session")

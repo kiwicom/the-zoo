@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load utils %}
+
+{% block menu %}
+  {% with selected='checklists' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block navtitle %}
+  {% with icon="clipboard check icon" header="Production checklist progress"%}
+   {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+{% if service_list %}
+<table class="ui striped table">
+  <tbody>
+    {% for service in service_list %}
+    <tr>
+      <td>
+        <h3 class="ui marginless header"><a href="{% url 'service_detail' service.owner_slug service.name_slug %}">{{ service.name }}</a></h3>
+      </td>
+      <td>
+        <div class="ui marginless indicating progress" data-value="{{ service.completed_checklist_steps }}" data-total="{{ service.total_checklist_steps }}">
+          <div class="bar">
+            <div class="progress"></div>
+          </div>
+        </div>
+      </td>
+      <td class="centered-text collapsing">
+        <a href="{% url 'service_checklist' service.owner_slug service.name_slug %}" class="ui brown button">
+          See items
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="ui basic center aligned segment">
+  <h3 class="ui header">
+    There are no services in beta
+  </h3>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $('.ui.progress').progress()
+</script>
+{% endblock %}
+

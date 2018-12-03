@@ -1,0 +1,56 @@
+from typing import Optional
+
+import attr
+from django.conf import settings
+import yaml
+
+
+@attr.s(frozen=True, slots=True)
+class Step:
+    tag: str = attr.ib()
+    category_name: str = attr.ib(cmp=False, repr=False)
+    id: str = attr.ib()
+    title: str = attr.ib(cmp=False, repr=False)
+    description: str = attr.ib(cmp=False, repr=False, default=None)
+    help_url: str = attr.ib(cmp=False, repr=False, default=None)
+    is_checked: Optional[bool] = attr.ib(default=None)
+
+    @property
+    def key(self):
+        return f"{self.tag}:{self.id}"
+
+
+class InvalidStepMetadata(Exception):
+    pass
+
+
+class IncorrectStepMetadata(Exception):
+    pass
+
+
+def load_all_steps():
+    all_steps = {}
+
+    print(settings.ZOO_CHECKLISTS_ROOT)
+
+    for steps_file_path in settings.ZOO_CHECKLISTS_ROOT.glob("**/*.yml"):
+        try:
+            header, items = yaml.safe_load_all(steps_file_path.read_text())
+        except (ValueError, KeyError, yaml.scanner.ScannerError) as exc:
+            raise InvalidStepMetadata("File format not correct") from exc
+
+        if items:
+            try:
+                all_steps[header["tag"]] = {
+                    item.key: item
+                    for item in (
+                        Step(**header, **item_details) for item_details in items
+                    )
+                }
+            except TypeError as exc:
+                raise IncorrectStepMetadata("Incorrect attributes") from exc
+
+    return all_steps
+
+
+STEPS = load_all_steps()

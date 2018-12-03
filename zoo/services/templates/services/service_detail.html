@@ -55,6 +55,35 @@
 <div class="ui stackable grid">
   <div class="sixteen wide column">
 
+    {% if checklist %}
+    <div class="ui fluid service-detail segment">
+      <div class="flex-horizontal--space-between">
+        <h3 class="ui marginless header">
+          {% if checklist.completed < checklist.total %}
+          Not ready for production
+          <div class="sub header">
+            Before launching this service to production make sure that you went through all the steps in our checklist
+          </div>
+          {% else %}
+          Ready to roll!
+          <div class="sub header">
+            You have went through all the steps in our checklist, you may now launch this service to production
+          </div>
+          {% endif %}
+        </h3>
+        <a class="ui brown button" href="{% url 'service_checklist' service.owner_slug service.name_slug %}">
+          See checklist
+        </a>
+      </div>
+      <br>
+      <div class="ui indicating small marginless progress" data-value="{{ checklist.completed }}" data-total="{{ checklist.total }}">
+        <div class="bar">
+          <div class="progress"></div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
     {% if object.repository %}
     <div class="ui fluid service-detail segment">
       <div class="flex-horizontal--space-between">

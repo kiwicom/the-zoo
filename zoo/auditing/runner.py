@@ -15,13 +15,13 @@ Result.__new__.__defaults__ = (None,)
 class CheckContext:
     Result = Result
 
-    def __init__(self, repository, repo_path):
+    def __init__(self, repository, fake_path):
         self.owner = repository.owner
         self.name = repository.name
         self.repo_url = repository.url
         self.remote_id = repository.remote_id
         self.provider = repository.provider
-        self.path = repo_path
+        self.path = fake_path
         self.languages = repository.languages_from_analytics
 
 
@@ -63,8 +63,8 @@ def save_check_result(issue_repo, issue_key, is_found, details=None):
         issue.save()
 
 
-def check_repository(checks, repository, repo_path):
-    context = CheckContext(repository, repo_path)
+def check_repository(checks, repository, fake_path):
+    context = CheckContext(repository, fake_path)
     for check in checks:
         try:
             for result in check(context):
@@ -91,6 +91,6 @@ def check_repository(checks, repository, repo_path):
             )
 
 
-def run_checks_and_save_results(checks, repository, repo_path):
-    for result in check_repository(checks, repository, repo_path):
+def run_checks_and_save_results(checks, repository, fake_path):
+    for result in check_repository(checks, repository, fake_path):
         save_check_result(repository, result.issue_key, result.is_found, result.details)

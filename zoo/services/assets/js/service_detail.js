@@ -66,4 +66,6 @@ $(document).ready(() => {
       }
     }).modal('show')
   })
+
+  $('.ui.progress').progress()
 })

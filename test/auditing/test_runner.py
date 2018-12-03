@@ -8,11 +8,11 @@ import zoo.auditing.runner as uut
 pytestmark = pytest.mark.django_db
 
 
-def test_check_context__init(repository, repo_path):
-    context = uut.CheckContext(repository, repo_path)
+def test_check_context__init(repository, fake_path):
+    context = uut.CheckContext(repository, fake_path)
     assert context.owner == repository.owner
     assert context.name == repository.name
-    assert context.path == repo_path
+    assert context.path == fake_path
 
 
 @pytest.mark.parametrize(
@@ -144,10 +144,10 @@ def check_failing(context):
     raise RuntimeError
 
 
-def test_check_repository(repository, repo_path):
+def test_check_repository(repository, fake_path):
     checks = [check_passing, check_found, check_unknown]
 
-    results = uut.check_repository(checks, repository, repo_path)
+    results = uut.check_repository(checks, repository, fake_path)
 
     assert list(results) == [
         uut.Result("check:passing", False, {"ignore": "details"}),
@@ -157,16 +157,16 @@ def test_check_repository(repository, repo_path):
             {
                 "context_name": repository.name,
                 "context_owner": repository.owner,
-                "context_path": str(repo_path),
+                "context_path": str(fake_path),
             },
         ),
     ]
 
 
-def test_check_repository__failing_check(repository, repo_path, mocker):
+def test_check_repository__failing_check(repository, fake_path, mocker):
     m_log = mocker.patch.object(uut, "log")
 
-    results = uut.check_repository([check_failing], repository, repo_path)
+    results = uut.check_repository([check_failing], repository, fake_path)
 
     assert len(list(results)) == 0
     m_log.exception.assert_called_once_with(
@@ -177,10 +177,10 @@ def test_check_repository__failing_check(repository, repo_path, mocker):
     )
 
 
-def test_run_checks_and_save_results(repository, repo_path):
+def test_run_checks_and_save_results(repository, fake_path):
     checks = [check_passing, check_found, check_unknown]
 
-    uut.run_checks_and_save_results(checks, repository, repo_path)
+    uut.run_checks_and_save_results(checks, repository, fake_path)
 
     assert Issue.objects.count() == 2
 
@@ -195,14 +195,14 @@ def test_run_checks_and_save_results(repository, repo_path):
     assert found_issue.details == {
         "context_name": repository.name,
         "context_owner": repository.owner,
-        "context_path": str(repo_path),
+        "context_path": str(fake_path),
     }
 
 
-def test_run_checks_and_save_results__failing_check(repository, repo_path, mocker):
+def test_run_checks_and_save_results__failing_check(repository, fake_path, mocker):
     m_log = mocker.patch.object(uut, "log")
 
-    uut.run_checks_and_save_results([check_failing], repository, repo_path)
+    uut.run_checks_and_save_results([check_failing], repository, fake_path)
 
     m_log.exception.assert_called_once_with(
         "auditing.check.error",

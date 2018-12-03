@@ -15,6 +15,7 @@ import structlog
 
 from . import forms, models
 from ..auditing.models import Issue
+from ..checklists.steps import STEPS
 
 log = structlog.get_logger()
 
@@ -63,6 +64,14 @@ class ServiceDelete(generic_views.DeleteView):
 
 class ServiceDetail(ServiceMixin, generic_views.DetailView):
     model = models.Service
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .select_related("repository", "datacenter")
+            .prefetch_related("checkmarks")
+        )
 
     def generate_sentry_histogram(
         self, sentry_issues: query.QuerySet
@@ -141,6 +150,17 @@ class ServiceDetail(ServiceMixin, generic_views.DetailView):
             ],
         }
 
+    def get_checklists_context(self):
+        if self.object.status != models.Status.BETA.value:
+            return None
+
+        return {
+            "total": sum(
+                [len(steps) for tag, steps in STEPS.items() if tag in self.object.tags]
+            ),
+            "completed": self.object.checkmarks.count(),
+        }
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -150,6 +170,7 @@ class ServiceDetail(ServiceMixin, generic_views.DetailView):
             ).count()
 
         context["sentry_data"] = self.get_sentry_context()
+        context["checklist"] = self.get_checklists_context()
 
         return context
 

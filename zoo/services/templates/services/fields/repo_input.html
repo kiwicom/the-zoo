@@ -8,7 +8,7 @@
     {id: {{ repo.pk }}, reference: '{{ repo.provider }} - {{ repo }}'},
     {% endfor %}
   ];
-  const inputInfo = {
+  const repoInputInfo = {
     id: '{{ widget.attrs.id }}',
     required: '{{ widget.required }}' == 'True',
     name: '{{ widget.name }}',

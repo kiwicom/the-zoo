@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+  {% with selected='checklists' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block navtitle %}
+  {% with icon='clipboard check icon' to_url='/services/'|add:service.owner_slug|add:'/'|add:service.name_slug header='Production checklist of '|add:service.name %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'service_checklist.css' %}">
+{% endblock %}
+
+{% block content %}
+{% for category in steps %}
+<h3 class="ui header">{{ category.name }}</h3>
+{% for step in category.steps %}
+<div class="ui fluid {% if step.is_checked %}green{% else %}red{% endif %} segment">
+  <div class="flex-horizontal--space-between">
+    <h4 class="ui marginless header" style="max-width: 640px;">
+      <div class="content">
+        {{ step.title }}
+        {% if step.description %}
+        <div class="sub header">{{ step.description }}</div>
+        {% endif %}
+      </div>
+    </h4>
+    <div class="flex-horizontal">
+      {% if step.help_url %}
+      <a href="{{ step.help_url }}" target="_blank" rel="noopener noreferrer" class="ui tiny basic circular icon button">
+        <i class="help icon"></i>
+      </a>
+      &nbsp;&nbsp;
+      {% endif %}
+      <div class="flex-horizontal checklist-action-wrapper" data-checked="{{ step.is_checked }}" data-url="{% url 'service_checklist_update' service.owner_slug service.name_slug step.key %}">
+        <div class="ui fluid {% if step.is_checked %}green{% else %}red{% endif %} button">
+          <span class="content">{% if step.is_checked %}Done{% else %}Not done{% endif %}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% csrf_token %}
+{% endfor %}
+{% empty %}
+<div class="ui placeholder secondary segment">
+  <div class="ui icon header">
+    <i class="info circle icon"></i>
+    No checklist steps found for the current tags
+  </div>
+  <a class="ui primary button" href="{% url 'service_update' service.owner_slug service.name_slug %}">Edit service</a>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'service_checklist.js' %}"></script>
+{% endblock %}

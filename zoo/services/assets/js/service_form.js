@@ -1,16 +1,17 @@
-import * as R from 'ramda';
-import jQuery from 'jquery/src/jquery';
-import 'semantic-ui-css/semantic.min.js';
-import Vue from 'vue';
-import Vuex from 'vuex';
-import RepoInput from './components/RepoInput';
-import '../style/service_form.less';
+import * as R from 'ramda'
+import jQuery from 'jquery/src/jquery'
+import 'semantic-ui-css/semantic.min.js'
+import Vue from 'vue'
+import Vuex from 'vuex'
+import RepoInput from './components/RepoInput'
+import TagInput from './components/TagInput'
+import '../style/service_form.less'
 
 $('select').dropdown({
   transition: 'fade down'
-});
+})
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
@@ -41,27 +42,37 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
-    setEnteredText: function (state, term) {
-      state.enteredText = term;
+    setEnteredText (state, term) {
+      state.enteredText = term
     },
-    selectSuggestion: function (state, id) {
-      state.inputValue = id;
+    selectSuggestion (state, id) {
+      state.inputValue = id
     },
-    refreshEnteredText: function (state) {
+    refreshEnteredText (state) {
       const matchedValue = R.find(R.propEq('id', state.inputValue), state.repoList)
       state.enteredText = matchedValue ? matchedValue.reference : ''
     },
-    clearInputs: function (state) {
-      state.enteredText = '';
-      state.inputValue = '';
+    clearInputs (state) {
+      state.enteredText = ''
+      state.inputValue = ''
     }
   }
-});
+})
 
-const app = new Vue({
+const repoInputApp = new Vue({
   el: '#repo-input',
   store: store,
   components: {
-    RepoInput
+    RepoInput,
+    TagInput
   },
-});
+})
+
+const tagInputApp = new Vue({
+  el: '#tag-input',
+  store: store,
+  components: {
+    RepoInput,
+    TagInput
+  },
+})

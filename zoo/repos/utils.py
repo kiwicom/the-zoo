@@ -16,7 +16,7 @@ def get_scm_module(provider):
     return scm_module
 
 
-def download_repository(repository, repo_dir, sha=None):
+def download_repository(repository, fake_dir, sha=None):
     scm_module = get_scm_module(repository.provider)
 
     try:
@@ -35,6 +35,6 @@ def download_repository(repository, repo_dir, sha=None):
         archive.seek(0)
         with tarfile.open(fileobj=archive) as tar:
             inner_folder = tar.next().name
-            tar.extractall(repo_dir)
+            tar.extractall(fake_dir)
 
-    return Path(repo_dir) / inner_folder
+    return Path(fake_dir) / inner_folder

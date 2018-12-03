@@ -14,6 +14,10 @@
         <i class="heartbeat icon"></i>
         Auditing
       </a>
+      <a href="{% url 'global_checklists' %}" class="{% if selected == 'checklists' %}active {% endif %}item">
+        <i class="clipboard check icon"></i>
+        Checklists
+      </a>
       <a href="{% url 'objective_list' %}" class="{% if selected == 'objective_list' %}active {% endif %}item">
         <i class="chart bar icon"></i>
         Objectives

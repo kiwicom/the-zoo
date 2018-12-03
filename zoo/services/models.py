@@ -61,6 +61,9 @@ class Service(models.Model):
     health_check_url = models.URLField(max_length=500, null=True, blank=True)
     owner_slug = models.SlugField(max_length=140)
     name_slug = models.SlugField(max_length=140)
+    tags = pg_fields.ArrayField(
+        base_field=models.CharField(max_length=50), blank=True, default=list
+    )
 
     def get_absolute_url(self):
         return reverse("service_detail", args=[self.owner_slug, self.name_slug])
@@ -133,6 +136,12 @@ def slugify_attribute(attribute):
 def generate_slugs(sender, instance, *args, **kwargs):
     instance.owner_slug = slugify_attribute(instance.owner)
     instance.name_slug = slugify_attribute(instance.name)
+
+
+@receiver(models.signals.pre_save, sender=Service)
+def generate_tags(sender, instance, *args, **kwargs):
+    if "general" not in instance.tags:
+        instance.tags.append("general")
 
 
 class SentryIssueCategory(Enum):

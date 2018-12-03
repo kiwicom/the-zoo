@@ -57,6 +57,7 @@ MEDIA_ROOT = str(public_root / "media")
 MEDIA_URL = "/media/"
 STATIC_ROOT = str(public_root / "static")
 STATIC_URL = "/static/"
+ZOO_CHECKLISTS_ROOT = root / "checklists" / "steps"
 ZOO_AUDITING_ROOT = root / "auditing" / "standards"
 
 SECRET_KEY = env("SECRET_KEY", default="mucho secretto")
@@ -72,6 +73,7 @@ INSTALLED_APPS = [
     "graphene_django",
     "zoo.base.apps.BaseConfig",
     "zoo.auditing.apps.AuditingConfig",
+    "zoo.checklists.apps.ChecklistsConfig",
     "zoo.repos.apps.ReposConfig",
     "zoo.services.apps.ServicesConfig",
     "zoo.analytics.apps.AnalyticsConfig",

@@ -1,0 +1,8 @@
+tag: general
+category_name: General services
+---
+- id: announce-service
+  title: Announce your service in the channel
+  description: |
+    Sharing is caring, ya know. Let people know what you're about to put in production!
+  help_url: https://google.com

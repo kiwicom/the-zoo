@@ -8,7 +8,7 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def scenario(mocker, repository_factory, issue_factory, check_factory, repo_path):
+def scenario(mocker, repository_factory, issue_factory, check_factory, fake_path):
     owner, name, sha = "games", "lemmings", "GINLNNIIJL"
     repository = repository_factory(id=42, owner=owner, name=name, remote_id=3)
 
@@ -61,7 +61,7 @@ def scenario(mocker, repository_factory, issue_factory, check_factory, repo_path
     mocker.patch("zoo.api.mutations.CHECKS", checks)
     mocker.patch("zoo.auditing.check_discovery.KINDS", kinds)
     m_download_repository = mocker.patch(
-        "zoo.api.mutations.download_repository", return_value=repo_path
+        "zoo.api.mutations.download_repository", return_value=fake_path
     )
 
     yield repository, sha

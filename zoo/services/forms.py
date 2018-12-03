@@ -2,6 +2,7 @@ from django import forms
 from django.forms import widgets
 
 from . import models
+from ..checklists.steps import STEPS
 from ..repos.models import Repository
 
 
@@ -28,6 +29,17 @@ class SentryProjectInput(widgets.TextInput):
     template_name = "services/fields/sentry_input.html"
 
 
+class TagInput(widgets.TextInput):
+    template_name = "services/fields/tag_input.html"
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context["tags"] = [tag for tag, _ in STEPS.items()]
+        context["widget"]["value"] = value
+
+        return context
+
+
 class ServiceForm(forms.ModelForm):
     class Meta:
         model = models.Service
@@ -44,6 +56,7 @@ class ServiceForm(forms.ModelForm):
             "dashboard_url",
             "docs_url",
             "service_url",
+            "tags",
         ]
         labels = {
             "pagerduty_url": "PagerDuty URL",
@@ -51,4 +64,8 @@ class ServiceForm(forms.ModelForm):
             "docs_url": "Documentation URL",
             "service_url": "Service URL",
         }
-        widgets = {"repository": RepoInput(), "sentry_project": SentryProjectInput()}
+        widgets = {
+            "repository": RepoInput(),
+            "sentry_project": SentryProjectInput(),
+            "tags": TagInput(),
+        }

@@ -8,6 +8,10 @@
 {% endwith %}
 {% endblock %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'service_detail.css' %}">
+{% endblock %}
+
 {% block navtitle %}
 {% with icon='cogs' to_url='/services' header=object.name|add:' service' subheader='owned by '|add:object.owner %}
 {{ block.super }}
@@ -45,10 +49,6 @@
   </div>
 </div>
 {% endwith %}
-{% endblock %}
-
-{% block stylesheets %}
-<link rel="stylesheet" href="{% static 'service_detail.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -135,15 +135,13 @@
             Sentry stats
           </h3>
           <div>
-            {{ sentry_data.weekly_events|short_int_word }} weekly issues | {{ sentry_data.weekly_users|short_int_word
-            }} users affected
+            {{ sentry_data.weekly_events|short_int_word }} weekly issues | {{ sentry_data.weekly_users|short_int_word }} users affected
           </div>
         </div>
         <h4 class="ui {% label_color 'rating' object.rating_grade %} sentry-rating header">
           <i class="{% label_icon 'rating' object.rating_grade %} icon"></i>
           <div class="content">
-            This project has been rated <span class="ui big {% label_color 'rating' object.rating_grade %} circular rating-grade label">{{
-              object.rating_grade }}</span>
+            This project has been rated <span class="ui big {% label_color 'rating' object.rating_grade %} circular rating-grade label">{{ object.rating_grade }}</span>
             <div class="sub header">
               {{ object.rating_reason }}
             </div>
@@ -188,8 +186,7 @@
                 <td class="collapsing">{{ sentry_issue.instance.short_id }}</td>
                 <td>
                   <h5 class="ui marginless header">
-                    <a target="_blank" rel="noopener noreferrer" href="{{ sentry_issue.instance.permalink }}">{{
-                      sentry_issue.instance.title }}</a>
+                    <a target="_blank" rel="noopener noreferrer" href="{{ sentry_issue.instance.permalink }}">{{ sentry_issue.instance.title }}</a>
                     <div class="sub header">
                       {{ sentry_issue.instance.culprit }}
                     </div>
@@ -255,7 +252,7 @@
 <script id="repository-details" type="x-tmpl-mustache">
   <div class="ui fluid segment">
       <div class="flex-horizontal--space-between repository-details">
-        <h3 class="ui marginless header">
+        <h3 class="ui marginless flex-horizontal header">
           {{#avatar}}
           <img class="ui small marginless circular image" src="{{ avatar }}" alt="{{ name }}">
           {{/avatar}}

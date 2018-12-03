@@ -24,10 +24,10 @@
       @keydown.up.prevent="decreaseCursor"
       @keydown.down.prevent="increaseCursor"
       @keydown.enter.prevent="doAction"
-      :required="inputInfo.required"
+      :required="repoInputInfo.required"
     >
     <i class="dropdown icon"></i>
-    <input type="hidden" :name="inputInfo.name" :id="inputInfo.id" :data-initial-value="inputInfo.initialValue" v-model="inputValue">
+    <input type="hidden" :name="repoInputInfo.name" :id="repoInputInfo.id" :data-initial-value="repoInputInfo.initialValue" v-model="inputValue">
     <repo-input-suggestions :inputHasFocus="isOnEditMode"></repo-input-suggestions>
   </div>
 </template>
@@ -53,10 +53,10 @@ function popupAction (action) {
 
 export default {
   template: "#repo-input-text-field-markup",
-  data: function() {
+  data () {
     return {
       isOnEditMode: false,
-      inputInfo: inputInfo,
+      repoInputInfo: repoInputInfo,
       owner: '',
       name: '',
       changeUndid: false
@@ -78,7 +78,7 @@ export default {
       return `${this.owner}/${this.name}`
     },
     enteredText: {
-      get: function() {
+      get () {
         return this.$store.state.enteredText
       },
       set: function(val) {
@@ -97,7 +97,7 @@ export default {
       }
     },
     inputValue: {
-      get: function() {
+      get () {
         return this.$store.state.inputValue
       }
     }
@@ -127,7 +127,7 @@ export default {
       this.$emit("decreaseCursor")
     },
     undoAutoHint () {
-      if (this.inputInfo.initialValue) {
+      if (this.repoInputInfo.initialValue) {
         this.setInitialValue()
       } else {
         this.enteredText = ''
@@ -144,8 +144,8 @@ export default {
       this.isOnEditMode = true
     },
     setInitialValue () {
-      if (this.inputInfo.initialValue) {
-        this.$store.commit("selectSuggestion", parseInt(this.inputInfo.initialValue))
+      if (this.repoInputInfo.initialValue) {
+        this.$store.commit("selectSuggestion", parseInt(this.repoInputInfo.initialValue))
         this.$store.commit("refreshEnteredText")
       }
     },

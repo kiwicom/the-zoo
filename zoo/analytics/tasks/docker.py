@@ -31,7 +31,9 @@ def parse_base_image_name(base_image: str, repository):
         lang_version = parse_version(lang_fragment.replace(lang_name, "").strip(": "))
         yield Language(lang_name, lang_version, for_production=True)
 
-        if "alpine" in os_fragment:
+        if os_fragment == "alpine":
+            yield OS("alpine", for_production=True)
+        elif os_fragment.startswith("alpine"):
             os_version = parse_version(os_fragment.replace("alpine", "").strip(": "))
             yield OS("alpine", os_version, for_production=True)
         elif lang_name in KNOWN_DEBIAN_IMAGES:

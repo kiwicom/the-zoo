@@ -37,11 +37,11 @@ services:
 
   postgres:
     ports:
-      - '5432'
+      - 25966:5432
 
   redis:
     ports:
-      - '6379'
+      - 26966:6379
 
   scheduler:
     environment:

@@ -1,0 +1,8 @@
+namespace: constant
+category: Constant Dummy Checks
+---
+- id: always_found
+  title: This issue is always found
+
+- id: never_found
+  title: This issue is never found

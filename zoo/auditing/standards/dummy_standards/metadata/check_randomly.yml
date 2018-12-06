@@ -1,0 +1,11 @@
+namespace: random
+category: Random Dummy Checks
+---
+- id: rarely_found
+  title: This issue is found 10% of the time
+
+- id: sometimes_found
+  title: This issue is found 50% of the time
+
+- id: often_found
+  title: This issue is found 90% of the time

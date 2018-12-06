@@ -55,3 +55,29 @@ class Issue(models.Model):
 
     def __str__(self):
         return f"{self.kind} issue on {self.repository}"
+
+
+class IssueCountByRepositorySnapshot(models.Model):
+    class Meta:
+        unique_together = ("repository", "timestamp")
+
+    repository = models.ForeignKey(
+        Repository, on_delete=models.CASCADE, related_name="issue_count_snapshots"
+    )
+    status = models.CharField(
+        choices=((item.value, item.value) for item in Issue.Status), max_length=100
+    )
+    timestamp = models.DateTimeField(default=timezone.now)
+    count = models.PositiveIntegerField()
+
+
+class IssueCountByKindSnapshot(models.Model):
+    class Meta:
+        unique_together = ("kind_key", "timestamp")
+
+    kind_key = models.CharField(max_length=500)
+    status = models.CharField(
+        choices=((item.value, item.value) for item in Issue.Status), max_length=100
+    )
+    timestamp = models.DateTimeField(default=timezone.now)
+    count = models.PositiveIntegerField()

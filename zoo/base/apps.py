@@ -13,6 +13,7 @@ class BaseConfig(AppConfig):
         from ..repos import tasks as repos_tasks
         from ..services import tasks as service_tasks
         from ..analytics import tasks as analytics_tasks
+        from ..auditing import tasks as auditing_tasks
         from ..objectives import tasks as objective_tasks
 
         celery_app.add_periodic_task(timedelta(hours=1), repos_tasks.sync_repos)
@@ -22,6 +23,9 @@ class BaseConfig(AppConfig):
         )
         celery_app.add_periodic_task(
             timedelta(days=1), objective_tasks.schedule_objective_snapshots
+        )
+        celery_app.add_periodic_task(
+            timedelta(days=1), auditing_tasks.take_issue_table_snapshots
         )
         celery_app.add_periodic_task(
             timedelta(days=1), analytics_tasks.take_dependency_snapshots

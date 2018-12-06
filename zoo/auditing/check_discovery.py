@@ -33,7 +33,7 @@ class Kind:
     category = attr.ib(cmp=False, repr=False)
     id = attr.ib()
     title = attr.ib(cmp=False, repr=False)
-    description = attr.ib(cmp=False, repr=False)
+    description = attr.ib(default="", cmp=False, repr=False)
     severity = attr.ib(
         cmp=False,
         repr=False,
@@ -105,7 +105,6 @@ def discover_checks():
 
     for package_name in settings.ZOO_AUDITING_CHECKS:
         package = importlib.import_module(f"{package_name}.checks")
-
         for _, module_full_name, ispkg in pkgutil.walk_packages(
             path=package.__path__,
             prefix=package.__name__ + ".",

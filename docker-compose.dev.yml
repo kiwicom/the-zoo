@@ -11,12 +11,12 @@ services:
       - 20966:8080
     environment:
       DATABASE_URL: 'postgres://postgres:postgres@postgres/postgres'
+      ZOO_AUDITING_CHECKS: dummy_standards
       ZOO_DEBUG: '1'
       ZOO_SLACK_URL:
       ZOO_GITLAB_URL:
       ZOO_SENTRY_URL:
       ZOO_SENTRY_ORGANIZATION:
-      ZOO_AUDITING_CHECKS:
       WEB_CONCURRENCY:
     tty: true
     volumes:
@@ -54,9 +54,10 @@ services:
   worker:
     environment:
       DATABASE_URL: 'postgres://postgres:postgres@postgres/postgres'
+      ZOO_AUDITING_CHECKS: dummy_standards
+      ZOO_DEBUG: '1'
       ZOO_DATADOG_API_KEY:
       ZOO_DATADOG_APP_KEY:
-      ZOO_DEBUG: '1'
       ZOO_GITLAB_URL:
       ZOO_GITLAB_DB_URL:
       ZOO_GITLAB_TOKEN:
@@ -66,7 +67,6 @@ services:
       ZOO_SENTRY_URL:
       ZOO_SENTRY_ORGANIZATION:
       ZOO_SENTRY_API_KEY:
-      ZOO_AUDITING_CHECKS:
     volumes:
       - ./zoo:/app/zoo
     restart: on-failure

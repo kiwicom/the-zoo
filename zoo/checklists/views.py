@@ -10,7 +10,8 @@ from .steps import STEPS
 
 
 def get_service_steps(service):
-    return [(tag, steps) for tag, steps in STEPS.items() if tag in service.tags]
+    checklist = [(tag, steps) for tag, steps in STEPS.items() if tag in service.tags]
+    return sorted(checklist, key=lambda x: x[0])
 
 
 class GlobalChecklistsView(ListView):
@@ -49,13 +50,15 @@ class ServiceChecklistView(TemplateView):
         service_owner_slug = kwargs.get("service_owner_slug")
         service_name_slug = kwargs.get("service_name_slug")
 
-        if None in [service_owner_slug, service_name_slug]:
+        if not service_owner_slug or not service_name_slug:
             raise SuspiciousOperation
 
         context = super().get_context_data(**kwargs)
         try:
             service = service_models.Service.objects.get(
-                owner_slug=service_owner_slug, name_slug=service_name_slug
+                owner_slug=service_owner_slug,
+                name_slug=service_name_slug,
+                status=service_models.Status.BETA.value,
             )
         except service_models.Service.DoesNotExist:
             raise Http404
@@ -85,7 +88,7 @@ class UpdateServiceCheklistForm(forms.Form):
 
 def update_service_checklist(request, checklist_item_key, *args, **kwargs):
     if request.method != "POST":
-        return JsonResponse({"error": "Method not allowed"}, status=403)
+        return JsonResponse({"error": "Method not allowed"}, status=405)
 
     request_data_form = UpdateServiceCheklistForm(request.POST)
 
@@ -110,18 +113,18 @@ def update_service_checklist(request, checklist_item_key, *args, **kwargs):
 
         except service_models.Service.DoesNotExist:
             return JsonResponse(
-                {"error": "The service specified does not exist"}, status=400
+                {"error": "The service specified does not exist"}, status=404
             )
+    else:
+        try:
+            models.Checkmark.objects.get(
+                step_key=checklist_item_key,
+                service__owner_slug=owner_slug,
+                service__name_slug=name_slug,
+            ).delete()
+            return JsonResponse({}, status=200)
 
-    try:
-        models.Checkmark.objects.get(
-            step_key=checklist_item_key,
-            service__owner_slug=owner_slug,
-            service__name_slug=name_slug,
-        ).delete()
-        return JsonResponse({}, status=200)
-
-    except models.Checkmark.DoesNotExist:
-        return JsonResponse(
-            {"error": "The step tried to check does not exist"}, status=400
-        )
+        except models.Checkmark.DoesNotExist:
+            return JsonResponse(
+                {"error": "The step tried to check does not exist"}, status=404
+            )

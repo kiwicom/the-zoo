@@ -1,14 +1,24 @@
 import '../style/service_checklist.less'
 
+function updateSegmentStatus(segment, color) {
+    const button = segment.find('.button')
+    const buttonContainer = button.closest('.segment')
+
+    button.attr('class', `ui fluid ${color} button`)
+    buttonContainer.attr('class', `ui fluid ${color} segment`)
+
+    if(color !== 'yellow')
+        button.html(color === 'green' ? 'Done' : 'Not done')
+    else
+        button.addClass('loading')
+}
+
 $(document).on('click', '.checklist-action-wrapper', (event) => {
     const clickedWrapper = $(event.target).closest('.checklist-action-wrapper')
     const wasChecked = clickedWrapper.data('checked') === 'True'
-    const button = clickedWrapper.find('.button')
-    const buttonContainer = button.closest('.segment')
     const csrfToken = $('input[name="csrfmiddlewaretoken"]').val()
 
-    button.attr('class', 'ui loading fluid yellow button')
-    buttonContainer.attr('class', 'ui fluid yellow segment')
+    updateSegmentStatus(clickedWrapper, 'yellow')
 
     $.post({
         url: clickedWrapper.data('url'),
@@ -17,9 +27,15 @@ $(document).on('click', '.checklist-action-wrapper', (event) => {
             csrfmiddlewaretoken: csrfToken
         }
     }).done(() => {
-        button.attr('class', `ui fluid ${wasChecked ? 'red' : 'green'} button`)
-        button.html(wasChecked ? 'Not done' : 'Done')
+        updateSegmentStatus(clickedWrapper, wasChecked ? 'red' : 'green')
         clickedWrapper.data('checked', wasChecked ? 'False' : 'True')
-        buttonContainer.attr('class', `ui fluid ${wasChecked ? 'red' : 'green'} segment`)
+    }).fail(() => {
+        Snackbar.show({
+            text: 'Oops, the server... failed',
+            actionText: 'Ok',
+            actionTextColor: '#FBC02D',
+            backgroundColor: '#795548'
+        })
+        updateSegmentStatus(clickedWrapper, wasChecked ? 'green' : 'red')
     })
 })

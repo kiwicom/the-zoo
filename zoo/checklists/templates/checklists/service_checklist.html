@@ -21,9 +21,9 @@
 {% for category in steps %}
 <h3 class="ui header">{{ category.name }}</h3>
 {% for step in category.steps %}
-<div class="ui fluid {% if step.is_checked %}green{% else %}red{% endif %} segment">
+<div class="ui fluid {% if step.is_checked %}green{% else %}red{% endif %} checklist-step segment">
   <div class="flex-horizontal--space-between">
-    <h4 class="ui marginless header" style="max-width: 640px;">
+    <h4 class="ui marginless header">
       <div class="content">
         {{ step.title }}
         {% if step.description %}
@@ -36,7 +36,6 @@
       <a href="{{ step.help_url }}" target="_blank" rel="noopener noreferrer" class="ui tiny basic circular icon button">
         <i class="help icon"></i>
       </a>
-      &nbsp;&nbsp;
       {% endif %}
       <div class="flex-horizontal checklist-action-wrapper" data-checked="{{ step.is_checked }}" data-url="{% url 'service_checklist_update' service.owner_slug service.name_slug step.key %}">
         <div class="ui fluid {% if step.is_checked %}green{% else %}red{% endif %} button">

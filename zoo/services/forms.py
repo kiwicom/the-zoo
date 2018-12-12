@@ -34,7 +34,7 @@ class TagInput(widgets.TextInput):
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
-        context["tags"] = [tag for tag, _ in STEPS.items()]
+        context["tags"] = list(STEPS)
         context["widget"]["value"] = value
 
         return context

@@ -1,7 +1,6 @@
 from collections import Counter
 from itertools import islice
 import json
-import random
 
 from arrow import Arrow
 from django.core.paginator import Paginator
@@ -10,6 +9,25 @@ from django.utils import timezone
 from django.views.generic import TemplateView
 
 from . import models
+
+COLOR_PALETTE = [
+    "#117510",
+    "#f38551",
+    "#5d2b58",
+    "#8E24AA",
+    "#d39459",
+    "#d00188",
+    "#84fd9c",
+    "#cd9e67",
+    "#72cccb",
+    "#c51900",
+    "#475963",
+    "#077ffe",
+    "#55cf29",
+    "#9d07e8",
+    "#3db8b1",
+    "#ff746e",
+]
 
 
 def chunk(collection, pieces: int) -> iter:
@@ -79,15 +97,11 @@ class AnalyticsOverview(TemplateView):
             "data": json.dumps(
                 [
                     {
-                        "backgroundColor": "rgb({r},{g},{b})".format(
-                            r=random.randint(0, 255),
-                            g=random.randint(0, 255),
-                            b=random.randint(0, 255),
-                        ),
+                        "backgroundColor": COLOR_PALETTE[index % len(COLOR_PALETTE)],
                         "data": [version_frequency.get(version) / dependency.dep_count],
                         "label": f"{version}" if version else "Unknown",
                     }
-                    for version in version_frequency
+                    for index, version in enumerate(version_frequency)
                 ]
             ),
         }

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load utils %}
+{% load humanize %}
 
 {% block menu %}
   {% with selected='analytics_overview' %}
@@ -50,15 +52,19 @@
   <tbody>
       {% for dependency in dependencies %}
       <tr>
-        <td data-sort-value="{{ dependency.instance.name }}" class="collapsing">{{ dependency.instance.name }}</td>
+        <td data-sort-value="{{ dependency.instance.name }}" class="collapsing"><b>{{ dependency.instance.name }}</b></td>
         <td class="collapsing centered-text">{{ dependency.instance.type }}</td>
         <td data-sort-value="{{ dependency.instance.dep_count }}" class="collapsing centered-text">{{ dependency.instance.dep_count }}</td>
         <td class="collapsing">
           <canvas width="150" height="32" class="version-chart" id="{{ dependency.version_chart.id }}" data-chart='{{ dependency.version_chart.data }}'></canvas>
         </td>
-        <td data-sort-value="{{ dependency.instance.timestamp.timestamp }}"  class="collapsing centered-text">{{ dependency.instance.timestamp }}</td>
-        <td data-sort-value="{{ dependency.internal }}"  class="collapsing centered-text">{{ dependency.internal }}</td>
-        <td data-sort-value="{{ dependency.healthy }}" class="collapsing centered-text">{{ dependency.instance.health_status }}</td>
+        <td data-sort-value="{{ dependency.instance.timestamp.timestamp }}"  class="collapsing centered-text">{{ dependency.instance.timestamp|naturaltime }}</td>
+        <td data-sort-value="{{ dependency.internal }}"  class="collapsing centered-text">
+          <i class="{% label_icon 'analytics_internal' dependency.internal %} {% label_color 'analytics_internal' dependency.internal %} icon"></i>
+        </td>
+        <td data-sort-value="{{ dependency.healthy }}" class="collapsing centered-text">
+          <i class="{% label_icon 'analytics_health' dependency.instance.health_status %} {% label_color 'analytics_health' dependency.instance.health_status %} icon"></i>
+        </td>
         <td class="collapsing">
           <canvas width="175" height="32" class="usage-chart" id="{{ dependency.usage_chart.id }}" data-chart='{{ dependency.usage_chart.data }}'></canvas>
         </td>

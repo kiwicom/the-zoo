@@ -19,7 +19,9 @@ known_icons = {
         r"D": "exclamation circle",
         r"E": "exclamation circle",
         r"F": "times circle",
-    }
+    },
+    "analytics_health": {"True": "check", "False": "times", "None": "question"},
+    "analytics_internal": {"True": "check", "False": "times"},
 }
 
 known_colors = {
@@ -64,6 +66,8 @@ known_colors = {
         Severity.WARNING.value: "orange",
         Severity.CRITICAL.value: "red",
     },
+    "analytics_health": {"True": "green", "False": "red", "None": "yellow"},
+    "analytics_internal": {"True": "green", "False": "red"},
 }
 
 
@@ -74,6 +78,7 @@ def service_link(name, url, icon=None):
 
 @register.simple_tag
 def label_icon(category, name):
+    name = str(name)
     if category in known_icons:
         for pattern in known_icons[category]:
             if re.match(pattern, name):
@@ -83,6 +88,7 @@ def label_icon(category, name):
 
 @register.simple_tag
 def label_color(category, name):
+    name = str(name)
     if category in known_colors:
         for pattern in known_colors[category]:
             if re.match(pattern, name):

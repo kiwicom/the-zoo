@@ -16,7 +16,8 @@ def analyze(repository, path):
     dockerfile = path / "Dockerfile"
     if not dockerfile.is_file():
         return
-    dfp = DockerfileParser(path=dockerfile.name)
+    dockerfile.resolve()
+    dfp = DockerfileParser(path=dockerfile.as_posix())
     for command in dfp.structure:
         if command["instruction"] != "FROM":
             continue

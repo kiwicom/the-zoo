@@ -25,6 +25,8 @@ def unpack_version(version: str) -> dict:
 
 
 def run_all(repository, path):
+    DependencyUsage.objects.filter(repo=repository).delete()
+
     for module in ANALYZERS:
         analyzer = getattr(module, "analyze")
         log.info("repo.analyzer", repo=repository, check=module.__name__)

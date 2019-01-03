@@ -11,37 +11,37 @@ arrow==0.12.1
 attrs==18.2.0
 autopep8==1.4.3           # via django-silk
 backcall==0.1.0           # via ipython
-billiard==3.5.0.4         # via celery
+billiard==3.5.0.5         # via celery
 celery==4.2.1
-certifi==2018.10.15       # via requests
+certifi==2018.11.29       # via requests
 chardet==3.0.4            # via requests
-colorama==0.3.9           # via structlog
-datadog==0.24.0
+colorama==0.4.1           # via structlog
+datadog==0.26.0
 decorator==4.3.0          # via datadog, ipython, retry, traitlets
 defusedxml==0.5.0         # via python3-openid
 deprecated==1.2.4         # via pygithub
 django-allauth==0.38.0
-django-debug-toolbar==1.10.1
+django-debug-toolbar==1.11
 django-environ==0.4.5
-django-extensions==2.1.3
+django-extensions==2.1.4
 django-silk==3.0.1
 django-stronghold==0.3.0
-django==2.1.3
-djangoql==0.12.0
-dockerfile-parse==0.0.11
+django==2.1.4
+djangoql==0.12.3
+dockerfile-parse==0.0.13
 gprof2dot==2016.10.13     # via django-silk
 graphene-django==2.2.0
 graphene==2.1.3
 graphql-core==2.1         # via graphene, graphene-django, graphql-relay
 graphql-relay==0.4.5      # via graphene
 gunicorn==19.9.0
-hiredis==0.2.0
-idna==2.7                 # via requests
+hiredis==0.3.1
+idna==2.8                 # via requests
 ipython-genutils==0.2.0   # via traitlets
-ipython==7.1.1
-jedi==0.13.1              # via ipython
+ipython==7.2.0
+jedi==0.13.2              # via ipython
 jinja2==2.10              # via django-silk
-kombu==4.2.1              # via celery
+kombu==4.2.2.post1        # via celery
 markdown==3.0.1
 markupsafe==1.1.0         # via jinja2
 oauthlib==2.1.0           # via requests-oauthlib
@@ -55,28 +55,28 @@ psycopg2==2.7.6.1
 ptyprocess==0.6.0         # via pexpect
 py==1.7.0                 # via retry
 pycodestyle==2.4.0        # via autopep8
-pygithub==1.43.3
-pygments==2.2.0           # via django-silk, ipython
-pyjwt==1.6.4              # via pygithub
+pygithub==1.43.4
+pygments==2.3.1           # via django-silk, ipython
+pyjwt==1.7.1              # via pygithub
 python-dateutil==2.7.5    # via arrow, django-silk
-python-gitlab==1.6.0
+python-gitlab==1.7.0
 python3-openid==3.1.0     # via django-allauth
 pytz==2018.7              # via celery, django, django-silk
 pyyaml==3.13
-raven==6.9.0
-redis==2.10.6
+raven==6.10.0
+redis==3.0.1
 requests-oauthlib==1.0.0  # via django-allauth
-requests==2.20.1
+requests==2.21.0
 requirements-parser==0.2.0
 retry==0.9.2
 rx==1.6.1                 # via graphql-core
 singledispatch==3.4.0.3   # via graphene-django
-six==1.11.0               # via django-extensions, graphene, graphene-django, graphql-core, graphql-relay, promise, prompt-toolkit, python-dateutil, python-gitlab, singledispatch, structlog, traitlets
+six==1.12.0               # via django-extensions, dockerfile-parse, graphene, graphene-django, graphql-core, graphql-relay, promise, prompt-toolkit, python-dateutil, python-gitlab, singledispatch, structlog, traitlets
 sqlparse==0.2.4           # via django-debug-toolbar, django-silk
 structlog[dev]==18.2.0
 traitlets==4.3.2          # via ipython
 urllib3==1.24.1           # via requests
 vine==1.1.4               # via amqp
 wcwidth==0.1.7            # via prompt-toolkit
-whitenoise==4.1.1
+whitenoise==4.1.2
 wrapt==1.10.11            # via deprecated

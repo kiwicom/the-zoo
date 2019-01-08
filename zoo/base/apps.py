@@ -28,6 +28,9 @@ class BaseConfig(AppConfig):
             timedelta(days=1), auditing_tasks.take_issue_table_snapshots
         )
         celery_app.add_periodic_task(
+            timedelta(days=1), auditing_tasks.cleanup_issues
+        )
+        celery_app.add_periodic_task(
             timedelta(days=1), analytics_tasks.take_dependency_snapshots
         )
         celery_app.add_periodic_task(

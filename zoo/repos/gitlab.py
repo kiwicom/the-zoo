@@ -88,3 +88,54 @@ def create_remote_issue(issue, user_name, reverse_url):
     )
 
     return gitlab_issue.iid
+
+
+@gitlab_retry
+def create_remote_commit(remote_id, message, actions, branch, **kwargs):
+    """Create a new commit in a remote Gitlab repository.
+
+    :param remote_id: ID of the remote repository.
+    :param message: The commit message.
+    :param actions: List of actions to perform in the commit.
+    :param branch: Name of the branch where to commit the actions.
+    """
+    start_branch = kwargs.get("start_branch", "master")
+
+    project = get_project(remote_id)
+    commit = project.commits.create(
+        {
+            "commit_message": message,
+            "actions": actions,
+            "branch": branch,
+            "start_branch": start_branch,
+        }
+    )
+    return commit.get_id()
+
+
+@gitlab_retry
+def create_merge_request(remote_id, title, source_branch, **kwargs):
+    """Create a new merge request in a remote Gitlab repository.
+
+    :param remote_id: ID of the remote repository.
+    :param title: Title of the merge request.
+    :param source_branch: Branch containing the changes.
+    """
+    target_branch = kwargs.get("target_branch", "master")
+    description = kwargs.get("description", "")
+    reverse_url = kwargs.get("reverse_url", None)
+
+    project = get_project(remote_id)
+
+    description += "\n\n---\n\n" if description else ""
+    description += f"*via [The Zoo]({reverse_url})*" if reverse_url else "*via The Zoo*"
+
+    merge_request = project.mergerequests.create(
+        {
+            "title": title,
+            "source_branch": source_branch,
+            "target_branch": target_branch,
+            "description": description,
+        }
+    )
+    return merge_request.get_id()

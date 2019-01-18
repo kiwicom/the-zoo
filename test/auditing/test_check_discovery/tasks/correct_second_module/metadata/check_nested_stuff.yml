@@ -4,6 +4,7 @@ category: Something written here
 ---
 - id: check_dummy_function
   title: This checks something dummy
+  patch: patch_more_stuff.patch_dummy_function
   description: |
     Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.
 

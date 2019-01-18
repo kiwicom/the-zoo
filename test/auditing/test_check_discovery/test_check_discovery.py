@@ -18,7 +18,7 @@ def test_check_discovery__correct_modules(settings):
     settings.ZOO_AUDITING_CHECKS = check_modules
 
     uut.discover_checks()
-    from zoo.auditing.check_discovery import KINDS, CHECKS
+    from zoo.auditing.check_discovery import KINDS, CHECKS, PATCHES
 
     assert len(CHECKS) == 10
 
@@ -35,6 +35,9 @@ def test_check_discovery__correct_modules(settings):
         "something:check_dummy_function",
         "something:check_another_dummy_function",
     }
+    assert len(PATCHES) == 1
+    assert set(PATCHES.keys()) == {"something:check_dummy_function"}
+    assert KINDS["something:check_dummy_function"].apply_patch() is True
 
 
 def test_check_discovery__members_not_functions(settings):

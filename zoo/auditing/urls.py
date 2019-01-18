@@ -17,6 +17,7 @@ service_urls = [
     path("", views.AuditReport.as_view(), name="audit_report"),
     path("<int:issue_pk>/gitlab_issue", views.open_git_issue, name="open_git_issue"),
     path("<int:issue_pk>/wontfix", views.wontfix_issue, name="wontfix_issue"),
+    path("<int:issue_pk>/patch", views.IssuePatch.as_view(), name="patch_issue"),
 ]
 
 urlpatterns = [

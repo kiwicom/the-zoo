@@ -3,6 +3,7 @@ category: Constant Dummy Checks
 ---
 - id: always_found
   title: This issue is always found
+  patch: patch_constantly.patch_constantly
 
 - id: never_found
   title: This issue is never found

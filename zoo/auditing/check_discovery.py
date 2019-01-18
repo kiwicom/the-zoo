@@ -33,6 +33,7 @@ class Kind:
     category = attr.ib(cmp=False, repr=False)
     id = attr.ib()
     title = attr.ib(cmp=False, repr=False)
+    patch = attr.ib(default=None, cmp=False, repr=False)
     description = attr.ib(default="", cmp=False, repr=False)
     severity = attr.ib(
         cmp=False,
@@ -53,15 +54,23 @@ class Kind:
     def key(self):
         return f"{self.namespace}:{self.id}"
 
+    @property
+    def apply_patch(self):
+        if self.patch is None:
+            return
+        return PATCHES.get(self.key)
+
     def format_description(self, details):
         return self.description.format_map(defaultdict(str, details or {}))
 
 
 CHECK_REGEX = r"^check\w*"
+PATCH_REGEX = r"^patch\w*"
 
 KINDS = defaultdict(
     lambda: Kind(
         id="deleted",
+        patch="deleted",
         namespace="deleted",
         category="deleted",
         title="[deleted issue]",
@@ -69,6 +78,7 @@ KINDS = defaultdict(
     )
 )
 CHECKS = []
+PATCHES = {}
 
 
 class IncorrectCheckMetadataError(Exception):
@@ -93,6 +103,7 @@ def raise_package_exception(name):
 def clear_discovered_checks():
     KINDS.clear()
     CHECKS.clear()
+    PATCHES.clear()
 
 
 def discover_checks():
@@ -105,30 +116,60 @@ def discover_checks():
 
     for package_name in settings.ZOO_AUDITING_CHECKS:
         package = importlib.import_module(f"{package_name}.checks")
-        for _, module_full_name, ispkg in pkgutil.walk_packages(
-            path=package.__path__,
-            prefix=package.__name__ + ".",
-            onerror=raise_package_exception,
-        ):
-            if not ispkg:
-                module_name = module_full_name.rsplit(".", 1)[1]
-                if re.match(CHECK_REGEX, module_name):
-                    module = importlib.import_module(module_full_name)
+        package_kinds = {}
 
-                    KINDS.update(
-                        _parse_metadata_file(
-                            settings.ZOO_AUDITING_ROOT / package_name, module_name
-                        )
-                    )
+        for module_name, module in _get_package_members(package, CHECK_REGEX):
+            CHECKS.extend(
+                [member for _, member in _get_module_members(module, CHECK_REGEX)]
+            )
+            package_kinds.update(
+                _parse_metadata_file(
+                    settings.ZOO_AUDITING_ROOT / package_name, module_name
+                )
+            )
 
-                    CHECKS.extend(
-                        [
-                            getattr(module, member)
-                            for member in dir(module)
-                            if re.match(CHECK_REGEX, member)
-                            and callable(getattr(module, member))
-                        ]
-                    )
+        KINDS.update(package_kinds)
+
+        try:
+            package = importlib.import_module(f"{package_name}.patches")
+        except ModuleNotFoundError:
+            continue
+
+        patches_keys = {
+            kind.patch: kind.key
+            for kind in package_kinds.values()
+            if kind.patch is not None
+        }
+
+        for module_name, module in _get_package_members(package, PATCH_REGEX):
+            PATCHES.update(
+                {
+                    patches_keys[f"{module_name}.{member_name}"]: member
+                    for member_name, member in _get_module_members(module, PATCH_REGEX)
+                }
+            )
+
+
+def _get_package_members(package, filter_by_re=None):
+    for _, module_full_name, ispkg in pkgutil.walk_packages(
+        path=package.__path__,
+        prefix=package.__name__ + ".",
+        onerror=raise_package_exception,
+    ):
+        if not ispkg:
+            module_name = module_full_name.rsplit(".", 1)[1]
+            if filter_by_re is not None and re.match(filter_by_re, module_name):
+                module = importlib.import_module(module_full_name)
+                yield module_name, module
+
+
+def _get_module_members(module, filter_by_re=None):
+    return (
+        (member_name, getattr(module, member_name))
+        for member_name in dir(module)
+        if (filter_by_re is None or re.match(filter_by_re, member_name))
+        and callable(getattr(module, member_name))
+    )
 
 
 discover_checks()

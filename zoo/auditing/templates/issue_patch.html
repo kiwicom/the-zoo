@@ -1,0 +1,11 @@
+{% load utils %}
+
+{% if patches %}
+{% for patch in patches %}
+<h3 class="ui header"><code>{{ patch.file_path }}</code></h3>
+<pre><code class="diff">{{ patch.previous_content|diff:patch.content }}<span class="diff-{{ status }}"></code></pre>
+{% endfor %}
+<input type="hidden" id="actions" name="actions" value="{{ actions }}">
+{% else %}
+<div class="ui info message">No auto-generated patches can be applied.</div>
+{% endif %}

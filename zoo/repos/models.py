@@ -42,3 +42,15 @@ class Repository(models.Model):
                 "name", flat=True
             )
         )
+
+    def get_merge_request_url(self, mr_id):
+        return {
+            Provider.GITLAB.value: f"{self.url}/merge_requests/{mr_id}",
+            Provider.GITHUB.value: f"{self.url}/pull/{mr_id}",
+        }[self.provider]
+
+    def get_merge_request_label(self, mr_id):
+        return {
+            Provider.GITLAB.value: f"Merge Request #{mr_id}",
+            Provider.GITHUB.value: f"Pull Request #{mr_id}",
+        }[self.provider]

@@ -13,9 +13,14 @@ Result = namedtuple("Result", ["issue_key", "is_found", "details"])
 # set default to `None` for `details`
 Result.__new__.__defaults__ = (None,)
 
+Patch = namedtuple("Patch", ["action", "file_path", "content", "previous_path"])
+# set default to `None` for `previous_path`
+Patch.__new__.__defaults__ = (None,)
+
 
 class CheckContext:
     Result = Result
+    Patch = Patch
 
     def __init__(self, repository, fake_path):
         self.owner = repository.owner

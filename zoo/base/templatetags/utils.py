@@ -1,3 +1,4 @@
+import difflib
 import re
 
 from django import template
@@ -125,6 +126,20 @@ def times(value: int, multiplier: int) -> int:
     This is meant to be used only to calculate styling values, never data.
     """
     return value * multiplier
+
+
+@register.filter
+def diff(value: str, new_value: str) -> str:
+    lines = (
+        line
+        for idx, line in enumerate(
+            difflib.unified_diff(
+                value.splitlines(keepends=True), new_value.splitlines(keepends=True)
+            )
+        )
+        if idx > 1  # skip first two lines showing name of file
+    )
+    return "".join(lines)
 
 
 @register.simple_tag

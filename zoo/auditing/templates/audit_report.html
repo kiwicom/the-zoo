@@ -48,6 +48,20 @@
           </div>
         </button>
       </form>
+      {% if issue.merge_request_id %}
+      <a href="{{ issue.merge_request.url }}" class="ui mini brown button">
+        {{ issue.merge_request.label }}
+      </a>
+      {% elif issue.kind.patch %}
+      <div class="ui mini brown vertical animated patch button" data-url="{% url 'patch_issue' service_owner_slug=service.owner_slug service_name_slug=service.name_slug issue_pk=issue.pk %}">
+        <div class="hidden content">
+          <i class="file alternate icon"></i>
+        </div>
+        <div class="visible content">
+            Show patch
+        </div>
+      </div>
+      {% endif %}
       <div class="ui mini basic negative vertical animated wontfix button" data-url="{% url 'wontfix_issue' service_owner_slug=service.owner_slug service_name_slug=service.name_slug issue_pk=issue.pk %}">
         <div class="hidden content">
           <i class="times icon"></i>
@@ -90,13 +104,15 @@
 </a>
 {% endif %}
 
-<div class="ui basic tiny modal">
-  <div class="ui icon header">
+<div class="ui tiny basic modal wontfix">
+  <div class="ui header">
     <i class="thumbs down icon"></i>
-    Please describe why!
+    <div class="content">
+      Please describe why!
+    </div>
   </div>
   <div class="content">
-    <form method="post" class="ui inverted resolve issue form" >
+    <form method="post" class="ui inverted resolve issue form wontfix" >
       <div class="field">
         <label>Are you sure this shouldn't or can't be fixed?</label>
         <textarea id="comment" name="comment" required rows="2"></textarea>
@@ -115,6 +131,36 @@
     <div class="ui green ok inverted button" data-action="">
       <i class="checkmark icon"></i>
       Fine, let's fix it!
+    </div>
+  </div>
+</div>
+
+<div class="ui basic modal patch">
+  <div class="ui header">
+    <i class="indent icon"></i>
+    <div class="content">
+      Here are the proposed changes to fix the issue.
+    </div>
+  </div>
+  <div class="ui paddingless loading main segment">
+    <div class="scrolling content">
+    <div class="ui borderless segment">
+      <form method="post" class="ui resolve issue form patch">
+        <div class="form-content">
+        </div>
+        {% csrf_token %}
+      </form>
+    </div>
+  </div>
+  </div>
+  <div class="actions centered-text">
+    <div class="ui red basic inverted cancel button">
+      <i class="remove icon"></i>
+      Cancel
+    </div>
+    <div class="ui green inverted approve button disabled" data-action="">
+      <i class="checkmark icon"></i>
+      Create Merge Request
     </div>
   </div>
 </div>

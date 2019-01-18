@@ -10,6 +10,7 @@ exclude = '''
   | buck-out
   | build
   | dist
+  | __pycache__
 
   # All of the above are the default values for black exclude. Specify custom bellow.
   | test\/.*\/snapshots\/*

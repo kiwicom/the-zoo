@@ -28,6 +28,7 @@ class Issue(models.Model):
     )
     details = pg_fields.JSONField(default=dict, blank=True)
     remote_issue_id = models.PositiveIntegerField(null=True, blank=True)
+    merge_request_id = models.PositiveIntegerField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     last_check = models.DateTimeField(default=timezone.now)
     deleted = models.BooleanField(default=False)
@@ -53,6 +54,14 @@ class Issue(models.Model):
     @property
     def remote_issue_url(self):
         return f"{self.repository.url}/issues/{self.remote_issue_id}"
+
+    @property
+    def merge_request(self):
+        return {
+            "id": self.merge_request_id,
+            "url": self.repository.get_merge_request_url(self.merge_request_id),
+            "label": self.repository.get_merge_request_label(self.merge_request_id),
+        }
 
     def __str__(self):
         return f"{self.kind} issue on {self.repository}"

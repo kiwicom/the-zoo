@@ -17,6 +17,7 @@ root = Path(__file__).parents[1]
 env = environ.Env(
     ZOO_DEBUG=(bool, False),
     ZOO_CELERY_BROKER_URL=(str, "redis://redis/0"),
+    ZOO_REDIS_CACHE_URL=(str, "redis://redis/1"),
     ZOO_DATADOG_API_KEY=(str, None),
     ZOO_DATADOG_APP_KEY=(str, None),
     ZOO_SLACK_URL=(str, None),
@@ -199,6 +200,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 RAVEN_CONFIG = {"release": _get_app_version()}
 
 CELERY_BROKER_URL = env("ZOO_CELERY_BROKER_URL")
+REDIS_CACHE_URL = env("ZOO_REDIS_CACHE_URL")
 DATADOG_API_KEY = env("ZOO_DATADOG_API_KEY")
 DATADOG_APP_KEY = env("ZOO_DATADOG_APP_KEY")
 GITLAB_TOKEN = env("ZOO_GITLAB_TOKEN")

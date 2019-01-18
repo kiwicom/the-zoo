@@ -1,16 +1,20 @@
 from collections import defaultdict, OrderedDict
 import json
+import pathlib
+import tempfile
 
-from django.http import Http404, JsonResponse
+from django.http import Http404, HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
-from . import models, tasks
+from . import models, runner, tasks
+from ..base import redis
 from ..repos.tasks import pull
+from ..repos.utils import download_repository
 from ..services.models import Service
-from .utils import create_git_issue
+from .utils import create_git_issue, get_md5_hash
 
 
 class AuditOverview(TemplateView):
@@ -166,6 +170,106 @@ class AuditReport(TemplateView):
             context["issues"][unknown_ctg] = deleted_issues
 
         return context
+
+
+class IssuePatch(TemplateView):
+    template_name = "issue_patch.html"
+
+    def get(self, request, *args, **kwargs):
+        issue = models.Issue.objects.get(pk=self.kwargs["issue_pk"])
+        repository = issue.repository
+
+        with tempfile.TemporaryDirectory() as repo_dir:
+            repo_path = download_repository(repository, repo_dir)
+            patches, actions = self.get_patch_data(issue, repo_path)
+
+        self.store_actions_hash(issue, actions)
+        context = {"patches": patches, "actions": actions}
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        issue = models.Issue.objects.get(pk=self.kwargs["issue_pk"])
+        repository = issue.repository
+
+        actions_field = request.POST.get("actions", "[]")
+        is_valid = self.validate_actions_hash(issue, actions_field)
+
+        if not is_valid:
+            return HttpResponseForbidden()
+
+        actions = json.loads(actions_field)
+        branch_name = f"zoo/{issue.kind.id}"
+
+        repository.scm_module.create_remote_commit(
+            repository.remote_id,
+            actions=actions,
+            message=issue.kind.title,
+            branch=branch_name,
+        )
+        issue.merge_request_id = repository.scm_module.create_merge_request(
+            repository.remote_id,
+            title=issue.kind.title,
+            description=issue.description_md,
+            source_branch=branch_name,
+            reverse_url=request.build_absolute_uri(reverse("audit_overview")),
+        )
+        issue.save()
+
+        return redirect(
+            "audit_report",
+            self.kwargs["service_owner_slug"],
+            self.kwargs["service_name_slug"],
+        )
+
+    def get_patch_data(self, issue, repo_path):
+        context = runner.CheckContext(issue.repository, repo_path)
+
+        patches, actions = [], []
+        for patch in issue.kind.apply_patch(context):
+            file_path = pathlib.Path(patch.file_path)
+            previous_path = (
+                pathlib.Path(patch.previous_path)
+                if patch.previous_path is not None
+                else None
+            )
+            repo_path_offset = len(repo_path.as_posix()) + 1
+
+            data = {}
+            data["action"] = patch.action
+            data["file_path"] = file_path.as_posix()[repo_path_offset:]
+
+            if patch.action in ["update", "delete"]:
+                data["previous_content"] = file_path.read_text()
+
+            if patch.action in ["create", "update"]:
+                data["content"] = patch.content
+
+            if previous_path is not None and previous_path != file_path:
+                data["previous_path"] = previous_path.as_posix()[repo_path_offset:]
+
+            patches.append(data)
+            actions.append(dict(data))
+            actions[-1].pop("previous_path", None)
+
+        return patches, json.dumps(actions)
+
+    def get_cache_key(self, issue):
+        return f"_cache.issues.{issue.id}"
+
+    def store_actions_hash(self, issue, actions):
+        md5_hash = get_md5_hash(actions.encode("utf-8"))
+        redis_conn = redis.get_connection()
+
+        key = self.get_cache_key(issue)
+        redis_conn.set(key, md5_hash, ex=600)
+        return md5_hash
+
+    def validate_actions_hash(self, issue, actions):
+        md5_hash = get_md5_hash(actions.encode("utf-8"))
+        redis_conn = redis.get_connection()
+
+        value = redis_conn.get(self.get_cache_key(issue))
+        return value is not None and value.decode("utf-8") == md5_hash
 
 
 @require_POST

@@ -144,9 +144,13 @@ class AuditReport(TemplateView):
 
         context["service"] = service
         context["issues"] = defaultdict(list)
+
         if service.repository:
-            for issue in service.repository.issues.filter(
-                status=models.Issue.Status.NEW.value
+            for issue in service.repository.issues.filter(deleted=False).exclude(
+                status__in=[
+                    models.Issue.Status.FIXED.value,
+                    models.Issue.Status.NOT_FOUND.value,
+                ]
             ):
                 context["issues"][issue.kind.category].append(issue)
 
@@ -155,6 +159,11 @@ class AuditReport(TemplateView):
             (key, sorted(value, key=lambda x: x.kind_key))
             for key, value in sorted(context["issues"].items())
         )
+
+        deleted_issues = service.repository.issues.filter(deleted=True).all()
+        if deleted_issues:
+            unknown_ctg = "Deprecated Issues"
+            context["issues"][unknown_ctg] = deleted_issues
 
         return context
 

@@ -24,6 +24,7 @@ class Issue(graphene.ObjectType):
     remote_issue_id = graphene.Int()
     comment = graphene.String()
     last_check = graphene.String()
+    deleted = graphene.Boolean()
 
     class Meta:
         interfaces = (relay.Node,)
@@ -39,6 +40,7 @@ class Issue(graphene.ObjectType):
             remote_issue_id=issue.remote_issue_id,
             comment=issue.comment,
             last_check=issue.last_check,
+            deleted=issue.deleted,
         )
 
     @classmethod

@@ -30,6 +30,7 @@ class Issue(models.Model):
     remote_issue_id = models.PositiveIntegerField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     last_check = models.DateTimeField(default=timezone.now)
+    deleted = models.BooleanField(default=False)
 
     @property
     def kind(self):

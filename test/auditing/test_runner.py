@@ -177,7 +177,7 @@ def test_check_repository__failing_check(repository, fake_path, mocker):
     )
 
 
-def test_run_checks_and_save_results(repository, fake_path):
+def test_run_checks_and_save_results(repository, fake_path, mocker):
     checks = [check_passing, check_found, check_unknown]
 
     uut.run_checks_and_save_results(checks, repository, fake_path)
@@ -197,6 +197,20 @@ def test_run_checks_and_save_results(repository, fake_path):
         "context_owner": repository.owner,
         "context_path": str(fake_path),
     }
+
+    checks = [check_failing, check_found, check_unknown]
+    mocker.patch("zoo.auditing.runner.CHECKS", checks)
+
+    uut.run_checks_and_save_results(checks, repository, fake_path)
+
+    assert Issue.objects.count() == 2
+
+    passing_issue = Issue.objects.get(kind_key="check:passing")
+    found_issue = Issue.objects.get(kind_key="check:found")
+
+    assert passing_issue.status == Issue.Status.NOT_FOUND.value
+    assert passing_issue.deleted is True
+    assert found_issue.status == Issue.Status.NEW.value
 
 
 def test_run_checks_and_save_results__failing_check(repository, fake_path, mocker):

@@ -3,6 +3,7 @@ from collections import namedtuple
 import arrow
 import structlog
 
+from .check_discovery import CHECKS
 from .models import Issue
 
 log = structlog.get_logger()
@@ -40,6 +41,22 @@ def determine_issue_status(is_found, old_status):
     return old_status
 
 
+def create_issue(issue_repo, issue_key, is_found, details=None):
+    status = Issue.Status.NEW.value if is_found else Issue.Status.NOT_FOUND.value
+    Issue.objects.create(
+        repository=issue_repo, kind_key=issue_key, status=status, details=details
+    )
+
+
+def update_issue(issue, is_found, details=None):
+    if issue.details != details:
+        issue.details = details
+    issue.status = determine_issue_status(is_found, issue.status)
+    issue.last_check = arrow.utcnow().datetime
+    issue.deleted = False
+    issue.save()
+
+
 def save_check_result(issue_repo, issue_key, is_found, details=None):
     if details is None:
         details = {}
@@ -51,16 +68,9 @@ def save_check_result(issue_repo, issue_key, is_found, details=None):
     try:
         issue = issue_repo.issues.get(kind_key=issue_key)
     except Issue.DoesNotExist:
-        status = Issue.Status.NEW.value if is_found else Issue.Status.NOT_FOUND.value
-        Issue.objects.create(
-            repository=issue_repo, kind_key=issue_key, status=status, details=details
-        )
+        create_issue(issue_repo, issue_key, is_found, details=details)
     else:
-        if issue.details != details:
-            issue.details = details
-        issue.status = determine_issue_status(is_found, issue.status)
-        issue.last_check = arrow.utcnow().datetime
-        issue.save()
+        update_issue(issue, is_found, details=details)
 
 
 def check_repository(checks, repository, fake_path):
@@ -92,5 +102,11 @@ def check_repository(checks, repository, fake_path):
 
 
 def run_checks_and_save_results(checks, repository, fake_path):
+    found_issues = set()
+
     for result in check_repository(checks, repository, fake_path):
+        found_issues.add(result.issue_key)
         save_check_result(repository, result.issue_key, result.is_found, result.details)
+
+    if checks == CHECKS:
+        repository.issues.exclude(kind_key__in=found_issues).update(deleted=True)

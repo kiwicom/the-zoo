@@ -32,6 +32,7 @@ env = environ.Env(
     ZOO_SENTRY_API_KEY=(str, None),
     ZOO_GITHUB_TOKEN=(str, None),
     ZOO_AUDITING_CHECKS=(list, []),
+    ZOO_AUDITING_DROP_ISSUES=(int, 7),
 )
 
 SITE_ROOT = str(root)
@@ -207,5 +208,6 @@ SENTRY_API_KEY = env("ZOO_SENTRY_API_KEY")
 GITHUB_TOKEN = env("ZOO_GITHUB_TOKEN")
 
 ZOO_AUDITING_CHECKS = env("ZOO_AUDITING_CHECKS")
+ZOO_AUDITING_DROP_ISSUES = env("ZOO_AUDITING_DROP_ISSUES")
 
 logs.configure_structlog(DEBUG)

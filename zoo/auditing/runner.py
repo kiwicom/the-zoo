@@ -1,6 +1,7 @@
 from collections import namedtuple
 
 import arrow
+from raven.contrib.django.raven_compat.models import client
 import structlog
 
 from .models import Issue
@@ -89,6 +90,7 @@ def check_repository(checks, repository, fake_path):
                 check=check.__name__,
                 check_module=check.__module__,
             )
+            client.captureException()
 
 
 def run_checks_and_save_results(checks, repository, fake_path):

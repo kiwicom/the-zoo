@@ -50,6 +50,7 @@ class ServiceForm(forms.ModelForm):
             "status",
             "slack_channel",
             "sentry_project",
+            "sonarqube_project",
             "datacenter",
             "repository",
             "pagerduty_url",
@@ -63,6 +64,7 @@ class ServiceForm(forms.ModelForm):
             "dashboard_url": "Dashboard URL",
             "docs_url": "Documentation URL",
             "service_url": "Service URL",
+            "sonarqube_project": "Sonarqube project Key",
         }
         widgets = {
             "repository": RepoInput(),

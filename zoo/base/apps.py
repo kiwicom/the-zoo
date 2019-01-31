@@ -22,6 +22,9 @@ class BaseConfig(AppConfig):
             timedelta(hours=1), service_tasks.schedule_sentry_sync
         )
         celery_app.add_periodic_task(
+            timedelta(days=1), service_tasks.sync_sonarqube_projects
+        )
+        celery_app.add_periodic_task(
             timedelta(days=1), objective_tasks.schedule_objective_snapshots
         )
         celery_app.add_periodic_task(

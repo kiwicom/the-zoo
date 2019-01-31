@@ -1,5 +1,6 @@
 from datetime import datetime
 import hashlib
+from urllib.parse import urljoin
 
 from celery import shared_task
 import dateutil.parser
@@ -9,6 +10,7 @@ import requests
 import structlog
 
 from . import models
+from .. import utils
 
 log = structlog.get_logger()
 
@@ -30,6 +32,41 @@ def fetch_sentry_project_issues(project_slug: str) -> dict:
 
         next_link = response.links["next"]
         api_request_url = next_link["url"] if next_link["results"] == "true" else None
+
+    return result
+
+
+def fetch_from_sonarqube(path, params=None):
+    session = utils.requests_retry_session()
+    session.auth = settings.SONARQUBE_TOKEN, ""
+
+    url = urljoin(settings.SONARQUBE_URL, path)
+    response = session.get(url, params=params)
+
+    response.raise_for_status()
+    return response.json()
+
+
+def fetch_sonarqube_project_links(project_key: str) -> list:
+    data = fetch_from_sonarqube(
+        "/api/project_links/search", params={"projectKey": project_key}
+    )
+    return data["links"]
+
+
+def fetch_sonarqube_projects() -> list:
+    result = []
+    next_page = True
+    params = {"p": 1}
+
+    while next_page:
+        data = fetch_from_sonarqube("/api/projects/search", params=params)
+
+        paging = data["paging"]
+        result.extend(data["components"])
+
+        next_page = paging["total"] > paging["pageSize"] * paging["pageIndex"]
+        params["p"] += 1
 
     return result
 
@@ -138,3 +175,23 @@ def schedule_sentry_sync():
         get_sentry_stats.apply_async(
             args=(service.id,), countdown=delay_s, expires=delay_s + (60 * 60)
         )
+
+
+@shared_task
+def sync_sonarqube_projects():
+    projects = {project["key"]: project for project in fetch_sonarqube_projects()}
+    services_by_repo_url = {}
+
+    for service in models.Service.objects.all():
+        if service.sonarqube_project is None:
+            services_by_repo_url[service.repository.url] = service
+
+    for key, project in projects.items():
+        links = fetch_sonarqube_project_links(key)
+        for link in links:
+            if link["url"] not in services_by_repo_url:
+                continue
+            service = services_by_repo_url[link["url"]]
+            service.sonarqube_project = key
+            service.save()
+            break

@@ -14,6 +14,8 @@ services:
       - ZOO_SENTRY_URL
       - ZOO_SENTRY_ORGANIZATION
       - ZOO_GITHUB_TOKEN
+      - ZOO_SONARQUBE_URL
+      - ZOO_SONARQUBE_TOKEN
       - WEB_CONCURRENCY
     ports:
       - '8080'
@@ -59,6 +61,8 @@ services:
       - ZOO_PINGDOM_APP_KEY
       - ZOO_GITHUB_TOKEN
       - ZOO_AUDITING_CHECKS
+      - ZOO_SONARQUBE_URL
+      - ZOO_SONARQUBE_TOKEN
     depends_on:
       - postgres
       - redis

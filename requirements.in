@@ -2,6 +2,7 @@ arrow
 attrs
 celery
 datadog
+ddtrace
 django
 djangoql
 django-allauth

@@ -17,6 +17,7 @@ certifi==2018.11.29       # via requests
 chardet==3.0.4            # via requests
 colorama==0.4.1           # via structlog
 datadog==0.26.0
+ddtrace==0.20.2
 decorator==4.3.2          # via datadog, ipython, retry, traitlets
 defusedxml==0.5.0         # via python3-openid
 deprecated==1.2.4         # via pygithub
@@ -44,6 +45,7 @@ jinja2==2.10              # via django-silk
 kombu==4.2.2.post1        # via celery
 markdown==3.0.1
 markupsafe==1.1.0         # via jinja2
+msgpack-python==0.5.6     # via ddtrace
 oauthlib==3.0.1           # via requests-oauthlib
 parso==0.3.2              # via jedi
 pexpect==4.6.0            # via ipython
@@ -71,7 +73,7 @@ requirements-parser==0.2.0
 retry==0.9.2
 rx==1.6.1                 # via graphql-core
 singledispatch==3.4.0.3   # via graphene-django
-six==1.12.0               # via django-extensions, dockerfile-parse, graphene, graphene-django, graphql-core, graphql-relay, promise, prompt-toolkit, python-dateutil, python-gitlab, singledispatch, structlog, traitlets
+six==1.12.0               # via ddtrace, django-extensions, dockerfile-parse, graphene, graphene-django, graphql-core, graphql-relay, promise, prompt-toolkit, python-dateutil, python-gitlab, singledispatch, structlog, traitlets
 sqlparse==0.2.4           # via django-debug-toolbar, django-silk
 structlog[dev]==18.2.0
 traitlets==4.3.2          # via ipython
@@ -79,4 +81,4 @@ urllib3==1.24.1           # via requests
 vine==1.2.0               # via amqp
 wcwidth==0.1.7            # via prompt-toolkit
 whitenoise==4.1.2
-wrapt==1.11.1             # via deprecated
+wrapt==1.11.1             # via ddtrace, deprecated

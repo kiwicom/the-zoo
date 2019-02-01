@@ -132,8 +132,11 @@ def test_sync_sonarqube_projects(mocker, service_factory, repository_factory):
 
     repository = repository_factory(url="https://gitlab.example.com/test/backend")
     service = service_factory(repository=repository)
+    service_without_repo = service_factory(repository=None)
+
     repository.save()
     service.save()
+    service_without_repo.save()
 
     uut.sync_sonarqube_projects()
 

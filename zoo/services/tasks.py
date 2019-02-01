@@ -182,9 +182,10 @@ def sync_sonarqube_projects():
     projects = {project["key"]: project for project in fetch_sonarqube_projects()}
     services_by_repo_url = {}
 
-    for service in models.Service.objects.all():
-        if service.sonarqube_project is None:
-            services_by_repo_url[service.repository.url] = service
+    for service in models.Service.objects.exclude(repository=None).filter(
+        sonarqube_project__isnull=True
+    ):
+        services_by_repo_url[service.repository.url] = service
 
     for key, project in projects.items():
         links = fetch_sonarqube_project_links(key)

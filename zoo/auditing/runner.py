@@ -100,7 +100,7 @@ def check_repository(checks, repository, fake_path):
                 check=check.__name__,
                 check_module=check.__module__,
             )
-            client.captureException()
+            client.captureException(fingerprint=f"{check.__module__}.{check.__name__}")
 
 
 def run_checks_and_save_results(checks, repository, fake_path):

@@ -18,7 +18,8 @@ RUN apk add --no-cache --virtual=.build-deps curl build-base postgresql-dev && \
 
 WORKDIR /app/webpack
 COPY webpack/ ./
-RUN yarn install
+RUN yarn install --frozen-lockfile && \
+    yarn cache clean
 
 COPY zoo/ source/
 RUN yarn production && \

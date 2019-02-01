@@ -100,7 +100,10 @@ INSTALLED_APPS = [
     "stronghold",
     "silk",
     "djangoql",
+    "ddtrace.contrib.django",
 ]
+
+DATADOG_TRACE = {"DEFAULT_SERVICE": "zoo", "TAGS": {"env": "production"}}
 
 SILKY_INTERCEPT_PERCENT = 100 if DEBUG else 0
 SILKY_AUTHENTICATION = True

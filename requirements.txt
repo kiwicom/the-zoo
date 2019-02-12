@@ -6,7 +6,6 @@
 #
 amqp==2.4.0               # via kombu
 aniso8601==3.0.2          # via graphene
-appnope==0.1.0            # via ipython
 arrow==0.13.0
 attrs==18.2.0
 autopep8==1.4.3           # via django-silk
@@ -27,7 +26,7 @@ django-environ==0.4.5
 django-extensions==2.1.5
 django-silk==3.0.1
 django-stronghold==0.3.0
-django==2.1.5
+django==2.1.7
 djangoql==0.12.3
 dockerfile-parse==0.0.13
 gprof2dot==2016.10.13     # via django-silk

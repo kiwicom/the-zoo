@@ -8,7 +8,7 @@ apipkg==1.5               # via execnet
 astroid==2.1.0            # via pylint
 atomicwrites==1.2.1       # via pytest
 attrs==18.2.0             # via pytest
-coverage==4.3.4
+coverage==4.5.2
 execnet==1.5.0            # via pytest-xdist
 factory-boy==2.11.1       # via pytest-factoryboy
 faker==1.0.2              # via factory-boy

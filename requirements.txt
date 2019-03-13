@@ -6,7 +6,6 @@
 #
 amqp==2.4.0               # via kombu
 aniso8601==3.0.2          # via graphene
-appnope==0.1.0            # via ipython
 arrow==0.13.0
 attrs==18.2.0
 autopep8==1.4.3           # via django-silk
@@ -64,7 +63,7 @@ python-dateutil==2.7.5    # via arrow, django-silk
 python-gitlab==1.7.0
 python3-openid==3.1.0     # via django-allauth
 pytz==2018.9              # via celery, django, django-silk
-pyyaml==3.13
+pyyaml==5.1
 raven==6.10.0
 redis==3.1.0
 requests-oauthlib==1.2.0  # via django-allauth

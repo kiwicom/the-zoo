@@ -9,36 +9,6 @@ import zoo.auditing.models
 
 class Migration(migrations.Migration):
 
-    replaces = [
-        ("auditing", "0001_initial"),
-        ("auditing", "0002_auto_20171206_1120"),
-        ("auditing", "0003_auto_20171206_1251"),
-        ("auditing", "0004a_auto_20171206_1432"),
-        ("auditing", "0004b_auto_20171206_1432"),
-        ("auditing", "0004c_auto_20171206_1432"),
-        ("auditing", "0005_auto_20171214_1420"),
-        ("auditing", "0006_issue_params"),
-        ("auditing", "0007_issue_gitlab_issue_id"),
-        ("auditing", "0008_wontfix_support"),
-        ("auditing", "0009_auto_20180207_1457"),
-        ("auditing", "0010_auto_20180326_1357"),
-        ("auditing", "0011_auto_20180328_1333"),
-        ("auditing", "0012_auto_20180329_1229"),
-        ("auditing", "0013_auto_20180329_1249"),
-        ("auditing", "0014_auto_20180329_1334"),
-        ("auditing", "0015_auto_20180411_1603"),
-        ("auditing", "0016_auto_20180426_1131"),
-        ("auditing", "0017_auto_20180426_1609"),
-        ("auditing", "0018_auto_20180528_0959"),
-        ("auditing", "0019_issue_last_check"),
-        ("auditing", "0020_auto_20180807_0927"),
-        ("auditing", "0021_add_status_choices"),
-        ("auditing", "0022_remove_generic_ref_repository"),
-        ("auditing", "0023_remove_dockerfilelint_bear_issue"),
-        ("auditing", "0024_remove_unhealthy_package_issue"),
-        ("auditing", "0025_auto_20181025_0921"),
-    ]
-
     dependencies = [
         ("contenttypes", "0002_remove_content_type_name"),
         ("repos", "0002_add_indexes"),

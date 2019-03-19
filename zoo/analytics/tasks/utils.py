@@ -23,13 +23,13 @@ def parse_version(raw_version: str) -> str:
 def validate_version(version: str) -> bool:  # Ignore RadonBear
     if not version:
         raise ValueError("Version given is an empty string?!?!¿!?")
-    elif version.count(".") > 2:
+    if version.count(".") > 2:
         raise ValueError(f"Version {version} has too many dots")
-    elif not any(True for char in version if char.isdigit()):
+    if not any(True for char in version if char.isdigit()):
         raise ValueError(f"Version {version} has no digits in it")
-    elif " " in version or "||" in version or "#" in version:
+    if " " in version or "||" in version or "#" in version:
         raise ValueError(f"Version {version} has unsupported version specifiers")
-    elif ("<" in version or ">" in version) and "=" not in version:
+    if ("<" in version or ">" in version) and "=" not in version:
         raise ValueError(f"Version {version} has unsupported version specifiers")
 
 

@@ -30,7 +30,7 @@ pytest-env==0.6.2
 pytest-factoryboy==2.0.2
 pytest-forked==1.0.2      # via pytest-xdist
 pytest-freezegun==0.3.0.post1
-pytest-mock==1.10.1
+pytest-mock==1.10.2
 pytest-xdist==1.26.1
 pytest==4.3.1
 python-dateutil==2.8.0    # via faker, freezegun

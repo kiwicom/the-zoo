@@ -6,7 +6,6 @@
 #
 amqp==2.4.2               # via kombu
 aniso8601==3.0.2          # via graphene
-appnope==0.1.0            # via ipython
 arrow==0.13.1
 attrs==19.1.0
 autopep8==1.4.3           # via django-silk
@@ -16,7 +15,7 @@ celery==4.2.1
 certifi==2019.3.9         # via requests
 chardet==3.0.4            # via requests
 colorama==0.4.1
-datadog==0.27.0
+datadog==0.28.0
 ddtrace==0.22.0
 decorator==4.4.0          # via datadog, ipython, retry, traitlets
 defusedxml==0.5.0         # via python3-openid

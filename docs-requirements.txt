@@ -18,9 +18,14 @@ pygments==2.3.1           # via sphinx
 pyparsing==2.3.1          # via packaging
 pytz==2018.9              # via babel
 requests==2.21.0          # via sphinx
-six==1.12.0               # via packaging, sphinx
+six==1.12.0               # via packaging
 snowballstemmer==1.2.1    # via sphinx
 sphinx-rtd-theme==0.4.3
-sphinx==1.8.5
-sphinxcontrib-websupport==1.1.0  # via sphinx
+sphinx==2.0.0
+sphinxcontrib-applehelp==1.0.1  # via sphinx
+sphinxcontrib-devhelp==1.0.1  # via sphinx
+sphinxcontrib-htmlhelp==1.0.1  # via sphinx
+sphinxcontrib-jsmath==1.0.1  # via sphinx
+sphinxcontrib-qthelp==1.0.2  # via sphinx
+sphinxcontrib-serializinghtml==1.1.1  # via sphinx
 urllib3==1.24.1           # via requests

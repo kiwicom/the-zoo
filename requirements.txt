@@ -6,7 +6,6 @@
 #
 amqp==2.4.2               # via kombu
 aniso8601==3.0.2          # via graphene
-appnope==0.1.0            # via ipython
 arrow==0.13.1
 attrs==19.1.0
 autopep8==1.4.3           # via django-silk
@@ -41,7 +40,7 @@ idna==2.8                 # via requests
 ipython-genutils==0.2.0   # via traitlets
 ipython==7.3.0
 jedi==0.13.3              # via ipython
-jinja2==2.10              # via django-silk
+jinja2==2.10.1            # via django-silk
 kombu==4.4.0              # via celery
 markdown==3.0.1
 markupsafe==1.1.1         # via jinja2

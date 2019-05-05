@@ -31,7 +31,7 @@ COPY . ./
 
 ARG package_version
 ENV PACKAGE_VERSION=$package_version
-RUN pip install -e . && \
+RUN pip install --no-use-pep517 -e . && \
     python manage.py collectstatic --noinput && \
     chown -R macaque:macaque /app
 

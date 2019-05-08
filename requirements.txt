@@ -6,7 +6,6 @@
 #
 amqp==2.4.2               # via kombu
 aniso8601==3.0.2          # via graphene
-appnope==0.1.0            # via ipython
 arrow==0.13.1
 attrs==19.1.0
 autopep8==1.4.4           # via django-silk
@@ -17,7 +16,7 @@ certifi==2019.3.9         # via requests
 chardet==3.0.4            # via requests
 colorama==0.4.1
 datadog==0.28.0
-ddtrace==0.23.0
+ddtrace==0.25.0
 decorator==4.4.0          # via datadog, ipython, retry, traitlets
 defusedxml==0.6.0         # via python3-openid
 deprecated==1.2.5         # via pygithub
@@ -45,7 +44,6 @@ jinja2==2.10.1            # via django-silk
 kombu==4.5.0              # via celery
 markdown==3.1
 markupsafe==1.1.1         # via jinja2
-msgpack-python==0.5.6     # via ddtrace
 oauthlib==3.0.1           # via requests-oauthlib
 parso==0.4.0              # via jedi
 pexpect==4.7.0            # via ipython
@@ -53,6 +51,7 @@ pickleshare==0.7.5        # via ipython
 ply==3.11                 # via djangoql
 promise==2.2.1            # via graphene, graphene-django, graphql-core, graphql-relay
 prompt-toolkit==2.0.9     # via ipython
+psutil==5.6.2             # via ddtrace
 psycopg2==2.8.2
 ptyprocess==0.6.0         # via pexpect
 py==1.8.0                 # via retry

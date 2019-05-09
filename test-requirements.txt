@@ -21,7 +21,7 @@ mccabe==0.6.1             # via pylint
 more-itertools==7.0.0     # via pytest
 passlib==1.7.1            # via pg8000
 pg8000==1.13.1            # via testing-postgresql
-pluggy==0.9.0             # via pytest
+pluggy==0.11.0            # via pytest
 py==1.8.0                 # via pytest
 pylint==2.3.1
 pytest-cov==2.5.1
@@ -32,7 +32,7 @@ pytest-forked==1.0.2      # via pytest-xdist
 pytest-freezegun==0.3.0.post1
 pytest-mock==1.10.4
 pytest-xdist==1.28.0
-pytest==4.4.1
+pytest==4.4.2
 python-dateutil==2.8.0    # via faker, freezegun
 six==1.12.0               # via astroid, faker, freezegun, httpretty, pytest, pytest-xdist, python-dateutil, snapshottest
 snapshottest==0.5.0

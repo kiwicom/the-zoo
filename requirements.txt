@@ -6,7 +6,6 @@
 #
 amqp==2.4.2               # via kombu
 aniso8601==3.0.2          # via graphene
-appnope==0.1.0            # via ipython
 arrow==0.13.1
 attrs==19.1.0
 autopep8==1.4.4           # via django-silk
@@ -24,7 +23,7 @@ deprecated==1.2.5         # via pygithub
 django-allauth==0.39.1
 django-debug-toolbar==1.11
 django-environ==0.4.5
-django-extensions==2.1.6
+django-extensions==2.1.7
 django-silk==3.0.2
 django-stronghold==0.3.0
 django==2.2.1

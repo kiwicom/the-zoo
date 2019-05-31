@@ -22,6 +22,7 @@ from .factories import (
     DependencyFactory,
     DependencyUsageFactory,
     KindFactory,
+    InfraNodeFactory,
 )
 
 
@@ -33,6 +34,7 @@ register(ServiceFactory)
 register(DependencyFactory)
 register(DependencyUsageFactory)
 register(KindFactory)
+register(InfraNodeFactory)
 
 
 fake = Faker()

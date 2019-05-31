@@ -11,6 +11,8 @@ attrs==19.1.0
 autopep8==1.4.4           # via django-silk
 backcall==0.1.0           # via ipython
 billiard==3.6.0.0         # via celery
+boto3==1.9.150
+botocore==1.12.150        # via boto3, s3transfer
 celery==4.3.0
 certifi==2019.3.9         # via requests
 chardet==3.0.4            # via requests
@@ -29,6 +31,7 @@ django-stronghold==0.3.0
 django==2.2.1
 djangoql==0.12.6
 dockerfile-parse==0.0.14
+docutils==0.14            # via botocore
 gprof2dot==2017.9.19      # via django-silk
 graphene-django==2.2.0
 graphene==2.1.3
@@ -41,6 +44,7 @@ ipython-genutils==0.2.0   # via traitlets
 ipython==7.5.0
 jedi==0.13.3              # via ipython
 jinja2==2.10.1            # via django-silk
+jmespath==0.9.4           # via boto3, botocore
 kombu==4.5.0              # via celery
 markdown==3.1
 markupsafe==1.1.1         # via jinja2
@@ -58,7 +62,7 @@ pycodestyle==2.5.0        # via autopep8
 pygithub==1.43.7
 pygments==2.3.1           # via django-silk, ipython
 pyjwt==1.7.1              # via pygithub
-python-dateutil==2.8.0    # via arrow, django-silk
+python-dateutil==2.8.0    # via arrow, botocore, django-silk
 python-gitlab==1.8.0
 python3-openid==3.1.0     # via django-allauth
 pytz==2019.1              # via celery, django, django-silk
@@ -69,12 +73,13 @@ requests-oauthlib==1.2.0  # via django-allauth
 requests==2.21.0
 requirements-parser==0.2.0
 rx==1.6.1                 # via graphql-core
+s3transfer==0.2.0         # via boto3
 singledispatch==3.4.0.3   # via graphene-django
 six==1.12.0               # via django-extensions, dockerfile-parse, graphene, graphene-django, graphql-core, graphql-relay, promise, prompt-toolkit, python-dateutil, python-gitlab, singledispatch, structlog, traitlets
 sqlparse==0.3.0           # via django, django-debug-toolbar, django-silk
 structlog==19.1.0
 traitlets==4.3.2          # via ipython
-urllib3==1.24.3           # via requests
+urllib3==1.24.3           # via botocore, requests
 vine==1.3.0               # via amqp, celery
 wcwidth==0.1.7            # via prompt-toolkit
 whitenoise==4.1.2

@@ -7,6 +7,7 @@ from faker import Faker as OriginalFaker
 from zoo.api.models import ApiToken
 from zoo.auditing.models import Issue
 from zoo.auditing.check_discovery import Kind
+from zoo.datacenters.models import InfraNode
 from zoo.repos.models import Repository
 from zoo.services.models import Service
 from zoo.analytics.models import Dependency, DependencyUsage, DependencyType
@@ -94,3 +95,11 @@ class KindFactory(Factory):
     id = Faker("domain_word")
     title = Faker("sentence")
     description = Faker("paragraph")
+
+
+class InfraNodeFactory(Factory):
+    class Meta:
+        model = InfraNode
+
+    kind = Faker("domain_word")
+    value = Faker("slug")

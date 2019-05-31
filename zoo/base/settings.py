@@ -6,6 +6,7 @@ https://docs.djangoproject.com/en/dev/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
+import os
 from pathlib import Path
 
 import environ
@@ -39,6 +40,13 @@ env = environ.Env(
     ZOO_AUDITING_DROP_ISSUES=(int, 7),
     ZOO_SONARQUBE_URL=(str, None),
     ZOO_SONARQUBE_TOKEN=(str, None),
+    AWS_CONFIG=(str, None),
+    AWS_CONFIG_FILE=(str, "/tmp/aws/config"),
+    AWS_SHARED_CREDENTIALS=(str, None),
+    AWS_SHARED_CREDENTIALS_FILE=(str, "/tmp/aws/credentials"),
+    RANCHER_API_URL=(str, None),
+    RANCHER_ACCESS_KEY=(str, None),
+    RANCHER_SECRET_KEY=(str, None),
 )
 
 SITE_ROOT = str(root)
@@ -87,6 +95,7 @@ INSTALLED_APPS = [
     "zoo.services.apps.ServicesConfig",
     "zoo.analytics.apps.AnalyticsConfig",
     "zoo.objectives.apps.ObjectivesConfig",
+    "zoo.datacenters.apps.DatacentersConfig",
     "zoo.api.apps.ApiConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -223,5 +232,18 @@ SONARQUBE_TOKEN = env("ZOO_SONARQUBE_TOKEN")
 
 ZOO_AUDITING_CHECKS = env("ZOO_AUDITING_CHECKS")
 ZOO_AUDITING_DROP_ISSUES = env("ZOO_AUDITING_DROP_ISSUES")
+
+AWS_CONFIG = env("AWS_CONFIG")
+AWS_CONFIG_FILE = env("AWS_CONFIG_FILE")
+AWS_CREDENTIALS = env("AWS_SHARED_CREDENTIALS")
+AWS_CREDENTIALS_FILE = env("AWS_SHARED_CREDENTIALS_FILE")
+
+# make boto3 adopt default locations of config files specified in the Zoo
+os.environ.setdefault("AWS_CONFIG_FILE", AWS_CONFIG_FILE)
+os.environ.setdefault("AWS_SHARED_CREDENTIALS_FILE", AWS_CREDENTIALS_FILE)
+
+RANCHER_API_URL = env("RANCHER_API_URL")
+RANCHER_ACCESS_KEY = env("RANCHER_ACCESS_KEY")
+RANCHER_SECRET_KEY = env("RANCHER_SECRET_KEY")
 
 logs.configure_structlog(DEBUG)

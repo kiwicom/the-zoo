@@ -1,5 +1,6 @@
 arrow
 attrs
+boto3
 celery
 colorama
 datadog

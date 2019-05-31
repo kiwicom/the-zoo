@@ -95,24 +95,6 @@ def test_repository(snapshot, call_api, repository_factory):
     snapshot.assert_match(response)
 
 
-def test_datacenter(snapshot, call_api, data_center_factory):
-    data_center_factory(id=10, provider="kiwi", region="Oklahoma")
-    id = to_global_id("DataCenter", 10)
-    query = f"""
-    query {{
-      node (id: "{id}") {{
-        ... on DataCenter {{
-            id
-            provider
-            region
-            }}
-        }}
-    }}
-    """
-    response = call_api(query)
-    snapshot.assert_match(response)
-
-
 def test_dependency(snapshot, call_api, dependency_factory):
     dependency_factory(id=10, name="Python", type="Language")
     id = to_global_id("Dependency", 10)

@@ -13,9 +13,4 @@ class ServiceAdmin(admin.ModelAdmin):
     )
 
 
-class DataCenterAdmin(admin.ModelAdmin):
-    search_fields = ("provider", "region")
-
-
 admin.site.register(models.Service, ServiceAdmin)
-admin.site.register(models.DataCenter, DataCenterAdmin)

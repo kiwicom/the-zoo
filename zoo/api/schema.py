@@ -18,7 +18,6 @@ schema = graphene.Schema(
     mutation=Mutation,
     types=[
         types.CheckResult,
-        types.DataCenter,
         types.Dependency,
         types.DependencyUsage,
         types.Issue,

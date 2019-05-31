@@ -8,7 +8,6 @@ from django.contrib.postgres import fields as pg_fields
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
-from djangoql.schema import DjangoQLSchema
 
 from . import ratings
 
@@ -43,9 +42,6 @@ class Service(models.Model):
         null=True,
         blank=True,
         max_length=100,
-    )
-    datacenter = models.ForeignKey(
-        "DataCenter", on_delete=models.PROTECT, null=True, blank=True
     )
     slack_channel = models.CharField(max_length=22, null=True, blank=True)
     sentry_project = models.CharField(max_length=100, null=True, blank=True)
@@ -189,23 +185,3 @@ class SentryIssueStats(models.Model):
     issue = models.ForeignKey(
         "services.SentryIssue", on_delete=models.CASCADE, related_name="stats"
     )
-
-
-class DataCenter(models.Model):
-    class Meta:
-        unique_together = ("provider", "region")
-
-    provider = models.CharField(max_length=100)
-    region = models.CharField(max_length=100, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.provider} {self.region}" if self.region else self.provider
-
-
-class ServiceQLSchema(DjangoQLSchema):
-    include = (Service, DataCenter)
-
-    def get_fields(self, model):
-        if isinstance(model, Service):
-            return ["name", "owner", "status", "impact", "datacenter", "service_url"]
-        return super(ServiceQLSchema, self).get_fields(model)

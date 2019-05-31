@@ -51,7 +51,6 @@ class ServiceForm(forms.ModelForm):
             "slack_channel",
             "sentry_project",
             "sonarqube_project",
-            "datacenter",
             "repository",
             "pagerduty_url",
             "dashboard_url",

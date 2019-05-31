@@ -53,9 +53,6 @@
       {% if service.impact %}
       <a class="ui {% label_color "impact" service.impact %} circular label">impact:{{ service.impact }}</a>
       {% endif %}
-      {% if service.datacenter %}
-      <a class="ui {% label_color "datacenter" service.datacenter.provider %} circular label">datacenter:{{ service.datacenter }}</a>
-      {% endif %}
     </div>
     {% endspaceless %}
 

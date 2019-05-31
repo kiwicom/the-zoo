@@ -1,6 +1,6 @@
 import pytest
 
-from zoo.services.models import DataCenter, Service
+from zoo.services.models import Service
 from zoo.repos.models import Repository
 
 pytestmark = pytest.mark.django_db
@@ -19,9 +19,6 @@ def generate_services(service_factory):
         slack_channel="https://slackchannel",
         status="fixed",
         health_check_url="https://healtcheck",
-        datacenter__id=18,
-        datacenter__region="Alaska",
-        datacenter__provider="kiwi",
         repository__id=78,
         repository__remote_id=239,
         repository__owner="jasckson",
@@ -39,9 +36,6 @@ def generate_services(service_factory):
         slack_channel="https://slackchannel",
         status="fixed",
         health_check_url="https://healtcheck",
-        datacenter__id=19,
-        datacenter__region="Texas",
-        datacenter__provider="kiwi",
         repository__id=48,
         repository__remote_id=99,
         repository__owner="colisn",
@@ -59,9 +53,6 @@ def generate_services(service_factory):
         slack_channel="https://slackchannel",
         status="fixed",
         health_check_url="https://healtcheck",
-        datacenter__id=20,
-        datacenter__region="Kansas",
-        datacenter__provider="kiwi",
         repository__id=234,
         repository__remote_id=9234,
         repository__owner="Daniel",
@@ -79,9 +70,6 @@ def generate_services(service_factory):
         slack_channel="https://slackchannel",
         status="fixed",
         health_check_url="https://healtcheck",
-        datacenter__id=21,
-        datacenter__region="Ohio",
-        datacenter__provider="kiwi",
         repository__id=3434,
         repository__remote_id=349,
         repository__owner="josh",
@@ -100,9 +88,6 @@ def generate_services(service_factory):
         slack_channel="https://slackchannel",
         status="fixed",
         health_check_url="https://healtcheck",
-        datacenter__id=23423,
-        datacenter__region="Arizona",
-        datacenter__provider="kiwi",
         repository__id=4543,
         repository__remote_id=990,
         repository__owner="imosley",
@@ -145,43 +130,6 @@ def test_all(snapshot, call_api, generate_services):
             dashboardUrl
             docsUrl
             healthCheckUrl
-          }
-        }
-        pageInfo {
-            hasPreviousPage
-            hasNextPage
-            startCursor
-            endCursor
-        }
-      }
-    }
-    """
-    response = call_api(query)
-    snapshot.assert_match(response)
-
-
-def test_with_datacenter(snapshot, call_api, generate_services):
-    query = """
-    query {
-      allServices {
-        totalCount
-        edges {
-          node {
-            id
-            owner
-            name
-            status
-            impact
-            slackChannel
-            pagerdutyUrl
-            dashboardUrl
-            docsUrl
-            healthCheckUrl
-            datacenter {
-              id
-              provider
-              region
-            }
           }
         }
         pageInfo {

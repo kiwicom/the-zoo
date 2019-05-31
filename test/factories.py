@@ -8,7 +8,7 @@ from zoo.api.models import ApiToken
 from zoo.auditing.models import Issue
 from zoo.auditing.check_discovery import Kind
 from zoo.repos.models import Repository
-from zoo.services.models import DataCenter, Service
+from zoo.services.models import Service
 from zoo.analytics.models import Dependency, DependencyUsage, DependencyType
 from zoo.analytics.tasks.repo_analyzers import unpack_version
 
@@ -36,14 +36,6 @@ class IssueFactory(DjangoModelFactory):
     )
 
 
-class DataCenterFactory(DjangoModelFactory):
-    class Meta:
-        model = DataCenter
-
-    region = Faker("domain_word")
-    provider = Faker("domain_word")
-
-
 class ServiceFactory(DjangoModelFactory):
     class Meta:
         model = Service
@@ -51,7 +43,6 @@ class ServiceFactory(DjangoModelFactory):
     owner = Faker("user_name")
     name = Faker("domain_word")
     impact = choice(["profit", "customers", "customers"])
-    datacenter = SubFactory(DataCenterFactory)
     repository = SubFactory(RepositoryFactory)
 
 

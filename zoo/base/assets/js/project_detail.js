@@ -14,6 +14,7 @@ $(document).ready(() => {
   .done((response) => {
     let template = $('#repository-details').html()
     repoDetailsContainer.html(Mustache.render(template, response))
+    repoDetailsContainer.removeClass('loading')
     $('.statistic').popup({
       transition: 'fade down',
       exclusive: true,

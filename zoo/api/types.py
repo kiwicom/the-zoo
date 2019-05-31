@@ -64,7 +64,6 @@ class Service(graphene.ObjectType):
     name = graphene.String()
     status = graphene.String()
     impact = graphene.String()
-    datacenter = graphene.Field(lambda: DataCenter)
     repository = graphene.Field(lambda: Repository)
     slack_channel = graphene.String()
     pagerduty_url = graphene.String()
@@ -85,7 +84,6 @@ class Service(graphene.ObjectType):
             dashboard_url=service.dashboard_url,
             docs_url=service.docs_url,
             health_check_url=service.health_check_url,
-            datacenter=service.datacenter_id,
             repository=service.repository_id,
         )
 
@@ -101,14 +99,6 @@ class Service(graphene.ObjectType):
         try:
             return Repository.from_db(
                 repos_models.Repository.objects.get(id=self.repository)
-            )
-        except ObjectDoesNotExist:
-            return None
-
-    def resolve_datacenter(self, info):
-        try:
-            return DataCenter.from_db(
-                services_models.DataCenter.objects.get(id=self.datacenter)
             )
         except ObjectDoesNotExist:
             return None
@@ -200,28 +190,6 @@ class RepositoryConnection(relay.Connection):
 
     class Meta:
         node = Repository
-
-
-class DataCenter(graphene.ObjectType):
-    provider = graphene.String()
-    region = graphene.String()
-
-    class Meta:
-        interfaces = (relay.Node,)
-
-    @classmethod
-    def get_node(cls, info, datacenter_id):
-        try:
-            service = services_models.DataCenter.objects.get(id=datacenter_id)
-            return cls.from_db(service)
-        except ObjectDoesNotExist:
-            return None
-
-    @classmethod
-    def from_db(cls, datacenter):
-        return cls(
-            id=datacenter.id, provider=datacenter.provider, region=datacenter.region
-        )
 
 
 class Dependency(graphene.ObjectType):

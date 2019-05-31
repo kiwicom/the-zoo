@@ -102,18 +102,20 @@
       </div>
     </div>
 
-    <div id="repository-details-container" data-url="{% url 'repo_details' object.repository.provider object.repository.remote_id %}">
-      <div class="ui fluid project-detail loading segment">
-        <div class="flex-horizontal--space-between">
-          <h3 class="ui marginless header">
-            <div class="content">
-              Loading repository data...
-              <div class="sub header">
-                &nbsp;
-              </div>
+    <div
+      id="repository-details-container"
+      class="ui fluid loading segment"
+      data-url="{% url 'repo_details' object.repository.provider object.repository.remote_id %}"
+    >
+      <div class="flex-horizontal--space-between">
+        <h3 class="ui marginless header">
+          <div class="content">
+            Loading repository data...
+            <div class="sub header">
+              &nbsp;
             </div>
-          </h3>
-        </div>
+          </div>
+        </h3>
       </div>
     </div>
     {% endif %}
@@ -150,51 +152,49 @@
 
 {% block scripts %}
 {% verbatim %}
-<script id="repository-details" type="x-tmpl-mustache">
-  <div class="ui fluid segment">
-      <div class="flex-horizontal--space-between repository-details">
-        <h3 class="ui marginless flex-horizontal header">
-          {{#avatar}}
-          <img class="ui small marginless circular image" src="{{ avatar }}" alt="{{ name }}">
-          {{/avatar}}
-          <div class="content">
-            <a href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ name }}</a>
-            <div class="sub header">
-              {{ description }}
-            </div>
+  <script id="repository-details" type="x-tmpl-mustache">
+    <div class="flex-horizontal--space-between repository-details">
+      <h3 class="ui marginless flex-horizontal header">
+        {{#avatar}}
+        <img class="ui small marginless circular image" src="{{ avatar }}" alt="{{ name }}">
+        {{/avatar}}
+        <div class="content">
+          <a href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ name }}</a>
+          <div class="sub header">
+            {{ description }}
           </div>
-        </h3>
-        <div class="flex-horizontal">
-          <div class="ui mini statistic" data-content="Stars">
-            <div class="value">
-              <i class="star icon"></i> {{ stars }}
-            </div>
-          </div>
-          <div class="ui mini statistic" data-content="Forks">
-            <div class="value">
-              <i class="counterclockwise rotated sitemap icon"></i> {{ forks }}
-            </div>
-          </div>
-          <div class="ui mini statistic" data-content="Branches">
-            <div class="value">
-              <i class="code branch icon"></i> {{ branch_count }}
-            </div>
-          </div>
-          <div class="ui mini statistic" data-content="Issues">
-            <div class="value">
-              <i class="bug icon"></i> {{ issue_count }}
-            </div>
-          </div>
-          <div class="ui mini statistic" data-content="Members">
-            <div class="value">
-              <i class="user icon"></i> {{ member_count }}
-            </div>
-          </div>
-          <a href="{{ url }}/issues/new" target="_blank" rel="noopener noreferrer" class="ui red icon button">
-            <i class="code icon"></i>
-            Open issue
-          </a>
         </div>
+      </h3>
+      <div class="flex-horizontal">
+        <div class="ui mini statistic" data-content="Stars">
+          <div class="value">
+            <i class="star icon"></i> {{ stars }}
+          </div>
+        </div>
+        <div class="ui mini statistic" data-content="Forks">
+          <div class="value">
+            <i class="counterclockwise rotated sitemap icon"></i> {{ forks }}
+          </div>
+        </div>
+        <div class="ui mini statistic" data-content="Branches">
+          <div class="value">
+            <i class="code branch icon"></i> {{ branch_count }}
+          </div>
+        </div>
+        <div class="ui mini statistic" data-content="Issues">
+          <div class="value">
+            <i class="bug icon"></i> {{ issue_count }}
+          </div>
+        </div>
+        <div class="ui mini statistic" data-content="Members">
+          <div class="value">
+            <i class="user icon"></i> {{ member_count }}
+          </div>
+        </div>
+        <a href="{{ url }}/issues/new" target="_blank" rel="noopener noreferrer" class="ui red icon button">
+          <i class="code icon"></i>
+          Open issue
+        </a>
       </div>
     </div>
   </script>

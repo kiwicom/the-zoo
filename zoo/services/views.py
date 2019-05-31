@@ -69,7 +69,7 @@ class ServiceDetail(ServiceMixin, generic_views.DetailView):
         return (
             super()
             .get_queryset()
-            .select_related("repository", "datacenter")
+            .select_related("repository")
             .prefetch_related("checkmarks")
         )
 
@@ -180,7 +180,7 @@ class ServiceList(generic_views.ListView):
     paginate_by = 50
 
     def get_queryset(self):
-        queryset = self.model.objects.select_related("repository", "datacenter")
+        queryset = self.model.objects.select_related("repository")
         queryterm = self.request.GET.get("q", None)
 
         SIMPLE_QUERY_PATTERN = r"^[\w-]+$"
@@ -193,7 +193,6 @@ class ServiceList(generic_views.ListView):
                     | Q(owner__icontains=queryterm)
                     | Q(status__icontains=queryterm)
                     | Q(impact__icontains=queryterm)
-                    | Q(datacenter__provider__icontains=queryterm)
                 )
 
             elif re.match(URL_QUERY_PATTERN, queryterm):

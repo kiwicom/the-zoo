@@ -32,7 +32,6 @@ service_form_data = {
     "name": fake.word(),
     "status": "production",
     "impact": "profit",
-    "datacenter": "",
     "slack_channel": "dev-null",
     "repository": "",
     "pagerduty_url": fake.url(),
@@ -43,26 +42,15 @@ service_form_data = {
 }
 
 
-def test_service_form__complete__correct(repository, data_center):
-    form = ServiceForm(
-        data={
-            **service_form_data,
-            "datacenter": data_center.pk,
-            "repository": repository.pk,
-        }
-    )
+def test_service_form__complete__correct(repository):
+    form = ServiceForm(data={**service_form_data, "repository": repository.pk})
 
     assert form.is_valid()
 
 
-def test_service_form__complete__incorrect_status(repository, data_center):
+def test_service_form__complete__incorrect_status(repository):
     form = ServiceForm(
-        data={
-            **service_form_data,
-            "status": "live",
-            "datacenter": data_center.pk,
-            "repository": repository.pk,
-        }
+        data={**service_form_data, "status": "live", "repository": repository.pk}
     )
 
     assert not form.is_valid()
@@ -71,14 +59,9 @@ def test_service_form__complete__incorrect_status(repository, data_center):
     }
 
 
-def test_service_form__complete__incorrect_dashboard_url(repository, data_center):
+def test_service_form__complete__incorrect_dashboard_url(repository):
     form = ServiceForm(
-        data={
-            **service_form_data,
-            "dashboard_url": "-",
-            "datacenter": data_center.pk,
-            "repository": repository.pk,
-        }
+        data={**service_form_data, "dashboard_url": "-", "repository": repository.pk}
     )
 
     assert not form.is_valid()

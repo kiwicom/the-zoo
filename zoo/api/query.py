@@ -5,7 +5,7 @@ from . import types
 from ..analytics.models import Dependency, DependencyType, DependencyUsage
 from ..auditing.models import Issue
 from ..repos.models import Repository
-from ..services.models import DataCenter, Service
+from ..services.models import Service
 from .paginator import Paginator
 
 DependencyTypeEnum = graphene.Enum.from_enum(DependencyType)
@@ -13,7 +13,6 @@ DependencyTypeEnum = graphene.Enum.from_enum(DependencyType)
 
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
-    all_datacenters = graphene.List(types.DataCenter)
     all_issues = relay.ConnectionField(
         types.IssueConnection,
         description="List of issues. Returns first 10 nodes if pagination is not specified.",
@@ -93,9 +92,6 @@ class Query(graphene.ObjectType):
         return types.RepositoryConnection(
             page_info=page_info, edges=edges, total_count=total
         )
-
-    def resolve_all_datacenters(self, info):
-        return DataCenter.objects.all()
 
     def resolve_all_dependencies(self, info, **kwargs):
         paginator = Paginator(**kwargs)

@@ -19,16 +19,6 @@ snapshots['test_repository 1'] = {
     }
 }
 
-snapshots['test_datacenter 1'] = {
-    'data': {
-        'node': {
-            'id': 'RGF0YUNlbnRlcjoxMA==',
-            'provider': 'kiwi',
-            'region': 'Oklahoma'
-        }
-    }
-}
-
 snapshots['test_service 1'] = {
     'data': {
         'node': {

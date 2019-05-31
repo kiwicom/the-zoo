@@ -44,9 +44,6 @@ class Service(models.Model):
         blank=True,
         max_length=100,
     )
-    datacenter = models.ForeignKey(
-        "DataCenter", on_delete=models.PROTECT, null=True, blank=True
-    )
     slack_channel = models.CharField(max_length=22, null=True, blank=True)
     sentry_project = models.CharField(max_length=100, null=True, blank=True)
     sonarqube_project = models.CharField(max_length=250, null=True, blank=True)
@@ -206,21 +203,10 @@ class SentryIssueStats(models.Model):
     )
 
 
-class DataCenter(models.Model):
-    class Meta:
-        unique_together = ("provider", "region")
-
-    provider = models.CharField(max_length=100)
-    region = models.CharField(max_length=100, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.provider} {self.region}" if self.region else self.provider
-
-
 class ServiceQLSchema(DjangoQLSchema):
-    include = (Service, DataCenter)
+    include = (Service,)
 
     def get_fields(self, model):
         if isinstance(model, Service):
-            return ["name", "owner", "status", "impact", "datacenter", "service_url"]
+            return ["name", "owner", "status", "impact", "service_url"]
         return super(ServiceQLSchema, self).get_fields(model)

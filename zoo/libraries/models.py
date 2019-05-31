@@ -6,6 +6,7 @@ from django.contrib.postgres import fields as pg_fields
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
+from djangoql.schema import DjangoQLSchema
 
 
 class Status(Enum):
@@ -98,3 +99,12 @@ def generate_slugs(sender, instance, *args, **kwargs):
 def generate_tags(sender, instance, *args, **kwargs):
     if "general" not in instance.tags:
         instance.tags.append("general")
+
+
+class LibraryQLSchema(DjangoQLSchema):
+    include = (Library,)
+
+    def get_fields(self, model):
+        if isinstance(model, Library):
+            return ["name", "owner", "status", "impact", "library_url"]
+        return super(LibraryQLSchema, self).get_fields(model)

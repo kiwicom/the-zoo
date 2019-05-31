@@ -122,7 +122,9 @@ class LibraryList(generic_views.ListView):
 
             else:
                 try:
-                    queryset = apply_search(queryset, queryterm, models.Library)
+                    queryset = apply_search(
+                        queryset, queryterm, models.LibrarySQLSchema
+                    )
                 except DjangoQLError:
                     log.exception("libraries.query_error", queryterm=queryterm)
                     return self.model.objects.none()

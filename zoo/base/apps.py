@@ -15,6 +15,7 @@ class BaseConfig(AppConfig):
         from ..analytics import tasks as analytics_tasks
         from ..auditing import tasks as auditing_tasks
         from ..objectives import tasks as objective_tasks
+        from ..datacenters import tasks as datacenters_tasks
 
         celery_app.add_periodic_task(timedelta(hours=1), repos_tasks.sync_repos)
         celery_app.add_periodic_task(timedelta(hours=1), repos_tasks.schedule_pulls)
@@ -36,4 +37,7 @@ class BaseConfig(AppConfig):
         )
         celery_app.add_periodic_task(
             timedelta(days=1), analytics_tasks.check_python_lib_licenses
+        )
+        celery_app.add_periodic_task(
+            timedelta(days=1), datacenters_tasks.schedule_infra_mapping
         )

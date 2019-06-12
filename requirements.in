@@ -25,7 +25,6 @@ PyGithub
 pyyaml
 raven
 redis
-retry
 requests
 requirements-parser
 structlog

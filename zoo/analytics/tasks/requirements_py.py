@@ -2,17 +2,13 @@ import re
 
 import arrow
 from pkg_resources import RequirementParseError
-import requests
 import requirements
-from retry import retry
 import structlog
 
 from . import PyLibrary
 from ...base.http import session
 
 log = structlog.get_logger()
-
-pypi_retry = retry(requests.RequestException, tries=5, delay=2, backoff=2)
 
 
 def analyze(repository, path):
@@ -95,7 +91,6 @@ def is_package_unhealthy(status: int, last_release_date: str) -> bool:
     return False
 
 
-@pypi_retry
 def get_pypi_metadata(package_name: str):
     r = session.get(f"https://pypi.org/pypi/{package_name}/json")
     return None if r.status_code == 404 else r.json()

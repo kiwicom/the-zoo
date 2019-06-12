@@ -4,14 +4,26 @@ from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 
 
+def get_retry_object(retries=5, backoff_factor=0.1):
+    """Create an instance of :obj:`urllib3.util.Retry`.
+
+    With default arguments (5 retries with 0.1 backoff factor), urllib3 will sleep
+    for 0.0, 0.2, 0.4, 0.8, 1.6 seconds between attempts.
+    """
+    return Retry(
+        total=retries,
+        read=retries,
+        connect=retries,
+        backoff_factor=backoff_factor,
+        status_forcelist=(500, 502, 504),
+    )
+
+
 def get_requests_session():
     """Create Python-Request's Session object."""
     session = requests.Session()
     session.headers = {"user-agent": settings.USER_AGENT}
     return session
-
-
-session = get_requests_session()
 
 
 def requests_retry_session(retries=3, backoff_factor=0.1, session=None):
@@ -35,14 +47,11 @@ def requests_retry_session(retries=3, backoff_factor=0.1, session=None):
         )
     """
     session = session or get_requests_session()
-    retry = Retry(
-        total=retries,
-        read=retries,
-        connect=retries,
-        backoff_factor=backoff_factor,
-        status_forcelist=(500, 502, 504),
-    )
-    adapter = HTTPAdapter(max_retries=retry)
+    max_retries = get_retry_object(retries=retries, backoff_factor=backoff_factor)
+    adapter = HTTPAdapter(max_retries=max_retries)
     session.mount("http://", adapter)
     session.mount("https://", adapter)
     return session
+
+
+session = requests_retry_session()

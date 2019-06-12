@@ -1,7 +1,5 @@
 from django.conf import settings
-from gitlab import Gitlab, GitlabError, GitlabGetError, GitlabListError
-import requests
-from retry import retry
+from gitlab import Gitlab, GitlabGetError, GitlabListError
 
 from ..base.http import session
 from .exceptions import MissingFilesError, RepositoryNotFoundError
@@ -10,12 +8,7 @@ gitlab = Gitlab(
     settings.GITLAB_URL, settings.GITLAB_TOKEN, api_version=4, session=session
 )
 
-gitlab_retry = retry(
-    (requests.RequestException, GitlabError), tries=5, delay=2, backoff=2
-)
 
-
-@gitlab_retry
 def get_project(remote_id):
     try:
         project = gitlab.projects.get(remote_id)
@@ -24,7 +17,6 @@ def get_project(remote_id):
     return project
 
 
-@gitlab_retry
 def download_archive(project, archive, sha=None):
     archive.seek(0)  # needed if retry
     try:
@@ -34,7 +26,6 @@ def download_archive(project, archive, sha=None):
     return archive
 
 
-@gitlab_retry
 def get_repositories():
     for project in gitlab.projects.list(as_list=False):
         yield {
@@ -46,7 +37,6 @@ def get_repositories():
         }
 
 
-@gitlab_retry
 def get_project_details(remote_id):
     project = get_project(remote_id)
     return {
@@ -65,7 +55,6 @@ def get_project_details(remote_id):
     }
 
 
-@gitlab_retry
 def get_languages(remote_id):
     project = get_project(remote_id)
     try:
@@ -75,7 +64,6 @@ def get_languages(remote_id):
     return langs
 
 
-@gitlab_retry
 def create_remote_issue(issue, user_name, reverse_url):
     gitlab_issue = issue.repository.remote_git_object.issues.create(
         {
@@ -93,7 +81,6 @@ def create_remote_issue(issue, user_name, reverse_url):
     return gitlab_issue.iid
 
 
-@gitlab_retry
 def create_remote_commit(remote_id, message, actions, branch, **kwargs):
     """Create a new commit in a remote Gitlab repository.
 
@@ -116,7 +103,6 @@ def create_remote_commit(remote_id, message, actions, branch, **kwargs):
     return commit.get_id()
 
 
-@gitlab_retry
 def create_merge_request(remote_id, title, source_branch, **kwargs):
     """Create a new merge request in a remote Gitlab repository.
 

@@ -1,21 +1,17 @@
 from django.conf import settings
-from github import Github, GithubException, InputGitTreeElement
+from github import Github, InputGitTreeElement
 from github.GithubException import UnknownObjectException
 from github.GithubObject import NotSet
 import requests
-from retry import retry
 
-from ..base.http import session
+from ..base import http
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 
-github = Github(settings.GITHUB_TOKEN, user_agent=settings.USER_AGENT)
-
-github_retry = retry(
-    (requests.RequestException, GithubException), tries=5, delay=2, backoff=2
+github = Github(
+    settings.GITHUB_TOKEN, user_agent=settings.USER_AGENT, retry=http.get_retry_object()
 )
 
 
-@github_retry
 def get_repositories():
     for repo in github.get_user().get_repos():
         yield {
@@ -27,7 +23,6 @@ def get_repositories():
         }
 
 
-@github_retry
 def get_project(github_id):
     try:
         project = github.get_repo(github_id)
@@ -36,12 +31,11 @@ def get_project(github_id):
     return project
 
 
-@github_retry
 def download_archive(project, archive, sha=None):
     archive.seek(0)  # needed if retry
     sha = sha if sha else NotSet
     archive_url = project.get_archive_link("tarball", ref=sha)
-    r = session.get(archive_url, stream=True)
+    r = http.session.get(archive_url, stream=True)
     if r.status_code == requests.codes.not_found:
         raise MissingFilesError
     for chunk in r.iter_content(chunk_size=1024):
@@ -50,7 +44,6 @@ def download_archive(project, archive, sha=None):
     return archive
 
 
-@github_retry
 def get_project_details(github_id):
     project = get_project(github_id)
     return {
@@ -69,7 +62,6 @@ def get_project_details(github_id):
     }
 
 
-@github_retry
 def get_languages(remote_id):
     langs = get_project(remote_id).get_languages()
     sum_of_bytes = sum(langs.values())
@@ -79,7 +71,6 @@ def get_languages(remote_id):
     return langs_percent
 
 
-@github_retry
 def create_remote_issue(issue, user_name, reverse_url):
     github_issue = issue.repository.remote_git_object.create_issue(
         title=f"{issue.kind.category}: {issue.kind.title}",
@@ -95,7 +86,6 @@ def create_remote_issue(issue, user_name, reverse_url):
     return github_issue.number
 
 
-@github_retry
 def create_remote_commit(remote_id, message, actions, branch, **kwargs):
     """Create a new commit in a remote GitHub repository.
 
@@ -125,7 +115,6 @@ def create_remote_commit(remote_id, message, actions, branch, **kwargs):
     return new_commit.sha
 
 
-@github_retry
 def create_merge_request(remote_id, title, source_branch, **kwargs):
     """Create a new pull request in a remote GitHub repository.
 

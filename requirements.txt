@@ -66,7 +66,7 @@ pyyaml==5.1
 raven==6.10.0
 redis==3.2.1
 requests-oauthlib==1.2.0  # via django-allauth
-requests==2.21.0
+requests==2.22.0
 requirements-parser==0.2.0
 rx==1.6.1                 # via graphql-core
 singledispatch==3.4.0.3   # via graphene-django

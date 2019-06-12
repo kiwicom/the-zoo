@@ -13,6 +13,8 @@ import environ
 from . import logs
 from ..utils import _get_app_version
 
+version = _get_app_version()
+
 root = Path(__file__).parents[1]
 env = environ.Env(
     ZOO_DEBUG=(bool, False),
@@ -24,6 +26,7 @@ env = environ.Env(
     ZOO_GITLAB_URL=(str, None),
     ZOO_GITLAB_TOKEN=(str, None),
     ZOO_GITLAB_DB_URL=(str, None),
+    ZOO_USER_AGENT=(str, f"zoo/{version}" if version else "zoo"),
     ZOO_PINGDOM_EMAIL=(str, None),
     ZOO_PINGDOM_PASS=(str, None),
     ZOO_PINGDOM_APP_KEY=(str, None),
@@ -44,6 +47,8 @@ DEBUG = env("ZOO_DEBUG")
 
 GA_TRACKING_ID = env("GA_TRACKING_ID", default=None)
 GITLAB_URL = env("ZOO_GITLAB_URL")
+
+USER_AGENT = env("ZOO_USER_AGENT")
 
 DATABASES = {
     "default": env.db(default="postgres://postgres:postgres@postgres/postgres")
@@ -197,7 +202,7 @@ STRONGHOLD_PUBLIC_URLS = (
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-RAVEN_CONFIG = {"release": _get_app_version()}
+RAVEN_CONFIG = {"release": version}
 
 CELERY_BROKER_URL = env("ZOO_CELERY_BROKER_URL")
 REDIS_CACHE_URL = env("ZOO_REDIS_CACHE_URL")

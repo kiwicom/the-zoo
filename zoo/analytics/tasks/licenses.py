@@ -2,12 +2,12 @@ from celery import shared_task
 from raven.contrib.django.raven_compat.models import client
 import requests
 
+from ...base.http import session
 from ..models import Dependency, DependencyType
 
 
 @shared_task
 def check_python_lib_licenses():
-    session = requests.Session()
     for dependency in Dependency.objects.filter(
         type=DependencyType.PY_LIB.value, license=None
     ).only("name"):

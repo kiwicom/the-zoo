@@ -3,9 +3,12 @@ from gitlab import Gitlab, GitlabError, GitlabGetError, GitlabListError
 import requests
 from retry import retry
 
+from ..base.http import session
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 
-gitlab = Gitlab(settings.GITLAB_URL, settings.GITLAB_TOKEN, api_version=4)
+gitlab = Gitlab(
+    settings.GITLAB_URL, settings.GITLAB_TOKEN, api_version=4, session=session
+)
 
 gitlab_retry = retry(
     (requests.RequestException, GitlabError), tries=5, delay=2, backoff=2

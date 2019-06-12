@@ -6,7 +6,7 @@
 #
 amqp==2.4.2               # via kombu
 aniso8601==3.0.2          # via graphene
-arrow==0.13.1
+arrow==0.14.2
 attrs==19.1.0
 autopep8==1.4.4           # via django-silk
 backcall==0.1.0           # via ipython

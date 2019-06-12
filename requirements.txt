@@ -23,7 +23,7 @@ deprecated==1.2.5         # via pygithub
 django-allauth==0.39.1
 django-debug-toolbar==1.11
 django-environ==0.4.5
-django-extensions==2.1.6
+django-extensions==2.1.9
 django-silk==3.0.2
 django-stronghold==0.3.0
 django==2.2.1

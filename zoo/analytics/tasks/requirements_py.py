@@ -8,6 +8,7 @@ from retry import retry
 import structlog
 
 from . import PyLibrary
+from ...base.http import session
 
 log = structlog.get_logger()
 
@@ -96,7 +97,7 @@ def is_package_unhealthy(status: int, last_release_date: str) -> bool:
 
 @pypi_retry
 def get_pypi_metadata(package_name: str):
-    r = requests.get(f"https://pypi.org/pypi/{package_name}/json")
+    r = session.get(f"https://pypi.org/pypi/{package_name}/json")
     return None if r.status_code == 404 else r.json()
 
 

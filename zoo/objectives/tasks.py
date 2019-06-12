@@ -9,6 +9,7 @@ import requests
 import structlog
 
 from . import models
+from ..base.http import session
 
 log = structlog.get_logger()
 initialize(api_key=settings.DATADOG_API_KEY, app_key=settings.DATADOG_APP_KEY)
@@ -32,7 +33,7 @@ def check_pingdom(objective: models.Objective, query_datetime: arrow.Arrow) -> f
         f"https://api.pingdom.com/api/2.1/summary.average/{objective.indicator_query}"
     )
 
-    response = requests.get(
+    response = session.get(
         api_url,
         auth=(settings.PINGDOM_EMAIL, settings.PINGDOM_PASS),
         headers={"App-Key": settings.PINGDOM_APP_KEY},

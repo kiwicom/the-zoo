@@ -10,7 +10,7 @@ import requests
 import structlog
 
 from . import models
-from .. import utils
+from ..base import http
 
 log = structlog.get_logger()
 
@@ -22,7 +22,7 @@ def fetch_sentry_project_issues(project_slug: str) -> dict:
     )
 
     while api_request_url is not None:
-        response = requests.get(
+        response = http.session.get(
             api_request_url,
             headers={"Authorization": f"Bearer {settings.SENTRY_API_KEY}"},
         )
@@ -37,7 +37,7 @@ def fetch_sentry_project_issues(project_slug: str) -> dict:
 
 
 def fetch_from_sonarqube(path, params=None):
-    session = utils.requests_retry_session()
+    session = http.requests_retry_session()
     session.auth = settings.SONARQUBE_TOKEN, ""
 
     url = urljoin(settings.SONARQUBE_URL, path)

@@ -5,9 +5,10 @@ from github.GithubObject import NotSet
 import requests
 from retry import retry
 
+from ..base.http import session
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 
-github = Github(settings.GITHUB_TOKEN)
+github = Github(settings.GITHUB_TOKEN, user_agent=settings.USER_AGENT)
 
 github_retry = retry(
     (requests.RequestException, GithubException), tries=5, delay=2, backoff=2
@@ -40,7 +41,7 @@ def download_archive(project, archive, sha=None):
     archive.seek(0)  # needed if retry
     sha = sha if sha else NotSet
     archive_url = project.get_archive_link("tarball", ref=sha)
-    r = requests.get(archive_url, stream=True)
+    r = session.get(archive_url, stream=True)
     if r.status_code == requests.codes.not_found:
         raise MissingFilesError
     for chunk in r.iter_content(chunk_size=1024):

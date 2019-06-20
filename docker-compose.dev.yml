@@ -54,6 +54,7 @@ services:
   worker:
     environment:
       DATABASE_URL: 'postgres://postgres:postgres@postgres/postgres'
+      GCP_SERVICE_KEY:
       ZOO_AUDITING_CHECKS: dummy_standards
       ZOO_DEBUG: '1'
       ZOO_DATADOG_API_KEY:

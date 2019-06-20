@@ -14,11 +14,13 @@ django-extensions
 django-silk
 django-stronghold
 dockerfile-parse
+google-api-python-client
 graphene
 graphene-django
 gunicorn
 hiredis
 ipython
+kubernetes
 markdown
 psycopg2
 python-gitlab

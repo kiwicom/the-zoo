@@ -2,8 +2,9 @@ from collections import defaultdict
 
 from django.db import transaction
 
-from . import amazon, models, rancher
+from . import amazon, gcp, models, rancher
 from .models import InfraNode, NodeKind
+from .utils import GCPClient, KubernetesClient
 
 
 def url_matches_dns(url, dns_record):
@@ -31,6 +32,7 @@ def map_infra_to_nodes():
     amazon.map_to_nodes()
     rancher.map_to_nodes()
     connect_aws_rancher_nodes()
+    gcp.map_to_nodes()
 
 
 class Mapper:
@@ -53,6 +55,86 @@ class Mapper:
     @transaction.atomic
     def link_image_to_service(self, image_node, service):
         raise NotImplementedError()
+
+
+class GoogleCloudPlatformMapper(Mapper):
+    def _get_ingress_component(self, workload):
+        # we assume that all our services use unique namespaces
+        # and use ingress for routing requests
+        if workload.value in self._components_cache:
+            return self._components_cache[workload.value]
+
+        # zoo.datacenters.gcp._workload_identifier
+        cluster, _, full_name = workload.value.split(":")
+        namespace, _ = full_name.split("/")
+        hosts = set()
+
+        gcloud = GCPClient()
+        kube = KubernetesClient(gcloud.get_cluster_by_name(cluster))
+
+        for ingress in kube.get_ingress(namespace):
+            hosts = hosts.union(
+                {rule.host for rule in ingress.spec.rules if rule.host is not None}
+            )
+
+        result = {"name": namespace, "urls": list(hosts)}
+
+        self._components_cache[workload.value] = result
+        return result
+
+    def _get_project_members(self, project):
+        gcloud = GCPClient()
+        if project.value not in self._members_cache:
+            self._members_cache[project.value] = gcloud.get_project_owners(
+                project.value
+            )
+        return self._members_cache[project.value]
+
+    def _get_gcp_datacenter(self, cluster, service):
+        _, _, zone, _ = cluster.value.split("_")
+
+        datacenter, _ = models.Datacenter.objects.get_or_create(
+            provider="GCP", region=zone
+        )
+        service_datacenter, _ = models.ServiceDatacenter.objects.get_or_create(
+            service=service, datacenter=datacenter
+        )
+        return service_datacenter
+
+    @transaction.atomic
+    def link_image_to_service(self, image_node, service):
+        ingress_components = defaultdict(set)
+
+        for cluster in image_node.find_sources_by_kind(NodeKind.GCP_CLUSTER_NAME):
+            datacenter = self._get_gcp_datacenter(cluster, service)
+
+            for project in cluster.find_sources_by_kind(NodeKind.GCP_PROJ_ID):
+                project_members = self._get_project_members(project)
+
+                for member in project_members:
+                    models.ServiceDatacenterMember.objects.get_or_create(
+                        service_datacenter=datacenter,
+                        name=member,
+                        email=member.split(":", 1)[1],
+                    )
+                models.ServiceDatacenterMember.objects.filter(
+                    service_datacenter=datacenter
+                ).exclude(name__in=project_members).delete()
+
+        for workload in image_node.find_sources_by_kind(NodeKind.GCP_WORKLOAD_NAME):
+            component_data = self._get_ingress_component(workload)
+
+            models.ServiceDatacenterComponent.objects.get_or_create(
+                service_datacenter=datacenter, **component_data
+            )
+            # save datacenter id with its component for later deletion
+            ingress_components[datacenter.id].add(component_data["name"])
+
+        # delete no longer existing cingress in datacenters
+        for datacenter_id in ingress_components:
+            models.ServiceDatacenterComponent.objects.filter(
+                service_datacenter_id=datacenter_id
+            ).exclude(name__in=ingress_components[datacenter_id]).delete()
 
 
 class AmazonRancherMapper(Mapper):

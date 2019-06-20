@@ -4,6 +4,7 @@ services:
     build: .
     environment:
       - DATABASE_URL
+      - GCP_SERVICE_KEY
       - SECRET_KEY
       - SENTRY_DSN
       - SENTRY_PUBLIC_DSN
@@ -44,6 +45,7 @@ services:
     command: [celery, worker, -A, zoo]
     environment:
       - DATABASE_URL
+      - GCP_SERVICE_KEY
       - SECRET_KEY
       - SENTRY_DSN
       - SENTRY_PUBLIC_DSN

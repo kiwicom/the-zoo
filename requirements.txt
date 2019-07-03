@@ -26,7 +26,7 @@ django-environ==0.4.5
 django-extensions==2.1.6
 django-silk==3.0.2
 django-stronghold==0.3.0
-django==2.2.1
+django==2.2.3
 djangoql==0.12.6
 dockerfile-parse==0.0.14
 gprof2dot==2017.9.19      # via django-silk

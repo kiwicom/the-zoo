@@ -3,7 +3,7 @@ attrs
 celery
 colorama
 datadog
-ddtrace==0.23.0
+ddtrace==0.26.0
 django
 djangoql
 django-allauth

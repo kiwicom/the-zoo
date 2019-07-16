@@ -6,7 +6,6 @@
 #
 amqp==2.5.0               # via kombu
 aniso8601==6.0.0          # via graphene
-appnope==0.1.0            # via ipython
 arrow==0.14.2
 attrs==19.1.0
 autopep8==1.4.4           # via django-silk
@@ -31,7 +30,7 @@ django==2.2.3
 djangoql==0.12.6
 dockerfile-parse==0.0.14
 gprof2dot==2017.9.19      # via django-silk
-graphene-django==2.3.2
+graphene-django==2.4.0
 graphene==2.1.6
 graphql-core==2.2         # via graphene, graphene-django, graphql-relay
 graphql-relay==0.4.5      # via graphene

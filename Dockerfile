@@ -1,4 +1,4 @@
-FROM python:3.7-alpine3.9
+FROM python:3.7-alpine
 
 ENV ZOO_RDS_PRODUCTION_CERT_PATH=/etc/ssl/certs/rds-combined-ca-bundle.pem \
     DJANGO_SETTINGS_MODULE=zoo.base.settings

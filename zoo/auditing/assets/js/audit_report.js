@@ -76,7 +76,7 @@ $(document).on('click', '.patch.button', (el) => {
                     hljs.highlightBlock(block);
                 });
                 // enable approve button only if there are patches to be applied
-                if ($content.find('code.diff')[0]) {
+                if ($content.find('code')[0]) {
                     $modal.find('.ui.green.approve.button').removeClass('disabled');
                 }
                 patchModalSegment.removeClass('loading')
@@ -84,6 +84,12 @@ $(document).on('click', '.patch.button', (el) => {
         },
         onApprove () {
             patchModalForm.submit()
+            Snackbar.show({
+                text: 'The patch was successfully applied',
+                actionText: 'Yay!',
+                actionTextColor: '#FBC02D',
+                backgroundColor: '#795548'
+            })
         },
         onHidden() {
             patchModalSegment.addClass('loading')

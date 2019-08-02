@@ -9,18 +9,21 @@ from .models import Issue
 
 log = structlog.get_logger()
 
-Result = namedtuple("Result", ["issue_key", "is_found", "details"])
-# set default to `None` for `details`
-Result.__new__.__defaults__ = (None,)
-
-Patch = namedtuple("Patch", ["action", "file_path", "content", "previous_path"])
-# set default to `None` for `previous_path`
-Patch.__new__.__defaults__ = (None,)
+Result = namedtuple("Result", ["issue_key", "is_found", "details"], defaults=(None,))
+CodePatch = namedtuple(
+    "CodePatch",
+    ["action", "file_path", "content", "previous_path"],
+    defaults=(None, None),
+)
+RequestPatch = namedtuple(
+    "RequestPatch", ["url", "method", "headers", "body"], defaults=(None, None)
+)
 
 
 class CheckContext:
     Result = Result
-    Patch = Patch
+    CodePatch = CodePatch
+    RequestPatch = RequestPatch
 
     def __init__(self, repository, fake_path):
         self.owner = repository.owner

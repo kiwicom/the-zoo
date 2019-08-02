@@ -1,4 +1,5 @@
 import difflib
+import json
 import re
 
 from django import template
@@ -140,6 +141,11 @@ def diff(value: str, new_value: str) -> str:
         if idx > 1  # skip first two lines showing name of file
     )
     return "".join(lines)
+
+
+@register.filter
+def json_pretty(value: dict) -> str:
+    return json.dumps(value, indent=4)
 
 
 @register.simple_tag

@@ -106,6 +106,45 @@ def clear_discovered_checks():
     PATCHES.clear()
 
 
+def _discover_kinds(package_name):
+    package = importlib.import_module(f"{package_name}.checks")
+    package_kinds = {}
+
+    for module_name, module in _get_package_members(package, CHECK_REGEX):
+        CHECKS.extend(
+            [member for _, member in _get_module_members(module, CHECK_REGEX)]
+        )
+        package_kinds.update(
+            _parse_metadata_file(settings.ZOO_AUDITING_ROOT / package_name, module_name)
+        )
+    return package_kinds
+
+
+def _discover_patches(package_name, package_kinds):
+    try:
+        package = importlib.import_module(f"{package_name}.patches")
+    except ModuleNotFoundError:
+        return {}
+
+    patches_keys = {
+        kind.patch: kind.key
+        for kind in package_kinds.values()
+        if kind.patch is not None
+    }
+
+    package_patches = {}
+    for module_name, module in _get_package_members(package, PATCH_REGEX):
+        package_patches.update(
+            {
+                patches_keys[f"{module_name}.{member_name}"]: member
+                for member_name, member in _get_module_members(module, PATCH_REGEX)
+                if f"{module_name}.{member_name}" in patches_keys
+            }
+        )
+
+    return package_patches
+
+
 def discover_checks():
     clear_discovered_checks()
 
@@ -115,39 +154,11 @@ def discover_checks():
     site.addsitedir(str(settings.ZOO_AUDITING_ROOT))
 
     for package_name in settings.ZOO_AUDITING_CHECKS:
-        package = importlib.import_module(f"{package_name}.checks")
-        package_kinds = {}
-
-        for module_name, module in _get_package_members(package, CHECK_REGEX):
-            CHECKS.extend(
-                [member for _, member in _get_module_members(module, CHECK_REGEX)]
-            )
-            package_kinds.update(
-                _parse_metadata_file(
-                    settings.ZOO_AUDITING_ROOT / package_name, module_name
-                )
-            )
-
+        package_kinds = _discover_kinds(package_name)
         KINDS.update(package_kinds)
 
-        try:
-            package = importlib.import_module(f"{package_name}.patches")
-        except ModuleNotFoundError:
-            continue
-
-        patches_keys = {
-            kind.patch: kind.key
-            for kind in package_kinds.values()
-            if kind.patch is not None
-        }
-
-        for module_name, module in _get_package_members(package, PATCH_REGEX):
-            PATCHES.update(
-                {
-                    patches_keys[f"{module_name}.{member_name}"]: member
-                    for member_name, member in _get_module_members(module, PATCH_REGEX)
-                }
-            )
+        package_patches = _discover_patches(package_name, package_kinds)
+        PATCHES.update(package_patches)
 
 
 def _get_package_members(package, filter_by_re=None):

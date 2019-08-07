@@ -154,6 +154,7 @@ class AuditReport(TemplateView):
                 status__in=[
                     models.Issue.Status.FIXED.value,
                     models.Issue.Status.NOT_FOUND.value,
+                    models.Issue.Status.WONTFIX.value,
                 ]
             ):
                 context["issues"][issue.kind.category].append(issue)

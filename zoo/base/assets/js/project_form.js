@@ -5,7 +5,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import RepoInput from './components/RepoInput'
 import TagInput from './components/TagInput'
-import '../style/service_form.less'
+import '../style/project_form.less'
 
 $('select').dropdown({
   transition: 'fade down'

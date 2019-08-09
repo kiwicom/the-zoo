@@ -3,13 +3,13 @@
 {% load utils %}
 
 {% block menu %}
-  {% with selected='service_list' %}
+  {% with selected=project_type %}
     {{ block.super }}
   {% endwith %}
 {% endblock %}
 
 {% block navtitle %}
-  {% with icon='heartbeat' to_url='/services/'|add:service.owner_slug|add:'/'|add:service.name_slug header='Audit Results for '|add:service.name %}
+  {% with icon='heartbeat' to_url='/'|add:project_type|add:'/'|add:project.owner_slug|add:'/'|add:project.name_slug header='Audit Results for '|add:project.name %}
     {{ block.super }}
   {% endwith %}
 {% endblock %}
@@ -37,7 +37,7 @@
         severity:{{ issue.kind.severity.value }}
       </div>
       {% if not issue.remote_issue_id %}
-      <form method="post" action="{% url 'open_git_issue' service_owner_slug=service.owner_slug service_name_slug=service.name_slug issue_pk=issue.pk %}">
+      <form method="post" action="{% url 'open_git_issue' project_type=project_type owner_slug=project.owner_slug name_slug=project.name_slug issue_pk=issue.pk %}">
         {% csrf_token %}
         <button type="submit" class="ui mini brown vertical animated button">
           <div class="hidden content">
@@ -53,7 +53,7 @@
         {{ issue.merge_request.label }}
       </a>
       {% elif issue.kind.patch %}
-      <div class="ui mini brown vertical animated patch button" data-url="{% url 'patch_issue' service_owner_slug=service.owner_slug service_name_slug=service.name_slug issue_pk=issue.pk %}">
+      <div class="ui mini brown vertical animated patch button" data-url="{% url 'patch_issue' project_type=project_type owner_slug=project.owner_slug name_slug=project.name_slug issue_pk=issue.pk %}">
         <div class="hidden content">
           <i class="file alternate icon"></i>
         </div>
@@ -62,7 +62,7 @@
         </div>
       </div>
       {% endif %}
-      <div class="ui mini basic negative vertical animated wontfix button" data-url="{% url 'wontfix_issue' service_owner_slug=service.owner_slug service_name_slug=service.name_slug issue_pk=issue.pk %}">
+      <div class="ui mini basic negative vertical animated wontfix button" data-url="{% url 'wontfix_issue' project_type=project_type owner_slug=project.owner_slug name_slug=project.name_slug issue_pk=issue.pk %}">
         <div class="hidden content">
           <i class="times icon"></i>
         </div>
@@ -96,7 +96,7 @@
 </div>
 {% endfor %}
 
-{% if service.repository %}
+{% if project.repository %}
 <a href="?force">
   <button class="ui huge yellow corner circular icon button">
     <i class="ui refresh icon"></i>

@@ -73,8 +73,8 @@ known_colors = {
 }
 
 
-@register.inclusion_tag("services/service_link.html")
-def service_link(name, url, icon=None):
+@register.inclusion_tag("shared/project_link.html")
+def project_link(name, url, icon=None):
     return {"name": name, "url": url, "icon": icon or name}
 
 

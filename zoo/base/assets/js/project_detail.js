@@ -1,13 +1,13 @@
-import '../style/service_detail.less'
+import '../style/project_detail.less'
 import jQuery from 'jquery/src/jquery'
 import 'semantic-ui-css/semantic.min.js'
 import Mustache from 'mustache'
 
 $(document).ready(() => {
   const repoDetailsContainer = $('#repository-details-container')
-  const serviceDeleteForm = $('#service-delete-form')
+  const projectDeleteForm = $('#project-delete-form')
   const confirmationModal = $('.ui.basic.modal')
-  let serviceDeleteFormProcessed = false
+  let projectDeleteFormProcessed = false
 
   $.get(repoDetailsContainer.data('url'))
   .done((response) => {
@@ -49,20 +49,20 @@ $(document).ready(() => {
     }
   })
 
-  $('.ui.service-actions.dropdown').dropdown({
+  $('.ui.project-actions.dropdown').dropdown({
     action: 'hide',
     position: 'right',
     transition: 'fade up'
   })
 
-  serviceDeleteForm.submit((event) => {
-    if(!serviceDeleteFormProcessed) {event.preventDefault()}
+  projectDeleteForm.submit((event) => {
+    if(!projectDeleteFormProcessed) {event.preventDefault()}
 
     confirmationModal.modal({
       transition: 'fade up',
       onApprove () {
-        serviceDeleteFormProcessed = true
-        serviceDeleteForm.submit()
+        projectDeleteFormProcessed = true
+        projectDeleteForm.submit()
       }
     }).modal('show')
   })

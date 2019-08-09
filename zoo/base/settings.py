@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     "zoo.checklists.apps.ChecklistsConfig",
     "zoo.repos.apps.ReposConfig",
     "zoo.services.apps.ServicesConfig",
+    "zoo.libraries.apps.LibrariesConfig",
     "zoo.analytics.apps.AnalyticsConfig",
     "zoo.objectives.apps.ObjectivesConfig",
     "zoo.api.apps.ApiConfig",

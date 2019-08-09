@@ -1,4 +1,4 @@
-import '../style/service_list.less'
+import '../style/project_list.less'
 const URI = require('urijs')
 const searchInput = $('.ui.search input')
 const enterKeyCode = 13
@@ -21,7 +21,7 @@ if(currentQuery) {
     searchInput.val(currentQuery)
 }
 
-$('.service-filter .ui.basic.label').popup({
+$('.project-filter .ui.basic.label').popup({
     transition: 'fade down',
     exclusive: true,
     hoverable: true,

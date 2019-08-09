@@ -7,9 +7,7 @@ global_urls = [
     path("", views.AuditOverview.as_view(), name="audit_overview"),
     path("bulk_create/", views.open_bulk_git_issues, name="bulk_create_issues"),
     path(
-        "<str:service_owner_slug>/",
-        views.AuditOverview.as_view(),
-        name="owned_audit_overview",
+        "<str:owner_slug>/", views.AuditOverview.as_view(), name="owned_audit_overview"
     ),
 ]
 
@@ -23,7 +21,7 @@ service_urls = [
 urlpatterns = [
     path("auditing/", include(global_urls)),
     path(
-        "services/<str:service_owner_slug>/<str:service_name_slug>/auditing/",
+        "<str:project_type>/<str:owner_slug>/<str:name_slug>/auditing/",
         include(service_urls),
     ),
 ]

@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
 from . import models, runner, tasks
+from ..libraries.models import Library
 from ..repos.tasks import pull
 from ..repos.utils import download_repository
 from ..services.models import Service
@@ -114,41 +115,45 @@ class AuditOverview(TemplateView):
 
 class AuditReport(TemplateView):
     template_name = "audit_report.html"
+    models = {"services": Service, "libraries": Library}
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
-        service = context["service"]
+        project = context["project"]
 
-        if "force" in self.request.GET and service.repository:
-            pull(service.repository.remote_id, service.repository.provider)
+        if "force" in self.request.GET and project.repository:
+            pull(project.repository.remote_id, project.repository.provider)
             return redirect(
-                "audit_report",
-                self.kwargs["service_owner_slug"],
-                self.kwargs["service_name_slug"],
+                "audit_report", self.kwargs["owner_slug"], self.kwargs["name_slug"]
             )
 
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        project_cls = self.models.get(self.kwargs["project_type"])
+
+        if project_cls is None:
+            raise Http404("Project.DoesNotExist")
 
         try:
-            service = (
-                Service.objects.select_related("repository")
+            project = (
+                project_cls.objects.select_related("repository")
                 .prefetch_related("repository__issues")
                 .get(
-                    owner_slug=self.kwargs["service_owner_slug"],
-                    name_slug=self.kwargs["service_name_slug"],
+                    owner_slug=self.kwargs["owner_slug"],
+                    name_slug=self.kwargs["name_slug"],
                 )
             )
-        except Service.DoesNotExist:
-            raise Http404("Service.DoesNotExist")
+        except project_cls.DoesNotExist:
+            raise Http404(f"{project_cls.__name__}.DoesNotExist")
 
-        context["service"] = service
+        context["project"] = project
+        context["project_type"] = self.kwargs["project_type"]
         context["issues"] = defaultdict(list)
 
-        if service.repository:
-            for issue in service.repository.issues.filter(deleted=False).exclude(
+        if project.repository:
+            for issue in project.repository.issues.filter(deleted=False).exclude(
                 status__in=[
                     models.Issue.Status.FIXED.value,
                     models.Issue.Status.NOT_FOUND.value,
@@ -163,7 +168,7 @@ class AuditReport(TemplateView):
             for key, value in sorted(context["issues"].items())
         )
 
-        deleted_issues = service.repository.issues.filter(deleted=True).all()
+        deleted_issues = project.repository.issues.filter(deleted=True).all()
         if deleted_issues:
             unknown_ctg = "Deprecated Issues"
             context["issues"][unknown_ctg] = deleted_issues
@@ -198,8 +203,9 @@ class IssuePatch(TemplateView):
 
         return redirect(
             "audit_report",
-            self.kwargs["service_owner_slug"],
-            self.kwargs["service_name_slug"],
+            self.kwargs["project_type"],
+            self.kwargs["owner_slug"],
+            self.kwargs["name_slug"],
         )
 
 
@@ -241,22 +247,22 @@ def open_bulk_git_issues(request):
 
 
 @require_POST
-def open_git_issue(request, service_owner_slug, service_name_slug, issue_pk):
+def open_git_issue(request, project_type, owner_slug, name_slug, issue_pk):
     issue = models.Issue.objects.get(pk=issue_pk)
 
     create_git_issue(
         issue,
         request.user.get_username(),
         request.build_absolute_uri(
-            reverse("audit_report", args=[service_owner_slug, service_name_slug])
+            reverse("audit_report", args=[project_type, owner_slug, name_slug])
         ),
     )
 
-    return redirect("audit_report", service_owner_slug, service_name_slug)
+    return redirect("audit_report", project_type, owner_slug, name_slug)
 
 
 @require_POST
-def wontfix_issue(request, service_owner_slug, service_name_slug, issue_pk):
+def wontfix_issue(request, project_type, owner_slug, name_slug, issue_pk):
     issue = models.Issue.objects.get(pk=issue_pk)
 
     issue.status = issue.Status.WONTFIX.value
@@ -264,4 +270,4 @@ def wontfix_issue(request, service_owner_slug, service_name_slug, issue_pk):
     issue.full_clean()
     issue.save()
 
-    return redirect("audit_report", service_owner_slug, service_name_slug)
+    return redirect("audit_report", project_type, owner_slug, name_slug)

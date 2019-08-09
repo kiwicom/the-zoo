@@ -1,43 +1,9 @@
 from django import forms
-from django.forms import widgets
 
 from . import models
-from ..checklists.steps import STEPS
-from ..repos.models import Repository
-
-
-class RepoInput(widgets.TextInput):
-    template_name = "services/fields/repo_input.html"
-
-    def __init__(self, attrs=None):
-        super().__init__(attrs)
-        self.attrs["list"] = "repos"
-
-    def get_context(self, name, value, attrs):
-        context = super().get_context(name, value, attrs)
-        context["repos"] = (
-            Repository.objects.order_by("owner", "name")
-            .only("pk", "owner", "name", "provider")
-            .all()
-        )
-
-        context["widget"]["value"] = value
-        return context
-
-
-class SentryProjectInput(widgets.TextInput):
-    template_name = "services/fields/sentry_input.html"
-
-
-class TagInput(widgets.TextInput):
-    template_name = "services/fields/tag_input.html"
-
-    def get_context(self, name, value, attrs):
-        context = super().get_context(name, value, attrs)
-        context["tags"] = list(STEPS)
-        context["widget"]["value"] = value
-
-        return context
+from ..base.forms import SentryProjectInput
+from ..checklists.forms import TagInput
+from ..repos.forms import RepoInput
 
 
 class ServiceForm(forms.ModelForm):

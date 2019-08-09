@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block menu %}
-  {% with selected='services' %}
+  {% with selected='libraries' %}
     {{ block.super }}
   {% endwith %}
 {% endblock %}
 
 {% block content %}
-  {% with project=service project_type_singular='service' %}
+  {% with project=library project_type_singular='library' %}
     {{ block.super }}
   {% endwith %}
 {% endblock %}

@@ -4,10 +4,21 @@ from django.utils import timezone
 
 class Checkmark(models.Model):
     class Meta:
-        unique_together = ("service", "step_key")
+        unique_together = ("service", "library", "step_key")
 
     service = models.ForeignKey(
-        "services.Service", on_delete=models.PROTECT, related_name="checkmarks"
+        "services.Service",
+        on_delete=models.PROTECT,
+        related_name="checkmarks",
+        null=True,
+        blank=True,
+    )
+    library = models.ForeignKey(
+        "libraries.Library",
+        on_delete=models.PROTECT,
+        related_name="checkmarks",
+        null=True,
+        blank=True,
     )
     step_key = models.CharField(max_length=500)
     created_at = models.DateTimeField(default=timezone.now)

@@ -30,7 +30,7 @@ env = environ.Env(
     ZOO_PINGDOM_EMAIL=(str, None),
     ZOO_PINGDOM_PASS=(str, None),
     ZOO_PINGDOM_APP_KEY=(str, None),
-    ZOO_RDS_PRODUCTION_CERT_PATH=(str, None),
+    ZOO_DATABASE_OPTIONS=(dict, {}),
     ZOO_SENTRY_URL=(str, None),
     ZOO_SENTRY_ORGANIZATION=(str, None),
     ZOO_SENTRY_API_KEY=(str, None),
@@ -53,12 +53,7 @@ USER_AGENT = env("ZOO_USER_AGENT").format(version=version)
 DATABASES = {
     "default": env.db(default="postgres://postgres:postgres@postgres/postgres")
 }
-
-if not DEBUG:
-    DATABASES["default"]["OPTIONS"] = {
-        "sslmode": "verify-full",
-        "sslrootcert": env("ZOO_RDS_PRODUCTION_CERT_PATH"),
-    }
+DATABASES["default"]["OPTIONS"] = env("ZOO_DATABASE_OPTIONS")
 
 public_root = root / "public"
 

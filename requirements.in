@@ -1,6 +1,7 @@
 arrow
 attrs
 celery
+celery-redbeat
 colorama
 datadog
 ddtrace==0.23.0

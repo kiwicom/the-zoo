@@ -30,12 +30,10 @@ services:
 
   scheduler:
     build: .
-    command: [celery, beat, -A, zoo, -s, /tmp/celerybeat-schedule/celerybeat-schedule, --pidfile, '']
+    command: [celery, beat, -A, zoo, -S, redbeat.RedBeatScheduler, --pidfile, '']
     environment:
       - ZOO_DEBUG
       - SECRET_KEY
-    volumes:
-      - /tmp/celerybeat-schedule
     depends_on:
       - redis
 

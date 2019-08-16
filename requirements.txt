@@ -32,9 +32,9 @@ djangoql==0.12.6
 dockerfile-parse==0.0.14
 gprof2dot==2017.9.19      # via django-silk
 graphene-django==2.3.2
-graphene==2.1.6
+graphene==2.1.7
 graphql-core==2.2         # via graphene, graphene-django, graphql-relay
-graphql-relay==0.4.5      # via graphene
+graphql-relay==2.0.0      # via graphene
 gunicorn==19.9.0
 hiredis==1.0.0
 idna==2.8                 # via requests

@@ -34,7 +34,7 @@ pytest-forked==1.0.2      # via pytest-xdist
 pytest-freezegun==0.3.0.post1
 pytest-mock==1.10.4
 pytest-xdist==1.29.0
-pytest==5.0.0
+pytest==5.1.0
 python-dateutil==2.8.0    # via faker, freezegun
 scramp==1.1.0             # via pg8000
 six==1.12.0               # via astroid, faker, freezegun, httpretty, packaging, pytest-xdist, python-dateutil, snapshottest

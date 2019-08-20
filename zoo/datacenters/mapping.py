@@ -3,8 +3,9 @@ from collections import defaultdict
 from django.db import transaction
 import requests
 
-from . import amazon, models, rancher
+from . import amazon, gcp, models, rancher
 from .models import InfraNode, NodeKind
+from .utils import GCPClient, KubernetesClient
 
 
 def url_matches_dns(url, dns_record):
@@ -32,6 +33,7 @@ def map_infra_to_nodes():
     amazon.map_to_nodes()
     rancher.map_to_nodes()
     connect_aws_rancher_nodes()
+    gcp.map_to_nodes()
 
 
 class Mapper:
@@ -40,6 +42,19 @@ class Mapper:
     def __init__(self):
         self._components_cache = {}
         self._members_cache = {}
+
+    def _create_component(self, service_datacenter, component_data):
+        if not component_data:
+            return
+
+        try:
+            models.ServiceDatacenterComponent.objects.get(
+                service_datacenter_id=service_datacenter.id, name=component_data["name"]
+            )
+        except models.ServiceDatacenterComponent.DoesNotExist:
+            models.ServiceDatacenterComponent.objects.create(
+                service_datacenter=service_datacenter, **component_data
+            )
 
     def get_service_image_nodes(self, service):
         image_uuid_part = f"{service.repository.owner}/{service.repository.name}"
@@ -69,7 +84,7 @@ class GoogleCloudPlatformMapper(Mapper):
         hosts = set()
 
         gcloud = GCPClient()
-        kube = KubernetesClient(gcloud.get_cluster_by_name(cluster))
+        kube = KubernetesClient(gcloud.get_clusters_by_name(cluster))
 
         for ingress in kube.get_ingress(namespace):
             hosts = hosts.union(
@@ -122,12 +137,11 @@ class GoogleCloudPlatformMapper(Mapper):
 
         for workload in image_node.find_sources_by_kind(NodeKind.GCP_WORKLOAD_NAME):
             component_data = self._get_ingress_component(workload)
+            self._create_component(datacenter, component_data)
 
-            models.ServiceDatacenterComponent.objects.get_or_create(
-                service_datacenter=datacenter, **component_data
-            )
-            # save datacenter id with its component for later deletion
-            ingress_components[datacenter.id].add(component_data["name"])
+            if component_data:
+                # save datacenter id with its component for later deletion
+                ingress_components[datacenter.id].add(component_data["name"])
 
         # delete no longer existing ingress in datacenters
         for datacenter_id in ingress_components:
@@ -206,20 +220,14 @@ class AmazonRancherMapper(Mapper):
                 project_members = self._get_project_members(project)
 
                 for service_datacenter in datacenters:
+                    self._create_component(service_datacenter, component_data)
+
                     if component_data:
-                        try:
-                            models.ServiceDatacenterComponent.objects.get(
-                                service_datacenter_id=service_datacenter.id,
-                                name=component_data["name"],
-                            )
-                        except models.ServiceDatacenterComponent.DoesNotExist:
-                            models.ServiceDatacenterComponent.objects.create(
-                                service_datacenter=service_datacenter, **component_data
-                            )
                         # save service_datacenter with components for later deletion
                         datacenters_components[service_datacenter.id].add(
                             component_data["name"]
                         )
+
                     for name in project_members:
                         models.ServiceDatacenterMember.objects.get_or_create(
                             service_datacenter=service_datacenter, name=name

@@ -21,6 +21,12 @@ class NodeKind:
     RANCHER_LB_PORTRULE_URI = "rancher.lb.portrule.uri"
     RANCHER_SERVICE_ID = "rancher.service.id"
 
+    GCP_ROOT_PROJ = "gcp.root.proj"
+    GCP_PROJ_ID = "gcp.project.id"
+    GCP_IP_RULE_NAME = "gcp.ip_rule.name"
+    GCP_CLUSTER_NAME = "gcp.cluster.name"
+    GCP_WORKLOAD_NAME = "gcp.workload.name"
+
     DOCKER_IMAGE_UUID = "docker.image.uuid"
 
 

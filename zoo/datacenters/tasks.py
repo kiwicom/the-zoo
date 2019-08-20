@@ -2,15 +2,17 @@ import arrow
 from celery import shared_task
 
 from ..services.models import Service
-from .mapping import AmazonRancherMapper, map_infra_to_nodes
+from .mapping import AmazonRancherMapper, GoogleCloudPlatformMapper, map_infra_to_nodes
 from .models import InfraNode
 
 
 @shared_task
 def link_service_to_datacenters(service_id):
     service = Service.objects.get(id=service_id)
-    mapper = AmazonRancherMapper()
-    mapper.link_service_to_datacenters(service)
+    amazon = AmazonRancherMapper()
+    amazon.link_service_to_datacenters(service)
+    gcp = GoogleCloudPlatformMapper()
+    gcp.link_service_to_datacenters(service)
 
 
 @shared_task

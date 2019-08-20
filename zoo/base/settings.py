@@ -49,6 +49,7 @@ env = environ.Env(
     RANCHER_API_URL=(str, None),
     RANCHER_ACCESS_KEY=(str, None),
     RANCHER_SECRET_KEY=(str, None),
+    GCP_SERVICE_KEY=(dict, {}),
 )
 
 SITE_ROOT = str(root)
@@ -246,5 +247,7 @@ os.environ.setdefault("AWS_SHARED_CREDENTIALS_FILE", AWS_CREDENTIALS_FILE)
 RANCHER_API_URL = env("RANCHER_API_URL")
 RANCHER_ACCESS_KEY = env("RANCHER_ACCESS_KEY")
 RANCHER_SECRET_KEY = env("RANCHER_SECRET_KEY")
+
+GCP_SERVICE_KEY = env("GCP_SERVICE_KEY")
 
 logs.configure_structlog(DEBUG)

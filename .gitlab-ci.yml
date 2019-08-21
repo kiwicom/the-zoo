@@ -9,9 +9,6 @@ variables:
   PYLINT_TARGET: zoo
   PYTEST_COVERAGE_TARGET: zoo
 
-services:
-  - docker:18.06-dind
-
 include:
   - 'https://ci-files.skypicker.com/templates/build/docker_build.yml'
   - 'https://ci-files.skypicker.com/templates/build/black.yml'
@@ -24,7 +21,6 @@ include:
   - 'https://ci-files.skypicker.com/templates/release/sonarqube_scan.yml'
   - 'https://ci-files.skypicker.com/templates/release/release_latest.yml'
 
-pytest:
+docker_build:
   services:
-    - docker:18.06-dind
-    - postgres:10.0
+    - docker:19.03-dind

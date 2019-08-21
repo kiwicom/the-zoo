@@ -24,3 +24,7 @@ include:
 docker_build:
   services:
     - docker:19.03-dind
+
+release_latest:
+  services:
+    - docker:19.03-dind

@@ -13,6 +13,7 @@ execnet==1.6.0            # via pytest-xdist
 factory-boy==2.12.0       # via pytest-factoryboy
 faker==1.0.7              # via factory-boy
 fakeredis==1.0.3
+fastdiff==0.2.0           # via snapshottest
 freezegun==0.3.12         # via pytest-freezegun
 httpretty==0.9.6
 importlib-metadata==0.18  # via pluggy, pytest
@@ -40,13 +41,14 @@ python-dateutil==2.8.0    # via faker, freezegun
 redis==3.2.1              # via fakeredis
 scramp==1.1.0             # via pg8000
 six==1.12.0               # via astroid, faker, fakeredis, freezegun, httpretty, packaging, pytest-xdist, python-dateutil, snapshottest
-snapshottest==0.5.0
+snapshottest==0.5.1
 sortedcontainers==2.1.0   # via fakeredis
 termcolor==1.1.0          # via snapshottest
 testing-postgresql==1.3.0
 testing.common.database==2.0.3  # via testing-postgresql
 text-unidecode==1.2       # via faker
 typed-ast==1.4.0          # via astroid
+wasmer==0.3.0             # via fastdiff
 wcwidth==0.1.7            # via pytest
 wrapt==1.11.2             # via astroid
 zipp==0.5.1               # via importlib-metadata

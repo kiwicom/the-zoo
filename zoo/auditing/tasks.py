@@ -5,7 +5,7 @@ from django.db.models import Count
 import structlog
 
 from .models import Issue, IssueCountByKindSnapshot, IssueCountByRepositorySnapshot
-from .utils import create_git_issue
+from .utils import apply_patches, create_git_issue
 
 log = structlog.get_logger()
 
@@ -15,6 +15,13 @@ def bulk_create_git_issues(issues):
     for issue_id, user_name, reverse_url in issues:
         issue = Issue.objects.get(id=issue_id)
         create_git_issue(issue, user_name, reverse_url)
+
+
+@shared_task
+def bulk_apply_patches(issues):
+    for issue_id in issues:
+        issue = Issue.objects.get(id=issue_id)
+        apply_patches(issue)
 
 
 @shared_task

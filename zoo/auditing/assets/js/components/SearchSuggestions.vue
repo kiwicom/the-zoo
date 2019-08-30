@@ -33,6 +33,7 @@
         return this.$store.getters.filteredFilters
       },
       count () {
+        console.log(this.filters)
         return this.filters.length
       }
     },

@@ -27,7 +27,7 @@
         const newUrl = URI(auditOverviewUrl)
 
         newUrl.addSearch({
-          service_owner: R.map(R.prop('name'), store.getters.appliedFiltersByType('owner'))
+          owner: R.map(R.prop('name'), store.getters.appliedFiltersByType('owner'))
         })
         newUrl.addSearch({
           namespace: R.map(R.prop('name'), store.getters.appliedFiltersByType('namespace'))

@@ -2,11 +2,14 @@ import json
 import pathlib
 import secrets
 import string
+import tempfile
 
 from django.urls import reverse
 import requests
 
+from . import runner
 from ..base import redis
+from ..repos.utils import download_repository
 
 
 def create_git_issue(issue, user_name, reverse_url):
@@ -16,6 +19,19 @@ def create_git_issue(issue, user_name, reverse_url):
     issue.remote_issue_id = remote_iid
     issue.full_clean()
     issue.save()
+
+
+def apply_patches(issue):
+    if issue.kind.patch is None:
+        return
+
+    with tempfile.TemporaryDirectory() as repo_dir:
+        repo_path = download_repository(issue.repository, repo_dir)
+        context = runner.CheckContext(issue.repository, repo_path)
+
+        handler = PatchHandler(issue)
+        handler.run_patches(context)
+        handler.handle_patches()
 
 
 def generate_random_key(length=512):
@@ -103,8 +119,9 @@ class PatchHandler:
         return self._patches
 
     def handle_patches(self, request=None, key=None):
-        key = key or request.POST.get("patches_key")
-        if not self._patches and not self.load_patches(key):
+        if request and key is None:
+            key = request.POST.get("patches_key")
+        if not self._patches and not (key and self.load_patches(key)):
             return False
 
         requests, actions = [], []

@@ -1,4 +1,5 @@
 from collections import defaultdict, OrderedDict
+import itertools
 import json
 import tempfile
 
@@ -13,6 +14,7 @@ from ..libraries.models import Library
 from ..repos.tasks import pull
 from ..repos.utils import download_repository
 from ..services.models import Service
+from .check_discovery import KINDS
 from .utils import create_git_issue, PatchHandler
 
 
@@ -21,15 +23,24 @@ class AuditOverview(TemplateView):
 
     @staticmethod
     def get_available_namespaces():
-        return {i.kind.namespace for i in models.Issue.objects.all()}
+        return {
+            kind.namespace for kind in KINDS.values() if kind.namespace != "deleted"
+        }
 
     @staticmethod
     def get_available_owners():
-        return {s.owner for s in Service.objects.all()}
+        return {
+            project.owner
+            for project in itertools.chain(Service.objects.all(), Library.objects.all())
+        }
 
     @staticmethod
     def get_available_status():
-        return {s.status for s in Service.objects.all() if s.status is not None}
+        return {
+            project.status
+            for project in itertools.chain(Service.objects.all(), Library.objects.all())
+            if project.status is not None
+        }
 
     @classmethod
     def get_available_filters(cls):
@@ -39,65 +50,109 @@ class AuditOverview(TemplateView):
             *({"name": n, "type": "status"} for n in cls.get_available_status()),
         ]
 
-    @staticmethod
-    def get_services(owner_filters, status_filters):
-        service_list = (
-            Service.objects.exclude(repository_id=None)
-            .select_related("repository")
-            .prefetch_related("repository__issues")
+    @classmethod
+    def get_projects(cls, model, owner_filters, status_filters):
+        project_list = model.objects.exclude(repository_id=None).select_related(
+            "repository"
         )
 
         if owner_filters:
-            service_list = service_list.filter(owner__in=owner_filters)
+            project_list = project_list.filter(owner__in=owner_filters)
 
         if status_filters:
-            service_list = service_list.filter(status__in=status_filters)
+            project_list = project_list.filter(status__in=status_filters)
 
-        return service_list
+        return project_list
+
+    @classmethod
+    def get_services(cls, *args):
+        return cls.get_projects(Service, *args)
+
+    @classmethod
+    def get_libraries(cls, *args):
+        return cls.get_projects(Library, *args)
+
+    @classmethod
+    def _get_repos_by_issue(cls, repository_ids):
+        issues = (
+            models.Issue.objects.filter(
+                status__in=[
+                    models.Issue.Status.NEW.value,
+                    models.Issue.Status.REOPENED.value,
+                ],
+                kind_key__in=KINDS,
+                repository_id__in=repository_ids,
+            )
+            .values("kind_key", "repository_id")
+            .all()
+        )
+        repos_by_issue = defaultdict(set)
+        for issue in issues:
+            repos_by_issue[issue["kind_key"]].add(issue["repository_id"])
+
+        return repos_by_issue
+
+    @classmethod
+    def _get_projects_by_repo(cls, *args):
+        projects = itertools.chain(cls.get_services(*args), cls.get_libraries(*args))
+        projects_by_repo = defaultdict(list)
+
+        for project in projects:
+            projects_by_repo[project.repository_id].append(
+                {
+                    "id": project.id,
+                    "name": project.name,
+                    "owner": project.owner,
+                    "url": project.get_absolute_url(),
+                    "type": project.__class__.__name__.lower(),
+                    "repository": {
+                        "id": project.repository_id,
+                        "url": project.repository.url,
+                        "owner": project.repository.owner,
+                        "name": project.repository.name,
+                    },
+                }
+            )
+        return projects_by_repo
 
     @classmethod
     def get_issues(cls, owner_filters, namespace_filters, status_filters):
-        kinds = defaultdict(lambda: {"services": []})
+        kinds = defaultdict(lambda: {"count": 0, "projects": []})
 
         if not namespace_filters:
             namespace_filters = cls.get_available_namespaces()
 
-        for service in cls.get_services(owner_filters, status_filters):
-            for issue in service.repository.issues.all():
-                if issue.kind.namespace not in namespace_filters:
-                    continue
+        projects_by_repo = cls._get_projects_by_repo(owner_filters, status_filters)
+        repos_by_issue = cls._get_repos_by_issue(projects_by_repo)
 
-                kinds[issue.kind_key]["title"] = issue.kind.title
-                kinds[issue.kind_key]["description"] = issue.kind.description
-                kinds[issue.kind_key]["effort"] = issue.kind.effort.value
-                kinds[issue.kind_key]["severity"] = issue.kind.severity.value
-                kinds[issue.kind_key]["services"].append(
-                    {
-                        "id": service.id,
-                        "pk": issue.pk,
-                        "url": issue.remote_issue_url,
-                        "status": issue.status,
-                        "kind_key": issue.kind_key,
-                        "remote_id": issue.remote_issue_id
-                        if issue.remote_issue_id is not None
-                        else None,
-                    }
-                )
+        for kind_key, repos in repos_by_issue.items():
+            kind = KINDS[kind_key]
+            if kind.namespace not in namespace_filters:
+                continue
+
+            kinds[kind.key]["title"] = kind.title
+            kinds[kind.key]["description"] = kind.description
+            kinds[kind.key]["effort"] = kind.effort.value
+            kinds[kind.key]["severity"] = kind.severity.value
+            kinds[kind.key]["patch"] = kind.patch
+
+            for repo_id in repos:
+                if repo_id in projects_by_repo:
+                    kinds[kind.key]["projects"] += projects_by_repo[repo_id]
+
+            kinds[kind.key]["projects"].sort(key=lambda d: d["name"])
+            kinds[kind.key]["count"] = len(kinds[kind.key]["projects"])
 
         return OrderedDict(sorted(kinds.items()))
 
     def get(self, request, *args, **kwargs):
         if request.is_ajax():
-            owner_filters = self.request.GET.getlist("service_owner")
+            owner_filters = self.request.GET.getlist("owner")
             namespace_filters = self.request.GET.getlist("namespace")
             status_filters = self.request.GET.getlist("status")
 
             return JsonResponse(
                 {
-                    "services": [
-                        {"id": s.id, "name": s.name, "owner": s.owner}
-                        for s in self.get_services(owner_filters, status_filters)
-                    ],
                     "issues": self.get_issues(
                         owner_filters, namespace_filters, status_filters
                     ),
@@ -185,7 +240,7 @@ class IssuePatch(TemplateView):
 
         with tempfile.TemporaryDirectory() as repo_dir:
             repo_path = download_repository(repository, repo_dir)
-            context = runner.CheckContext(issue.repository, repo_path)
+            context = runner.CheckContext(repository, repo_path)
 
             handler = PatchHandler(issue)
             patches = handler.run_patches(context)
@@ -213,37 +268,50 @@ class IssuePatch(TemplateView):
 def open_bulk_git_issues(request):
     data = json.loads(request.body)
 
+    issues = []
+    for kind_key, repositories in data["selectedIssues"].items():
+        issues += models.Issue.objects.filter(
+            status__in=[
+                models.Issue.Status.NEW.value,
+                models.Issue.Status.REOPENED.value,
+            ],
+            repository_id__in=repositories,
+            kind_key=kind_key,
+            remote_issue_id__isnull=True,
+        ).all()
+
     user_name = request.user.get_username()
     redirect_uri = request.build_absolute_uri(
         reverse("audit_overview")
         if "owner" not in data
         else reverse("owned_audit_overview", args=[data["owner"]])
     )
-    issues = [(pk, user_name, redirect_uri) for pk in data["pk_list"]]
-    tasks.bulk_create_git_issues.delay(issues)
+    new_issues = [(issue.id, user_name, redirect_uri) for issue in issues]
+    tasks.bulk_create_git_issues.delay(new_issues)
 
-    owner_filters = {
-        f["name"] for f in data["filters"]["applied"] if f["type"] == "owner"
-    }
-    namespace_filters = {
-        f["name"] for f in data["filters"]["applied"] if f["type"] == "namespace"
-    }
-    status_filters = {
-        f["name"] for f in data["filters"]["applied"] if f["type"] == "status"
-    }
+    return JsonResponse(data)
 
-    return JsonResponse(
-        {
-            "services": [
-                {"id": s.id, "name": s.name, "owner": s.owner}
-                for s in AuditOverview.get_services(owner_filters, status_filters)
+
+@require_POST
+def apply_bulk_patches(request):
+    data = json.loads(request.body)
+
+    issues = []
+    for kind_key, repositories in data["selectedIssues"].items():
+        issues += models.Issue.objects.filter(
+            status__in=[
+                models.Issue.Status.NEW.value,
+                models.Issue.Status.REOPENED.value,
             ],
-            "issues": AuditOverview.get_issues(
-                owner_filters, namespace_filters, status_filters
-            ),
-            "filters": data["filters"],
-        }
-    )
+            repository_id__in=repositories,
+            kind_key=kind_key,
+            merge_request_id__isnull=True,
+        ).all()
+
+    patching_issues = [issue.id for issue in issues]
+    tasks.bulk_apply_patches.delay(patching_issues)
+
+    return JsonResponse(data)
 
 
 @require_POST

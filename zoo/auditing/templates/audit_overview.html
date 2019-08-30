@@ -8,20 +8,26 @@
   {% endwith %}
 {% endblock %}
 
+{% block navtitle %}
+  {% with icon='heartbeat' header='Auditing Results' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
 {% block stylesheets %}
   <link rel="stylesheet" href="{% static 'audit_overview.css' %}">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-  <div class="ui loading segment app">
+
+  <div class="app">
     <main-header></main-header>
-    <matrix :services="services" :issues="issues"></matrix>
+    <issue-list></issue-list>
   </div>
   <div class="ui basic tiny modal">
     <div class="ui icon header">
       <i class="question circle icon"></i>
-      <span id="issue-modal-text">You are going to create %s issues, is this action intended?</span>
+      <span id="action-modal-text"></span>
     </div>
     <div class="actions centered-text">
       <div class="ui red basic cancel inverted button">
@@ -38,8 +44,12 @@
 
 {% block scripts %}
   <script>
+    const pluralize = function (num, singular, plural) {
+      return num + ' ' + (num === 1 ? singular : plural)
+    }
     const auditOverviewCsrfToken = '{{ csrf_token }}'
-    const auditOverviewEndpoint = '{% url "bulk_create_issues" %}'
+    const auditOverviewIssueEndpoint = '{% url "bulk_create_issues" %}'
+    const auditOverviewPatchEndpoint = '{% url "bulk_apply_patches" %}'
     const auditOverviewUrl = '{% url "audit_overview" %}'
   </script>
   <script src="{% static 'audit_overview.js' %}"></script>

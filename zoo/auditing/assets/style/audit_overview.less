@@ -1,192 +1,175 @@
 @import '~zoo:base/style/_helpers.less';
 @import '~zoo:base/style/_variables.less';
 @import '~zoo:base/style/code.less';
-@import (inline) "~highlight.js/styles/atom-one-dark.css";
+@import (inline) "~highlight.js/styles/solarized-light.css";
 
-@cell-height: 38px;
-@cell-width: 10rem;
+.app {
+  width: inherit;
 
+  .issue-list {
+    width: inherit;
 
-.header-button {
-  padding: 0 1rem;
-  background: #e0e1e2;
-  line-height: calc(~'@{cell-height} - 5px');
-  border-radius: @border-radius;
-}
-
-.ui.app.segment {
-  margin-top: -1rem;
-  height: calc(~'100vh - 6rem');
-}
-
-.ui.code.branch.icon {
-  margin: 0 !important;
-}
-
-.matrix-cell-button {
-  .flex-vertical();
-  height: calc(~'@{cell-height} - 4px');
-  width: calc(~'@{cell-height} - 4px');
-  background: none;
-  border-radius: 50%;
-  border: 0;
-  cursor: pointer;
-
-  &:hover {
-    background: #cacbcd;
-  }
-
-  &:focus {
-    outline: 0;
-  }
-}
-
-.auditgrid-wrapper {
-  margin-top: 1rem;
-  height: calc(~'100% - 4rem');
-  position: relative;
-}
-
-.auditgrid {
-  height: 100%;
-
-  &.results {
-    height: calc(~'100% - @{cell-height}');
-  }
-
-  .auditgrid-header,
-  .auditgrid-body {
-    width: 100%;
-  }
-
-  .auditgrid-header {
-    border-bottom: 1px solid #dededf;
-  }
-
-  .auditgrid-header,
-  .auditgrid-header-services,
-  .auditgrid-body {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .auditgrid-header-services {
-    overflow: hidden;
-    will-change: scroll-position;
-    padding-left: .25rem;
-  }
-
-  .auditgrid-body {
-    height: calc(~'100% - @{cell-height}');
-  }
-
-  .auditgrid-matrix {
-    overflow: auto;
-  }
-
-  .auditgrid-cell {
-    .flex-horizontal();
-    height: @cell-height;
-    width: @cell-width;
-    flex-shrink: 0;
-    flex-grow: 1;
-    text-align: center;
-
-    .ui.fluid.button {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+    &.loading {
+      min-height: 10rem;
     }
-  }
 
-  .auditgrid-column {
-    height: 100%;
-    overflow: hidden;
-    flex-shrink: 0;
-    will-change: scroll-position;
-    border-right: 1px solid #dededf;
+    .table-actions {
+      .flex-horizontal();
+      width: inherit;
+      position: fixed;
+      bottom: 0;
+      height: 38px;
+      border-top: 0;
+      justify-content: space-between;
+      margin: 0;
+      padding: 1.5rem .5rem;
 
-    .auditgrid-cell {
-      width: 22.5rem;
+      .selected-info {
+        padding: 0 1rem;
 
-      &:nth-child(2n) {
-        background-color: #ececec;
+        .ui.header {
+          margin: 0;
+          margin-right: 1rem;
+        }
       }
-    }
 
-    .issue-header-wrapper {
-      width: 100%;
-    }
-
-    .icon.button {
-      flex-shrink: 0;
-      margin: 0 0 0 .25rem;
-
-      /* stylelint-disable-next-line selector-max-compound-selectors */
-      i {
-        opacity: .6;
-      }
-    }
-
-    .ui.fluid.button {
-      margin-left: .25rem;
-      flex-grow: 1;
-    }
-  }
-
-  .auditgrid-row {
-    display: flex;
-    flex-direction: row;
-    height: @cell-height;
-
-    &:nth-child(2n) {
-
-      .auditgrid-cell {
-        background-color: #ececec;
+      .clear-selected-button {
+        opacity: .75;
       }
     }
   }
-
-  .auditgrid-severity {
-    background: @primary-color !important;
-    color: #fff;
-    height: 24px !important;
-    border-right: none !important;
-  }
-
-  .severity-advice {
-    background: @green !important;
-  }
-
-  .severity-warning {
-    background: @yellow !important;
-    color: @black !important;
-  }
-
-  .severity-critical {
-    background: @red !important;
-  }
 }
 
-.ui.segment.table-actions {
-  .flex-horizontal();
-  height: @cell-height;
-  width: 100%;
-  border-top: 0;
+.ui.popup {
+  max-width: 40%
+}
+
+.page-header {
   justify-content: space-between;
-  margin: 0;
-  padding: 1.5rem .5rem;
+}
 
-  .selected-info {
-    padding: 0 1rem;
+.severity-advice {
+  background: @green !important;
+  color: white !important;
+}
+
+.severity-warning {
+  background: @yellow !important;
+  color: black !important;
+
+  .ui.header {
+    margin-bottom: 0;
+    flex-grow: 1;
+  }
+}
+
+.severity-critical {
+  background: @red !important;
+  color: white !important;
+
+  .ui.label {
+    cursor: default;
+  }
+}
+
+.main-header {
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+
+.ui.icon.message {
+  background: @white;
+}
+
+.ui.issue.segments {
+  margin-bottom: .15rem;
+  margin-top: .15rem;
+}
+
+.ui.issue.segment {
+  .flex-horizontal();
+  justify-content: space-between;
+  padding: .75rem;
+
+  .actions-wrapper {
+    .ui.icon.button {
+      margin: 0;
+      width: 47px;
+      height: 47px;
+    }
+  }
+
+  .ui.header small {
+    font-weight: 500;
+    opacity: .75;
+  }
+
+  .ui.circular.label {
+    margin-top: .15rem;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  .tags-wrapper {
+    justify-content: flex-start;
+    margin-top: .25rem;
+
+    &:empty {
+      margin: 0;
+    }
+
+    .ui.label:first-child {
+      margin-left: 0;
+    }
+  }
+
+  &.accordion .title {
+    color: rgba(0,0,0,.4);
+
+    &:hover {
+      color: @black;
+    }
+  }
+
+  @media only screen and (max-width: @largestMobileScreen) {
+    .flex-vertical();
 
     .ui.header {
-      margin: 0;
-      margin-right: 1rem;
+      text-align: center;
+      margin: 0 0 1rem !important;
     }
   }
 
-  .clear-selected-button {
-    opacity: .75;
+  @media only screen and (max-width: @mobileBreakpoint) {
+
+    .tags-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .actions-wrapper {
+      flex-direction: column;
+      width: 100%;
+
+      .ui.button {
+        width: 100%;
+        margin-bottom: .5rem;
+      }
+    }
+  }
+
+  .ui.header {
+    margin-bottom: 0;
+    flex-grow: 1;
+  }
+
+  .ui.label {
+    cursor: default;
+  }
+
+  .code.icon {
+    margin: 0 .1rem 0 -.1rem !important;
   }
 }

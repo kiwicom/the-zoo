@@ -5,6 +5,7 @@ import Mustache from 'mustache'
 
 $(document).ready(() => {
   const repoDetailsContainer = $('#repository-details-container')
+  const pagerdutyDetailsContainer = $('#pagerduty-details-container')
   const projectDeleteForm = $('#project-delete-form')
   const confirmationModal = $('.ui.basic.modal')
   let projectDeleteFormProcessed = false
@@ -21,6 +22,22 @@ $(document).ready(() => {
   })
   .fail(() => {
     showSnackbar('Failed fetching repository')
+    repoDetailsContainer.remove()
+  })
+
+  $.get(pagerdutyDetailsContainer.data('url'))
+  .done((response) => {
+    let template = $('#pagerduty-details').html()
+    pagerdutyDetailsContainer.html(Mustache.render(template, response))
+    pagerdutyDetailsContainer.removeClass('loading')
+    $('.statistic').popup({
+      transition: 'fade down',
+      exclusive: true,
+      position: 'top center'
+    })
+  })
+  .fail(() => {
+    showSnackbar('Failed fetching pagerduty details')
     repoDetailsContainer.remove()
   })
 

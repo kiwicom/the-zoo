@@ -125,6 +125,17 @@ class Service(models.Model):
                 f"{settings.GITLAB_URL}/{self.repository.owner}/{self.repository.name}"
             )
 
+    @property
+    def pagerduty_service_id(self):
+        if self.pagerduty_url is None:
+            return
+
+        service_re = re.search(
+            r"pagerduty.com\/services\/([A-Z0-9]+)", self.pagerduty_url
+        )
+        if service_re:
+            return service_re.group(1)
+
     def __str__(self):
         return f"{self.key}"
 

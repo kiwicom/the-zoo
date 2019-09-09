@@ -21,21 +21,22 @@ env = environ.Env(
     ZOO_CELERY_BROKER_URL=(str, "redis://redis/0"),
     ZOO_REDIS_CACHE_URL=(str, "redis://redis/1"),
     ZOO_REDBEAT_REDIS_URL=(str, "redis://redis/2"),
+    ZOO_DATABASE_OPTIONS=(dict, {}),
     ZOO_DATADOG_API_KEY=(str, None),
     ZOO_DATADOG_APP_KEY=(str, None),
     ZOO_SLACK_URL=(str, None),
+    ZOO_GITHUB_TOKEN=(str, None),
     ZOO_GITLAB_URL=(str, None),
     ZOO_GITLAB_TOKEN=(str, None),
     ZOO_GITLAB_DB_URL=(str, None),
     ZOO_USER_AGENT=(str, "zoo/{version}" if version else "zoo"),
+    ZOO_PAGERDUTY_TOKEN=(str, None),
     ZOO_PINGDOM_EMAIL=(str, None),
     ZOO_PINGDOM_PASS=(str, None),
     ZOO_PINGDOM_APP_KEY=(str, None),
-    ZOO_DATABASE_OPTIONS=(dict, {}),
     ZOO_SENTRY_URL=(str, None),
     ZOO_SENTRY_ORGANIZATION=(str, None),
     ZOO_SENTRY_API_KEY=(str, None),
-    ZOO_GITHUB_TOKEN=(str, None),
     ZOO_AUDITING_CHECKS=(list, []),
     ZOO_AUDITING_DROP_ISSUES=(int, 7),
     ZOO_SONARQUBE_URL=(str, None),
@@ -85,6 +86,7 @@ INSTALLED_APPS = [
     "zoo.analytics.apps.AnalyticsConfig",
     "zoo.objectives.apps.ObjectivesConfig",
     "zoo.api.apps.ApiConfig",
+    "zoo.pagerduty.apps.PagerdutyConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -208,6 +210,7 @@ DATADOG_API_KEY = env("ZOO_DATADOG_API_KEY")
 DATADOG_APP_KEY = env("ZOO_DATADOG_APP_KEY")
 GITLAB_TOKEN = env("ZOO_GITLAB_TOKEN")
 GITLAB_DB_URL = env("ZOO_GITLAB_DB_URL")
+PAGERDUTY_TOKEN = env("ZOO_PAGERDUTY_TOKEN")
 PINGDOM_EMAIL = env("ZOO_PINGDOM_EMAIL")
 PINGDOM_PASS = env("ZOO_PINGDOM_PASS")
 PINGDOM_APP_KEY = env("ZOO_PINGDOM_APP_KEY")

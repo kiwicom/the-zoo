@@ -14,16 +14,6 @@
   {% endwith %}
 {% endblock %}
 
-{% block navbuttons %}
-  <a target="_blank" rel="noopener noreferrer"
-    {% if object.pagerduty_url %}href="{{ object.pagerduty_url }}" {% endif %}
-    class="ui {% if not object.pagerduty_url %}disabled{% endif %} red icon button"
-  >
-    <i class="warning circle icon"></i>
-    Create incident
-  </a>
-{% endblock %}
-
 {% block content %}
   {% with project_type='services' project_type_singular='service' project_checklist_view='service_checklist' project_update_view='service_update' %}
     {{ block.super }}
@@ -146,4 +136,82 @@
     </div>
   </div>
   {% endif %}
+
+  {% if object.pagerduty_service_id %}
+  <div
+    id="pagerduty-details-container"
+    class="ui fluid loading segment"
+    data-url="{% url 'pagerduty_service_details' service_id=object.pagerduty_service_id %}"
+  >
+    <div class="flex-horizontal--space-between">
+      <h3 class="ui marginless header">
+        <div class="content">
+          Loading pagerduty data...
+          <div class="sub header">
+            &nbsp;
+          </div>
+        </div>
+      </h3>
+    </div>
+  </div>
+  {% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{% verbatim %}
+  <script id="pagerduty-details" type="x-tmpl-mustache">
+    <div class="flex-horizontal--space-between pagerduty-details">
+      <h3 class="ui marginless header">
+        <i class="warning circle icon"></i>
+        <div class="content">
+          {{ #oncall }}
+            <a target="_blank" href="{{ oncall.html_url }}">{{ oncall.summary }}</a>
+          {{ /oncall }}
+          {{ ^oncall }}
+            No one
+          {{ /oncall }}
+          is On-Call
+          <div class="sub header">
+            {{ summary }}
+          </div>
+        </div>
+      </h3>
+      <div class="flex-horizontal">
+        <div class="ui mini statistic" data-content="Active incidents">
+          <div class="value">
+            <i class="fire extinguisher icon"></i> {{ incidents.active_total }}
+          </div>
+        </div>
+        <div class="ui mini statistic" data-content="Incidents during the last week">
+          <div class="value">
+            <i class="calendar times outline icon"></i> {{ incidents.past_week_total }}
+          </div>
+        </div>
+        <a target="_blank" rel="noopener noreferrer" href="{{ html_url }}" class="ui red icon button">
+          <i class="warning circle icon"></i>
+          Create incident
+        </a>
+      </div>
+    </div>
+    {{ #incidents.active_total }}
+      <div class="ui segments">
+      {{ #incidents.active }}
+        <div class="ui segment {{ color }}">
+          <div class="flex-horizontal--space-between">
+            <h4 class="ui {{ color }} marginless header">
+              <div class="content">Incident <a href="{{ html_url }}">{{ summary }}</a></div>
+              <div class="sub header">
+                <b>description:</b> {{ description }}
+              </div>
+            </h4>
+            <a class="ui {{ color }} circular label">status:{{ status }}</a>
+          </div>
+        </div>
+      {{ /incidents.active }}
+      </div>
+    {{ /incidents.active_total }}
+  </script>
+{% endverbatim %}
+{{ block.super }}
 {% endblock %}

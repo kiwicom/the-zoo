@@ -179,7 +179,10 @@ class AuditReport(TemplateView):
         if "force" in self.request.GET and project.repository:
             pull(project.repository.remote_id, project.repository.provider)
             return redirect(
-                "audit_report", self.kwargs["owner_slug"], self.kwargs["name_slug"]
+                "audit_report",
+                self.kwargs["project_type"],
+                self.kwargs["owner_slug"],
+                self.kwargs["name_slug"],
             )
 
         return self.render_to_response(context)

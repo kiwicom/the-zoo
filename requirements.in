@@ -21,6 +21,7 @@ hiredis
 ipython
 markdown
 psycopg2
+pygerduty
 python-gitlab
 PyGithub
 pyyaml

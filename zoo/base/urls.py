@@ -24,6 +24,7 @@ urlpatterns = [
     path("repos/", include("zoo.repos.urls")),
     path("services/", include("zoo.services.urls")),
     path("libraries/", include("zoo.libraries.urls")),
+    path("pagerduty/", include("zoo.pagerduty.urls")),
     path("", include("zoo.auditing.urls")),
     path("", include("zoo.checklists.urls")),
     path("objectives/", include("zoo.objectives.urls")),

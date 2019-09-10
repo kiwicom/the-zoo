@@ -16,7 +16,7 @@ django-stronghold
 dockerfile-parse
 graphene
 graphene-django
-gunicorn
+gunicorn[gevent]
 hiredis
 ipython
 markdown

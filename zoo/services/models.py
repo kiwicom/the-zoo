@@ -53,7 +53,11 @@ class Service(models.Model):
     rating_grade = models.CharField(max_length=1, null=True, blank=True)
     rating_reason = models.CharField(max_length=250, null=True, blank=True)
     repository = models.ForeignKey(
-        "repos.Repository", on_delete=models.PROTECT, null=True, blank=True
+        "repos.Repository",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="services",
     )
     pagerduty_url = models.URLField(max_length=500, null=True, blank=True)
     dashboard_url = models.URLField(max_length=500, null=True, blank=True)

@@ -28,6 +28,15 @@ class Repository(models.Model):
         return f"{self.owner}/{self.name}"
 
     @property
+    def project_type(self):
+        type_ = "unknown"
+        if self.services.exists():
+            type_ = "service"
+        elif self.libraries.exists():
+            type_ = "library"
+        return type_
+
+    @property
     def scm_module(self):
         return get_scm_module(self.provider)
 

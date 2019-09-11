@@ -20,7 +20,7 @@ RequestPatch = namedtuple(
 )
 
 
-class CheckContext:
+class CheckContext:  # pylint: disable=too-many-instance-attributes
     Result = Result
     CodePatch = CodePatch
     RequestPatch = RequestPatch
@@ -33,6 +33,7 @@ class CheckContext:
         self.provider = repository.provider
         self.path = fake_path
         self.languages = repository.languages_from_analytics
+        self.project_type = repository.project_type
 
 
 def determine_issue_status(is_found, old_status):

@@ -21,6 +21,25 @@
 {% endblock %}
 
 {% block more_details %}
+  {% if object.pagerduty_service_id %}
+  <div
+    id="pagerduty-details-container"
+    class="ui fluid loading segment"
+    data-url="{% url 'pagerduty_service_details' service_id=object.pagerduty_service_id %}"
+  >
+    <div class="flex-horizontal--space-between">
+      <h3 class="ui marginless header">
+        <div class="content">
+          Loading pagerduty data...
+          <div class="sub header">
+            &nbsp;
+          </div>
+        </div>
+      </h3>
+    </div>
+  </div>
+  {% endif %}
+
   <div class="ui fluid service-detail segment">
     <div class="flex-horizontal--space-between">
       <h3 class="ui marginless header">
@@ -133,25 +152,6 @@
         </table>
       </div>
       {% endif %}
-    </div>
-  </div>
-  {% endif %}
-
-  {% if object.pagerduty_service_id %}
-  <div
-    id="pagerduty-details-container"
-    class="ui fluid loading segment"
-    data-url="{% url 'pagerduty_service_details' service_id=object.pagerduty_service_id %}"
-  >
-    <div class="flex-horizontal--space-between">
-      <h3 class="ui marginless header">
-        <div class="content">
-          Loading pagerduty data...
-          <div class="sub header">
-            &nbsp;
-          </div>
-        </div>
-      </h3>
     </div>
   </div>
   {% endif %}

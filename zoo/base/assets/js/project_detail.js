@@ -38,7 +38,7 @@ $(document).ready(() => {
   })
   .fail(() => {
     showSnackbar('Failed fetching pagerduty details')
-    repoDetailsContainer.remove()
+    pagerdutyDetailsContainer.remove()
   })
 
   $('.histogram .hitbox').popup({

@@ -17,8 +17,7 @@
       "/^border/": ["none"]
     },
     "at-rule-blacklist": "extend",
-    "max-nesting-depth": 3,
-    "selector-max-compound-selectors": 3,
+    "max-nesting-depth": 5,
     "selector-no-qualifying-type": true,
     "no-duplicate-selectors": true,
     "block-no-empty": true,
@@ -45,6 +44,5 @@
     "declaration-block-semicolon-newline-after": "always",
     "block-closing-brace-empty-line-before": "never",
     "block-closing-brace-newline-before": "always"
-
   }
 }

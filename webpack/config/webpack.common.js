@@ -99,8 +99,8 @@ module.exports = {
     extractText,
     new VueLoaderPlugin(),
     new StyleLintPlugin({
-      configFile: path.resolve(__dirname, "..", "assets/.stylelintrc"),
-      context: path.resolve(__dirname, "..", "assets/"),
+      configFile: path.resolve(__dirname, "..", "source/base/assets/.stylelintrc"),
+      context: path.resolve(__dirname, "..", "source/**/assets/"),
       files: '**/*.less'
     }),
   ]

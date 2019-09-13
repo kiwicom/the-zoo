@@ -59,7 +59,7 @@ psycopg2==2.8.3
 ptyprocess==0.6.0         # via pexpect
 pycodestyle==2.5.0        # via autopep8
 pygerduty==0.38.2
-pygithub==1.43.7
+pygithub==1.43.8
 pygments==2.4.2           # via django-silk, ipython
 pyjwt==1.7.1              # via pygithub
 python-dateutil==2.8.0    # via arrow, celery-redbeat, django-silk

@@ -27,7 +27,7 @@ django-environ==0.4.5
 django-extensions==2.1.9
 django-silk==3.0.2
 django-stronghold==0.3.0
-django==2.2.3
+django==2.2.4
 djangoql==0.12.6
 dockerfile-parse==0.0.14
 gevent==1.4.0             # via gunicorn

@@ -42,7 +42,11 @@ class Library(models.Model):
     slack_channel = models.CharField(max_length=22, null=True, blank=True)
     sonarqube_project = models.CharField(max_length=250, null=True, blank=True)
     repository = models.ForeignKey(
-        "repos.Repository", on_delete=models.PROTECT, null=True, blank=True
+        "repos.Repository",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="libraries",
     )
     docs_url = models.URLField(max_length=500, null=True, blank=True)
     library_url = models.URLField(max_length=500, null=True, blank=True)

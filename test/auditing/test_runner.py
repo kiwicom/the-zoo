@@ -13,6 +13,7 @@ def test_check_context__init(repository, fake_path):
     assert context.owner == repository.owner
     assert context.name == repository.name
     assert context.path == fake_path
+    assert context.project_type == repository.project_type
 
 
 @pytest.mark.parametrize(

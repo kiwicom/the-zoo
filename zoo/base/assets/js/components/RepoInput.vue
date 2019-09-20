@@ -28,7 +28,7 @@
     >
     <i class="dropdown icon"></i>
     <input type="hidden" :name="repoInputInfo.name" :id="repoInputInfo.id" :data-initial-value="repoInputInfo.initialValue" v-model="inputValue">
-    <repo-input-suggestions :inputHasFocus="isOnEditMode"></repo-input-suggestions>
+    <repo-input-suggestions :inputHasFocus="isOnEditMode" ref="suggestions"></repo-input-suggestions>
   </div>
 </template>
 
@@ -137,8 +137,7 @@ export default {
       this.changeUndid = false
     },
     doAction () {
-      if (this.$store.state.enteredText) this.$emit("select")
-      else this.$store.commit("clearInputs")
+      this.$emit("select")
     },
     onFocus () {
       this.isOnEditMode = true
@@ -150,16 +149,9 @@ export default {
       }
     },
     onBlur () {
-      /*
-          The visibility of the suggestion box depends on the focus status of the input.
-          Whenever the suggestion box shouldn't be visible, Vue removes it from the DOM
-          and the click on element cannot work. That's why I'm using this 100ms timeout.
-        */
-      const inputElement = this
-      setTimeout(function() {
-        inputElement.isOnEditMode = false
-        inputElement.$store.commit("refreshEnteredText")
-      }, 100)
+      this.$refs.suggestions.selectSuggestion();
+      this.isOnEditMode = false
+      this.$store.commit("refreshEnteredText")
     },
   },
   components: {

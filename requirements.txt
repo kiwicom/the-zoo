@@ -39,7 +39,7 @@ google-api-python-client==1.7.10
 google-auth-httplib2==0.0.3  # via google-api-python-client
 google-auth==1.6.3        # via google-api-python-client, google-auth-httplib2, kubernetes
 gprof2dot==2017.9.19      # via django-silk
-graphene-django==2.5.0
+graphene-django==2.6.0
 graphene==2.1.8
 graphql-core==2.2.1       # via graphene, graphene-django, graphql-relay
 graphql-relay==2.0.0      # via graphene

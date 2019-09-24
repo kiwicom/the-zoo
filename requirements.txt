@@ -55,7 +55,7 @@ jedi==0.15.1              # via ipython
 jinja2==2.10.1            # via django-silk
 jmespath==0.9.4           # via boto3, botocore
 kombu==4.6.4              # via celery
-kubernetes==10.0.0
+kubernetes==10.0.1
 markdown==3.1.1
 markupsafe==1.1.1         # via jinja2
 more-itertools==7.2.0     # via zipp

@@ -11,8 +11,8 @@ attrs==19.1.0
 autopep8==1.4.4           # via django-silk
 backcall==0.1.0           # via ipython
 billiard==3.6.1.0         # via celery
-boto3==1.9.150
-botocore==1.12.150        # via boto3, s3transfer
+boto3==1.9.235
+botocore==1.12.235        # via boto3, s3transfer
 cachetools==3.1.1         # via google-auth
 celery-redbeat==0.13.0
 celery==4.3.0

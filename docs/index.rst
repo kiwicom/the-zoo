@@ -55,13 +55,13 @@ Then you describe the errors with the following parameters:
     namespace: py_security
     category: Security Issues in Python Code
     ---
-    - id: user_input_improperly_handeled
+    - id: user_input_improperly_handled
       severity: critical
       effort: medium
       title: Handle user input correctly
       description: |
         Applications with improperly handled user input become vulnerable to attacks like
-        command injection, SSRF, SQL injection, XSS, directory traveral etc.
+        command injection, SSRF, SQL injection, XSS, directory traversal etc.
 
         [PyT](https://github.com/python-security/pyt) reported security vulnerabilities
         in the following files:

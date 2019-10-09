@@ -29,6 +29,14 @@ The Zoo also provides analytics about how dependency usage and its versions evol
 
 ## Development
 
+### Initial setup
+
+- Create a database: `$ make migrate`
+- Create a superuser: `$ make superuser`
+- Create `.env` file as documented below
+
+### How to run
+
 - Run in debug mode: `$ make run`
 - Stop: `$ make stop`
 - Stop and/or delete data: `$ make destroy`
@@ -41,11 +49,6 @@ Access web locally:
 - Login at <http://localhost:20966/admin> with your superuser account
 - Access zoo at <http://localhost:20966/>
 
-### Initial setup
-
-- Create a database: `$ make migrate`
-- Create a superuser: `$ make superuser`
-
 ### Database changes
 
 - Generate database migrations: `$ make makemigrations`
@@ -55,6 +58,21 @@ Access web locally:
 
 Check `Makefile` for shell commands if you want to run them with modified
 parameters.
+
+### Local .env file
+
+Creating a local `.env` file (see [Docker docs](https://docs.docker.com/compose/env-file/)
+on `.env` files) is necessary for some components in the app to work correctly,
+a basic example of such file contains the following:
+
+```
+ZOO_DEBUG=1
+ZOO_GITHUB_TOKEN=...
+ZOO_GITLAB_TOKEN=...
+ZOO_GITLAB_URL=https://gitlab.com
+```
+
+Version control tokens only need read access to repositories. 
 
 ## Testing
 
@@ -99,4 +117,4 @@ Setup virtual enviroment and install there `docs-requirements.txt`. Then you can
 use shortcuts:
 
 - Build docs: `$ make build-docs`
-- Open docs: `$ make read-docs`
+- Open docs: `$ make open-docs`

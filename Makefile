@@ -1,6 +1,7 @@
 # makes `make test` target our test section, not the directory test/
 .PHONY: test
 
+curr_dir = $(shell pwd)
 
 run:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up app webpack worker
@@ -40,3 +41,9 @@ build-docs:
 
 open-docs:
 	open docs/_build/html/index.html
+
+coala:
+		docker run --rm -it -w /app -v $(curr_dir):/app:cached coala/base:0.11 coala -n
+
+black:
+		docker run --rm -it -v $(curr_dir):/app kiwicom/black:19.3b0 black /app

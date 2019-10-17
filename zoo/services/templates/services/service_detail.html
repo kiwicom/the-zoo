@@ -9,18 +9,18 @@
 {% endblock %}
 
 {% block navtitle %}
-  {% with project_delete_view='service_delete' icon='cogs' to_url='/services' header=object.name|add:' service' subheader='owned by '|add:object.owner %}
+  {% with project_delete_view='service_delete' icon='cogs' to_url='/services' header=object.name|add:' service' project_update_view='service_update' subheader='owned by '|add:object.owner %}
     {{ block.super }}
   {% endwith %}
 {% endblock %}
 
 {% block content %}
-  {% with project_type='services' project_type_singular='service' project_checklist_view='service_checklist' project_update_view='service_update' %}
+  {% with project_type='services' project_type_singular='service' project_checklist_view='service_checklist' %}
     {{ block.super }}
   {% endwith %}
 {% endblock %}
 
-{% block more_details %}
+{% block priority_details %}
   {% if object.pagerduty_service_id %}
   <div
     id="pagerduty-details-container"
@@ -39,7 +39,9 @@
     </div>
   </div>
   {% endif %}
+{% endblock %}
 
+{% block extra_details %}
   {% if sentry_data %}
   <div class="sixteen wide column">
     <div class="ui sentry-stats segment">
@@ -142,7 +144,7 @@
   <script id="pagerduty-details" type="x-tmpl-mustache">
     <div class="flex-horizontal--space-between pagerduty-details">
       <h3 class="ui marginless header">
-        <i class="warning circle icon"></i>
+        <i class="pager icon"></i>
         <div class="content">
           {{ #oncall }}
             <a target="_blank" href="{{ oncall.html_url }}">{{ oncall.summary }}</a>
@@ -167,7 +169,7 @@
             <i class="calendar times outline icon"></i> {{ incidents.past_week_total }}
           </div>
         </div>
-        <a target="_blank" rel="noopener noreferrer" href="{{ html_url }}" class="ui red icon button">
+        <a target="_blank" rel="noopener noreferrer" href="{{ html_url }}" class="ui button">
           <i class="warning circle icon"></i>
           Create incident
         </a>
@@ -184,7 +186,7 @@
                 <b>description:</b> {{ description }}
               </div>
             </h4>
-            <a class="ui {{ color }} circular label">status:{{ status }}</a>
+            <a class="ui {{ color }} circular black-text label">status:{{ status }}</a>
           </div>
         </div>
       {{ /incidents.active }}

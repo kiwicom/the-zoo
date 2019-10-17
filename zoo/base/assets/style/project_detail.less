@@ -4,6 +4,19 @@
   justify-content: space-between;
 }
 
+.ui.project-detail.pointing.menu {
+  background: #f3f4f5;
+
+  .item,
+  .active.item {
+    font-weight: 500;
+  }
+
+  .active.item::after {
+    background-color: #e9e9ea;
+  }
+}
+
 .ui.project-detail.segment {
 
   &:first-of-type {
@@ -98,6 +111,10 @@
 }
 
 .ui.project-actions.button {
+
+  .left.menu {
+    margin: 0 3.25em 0 0;
+  }
 
   .item {
     padding: 0 !important;

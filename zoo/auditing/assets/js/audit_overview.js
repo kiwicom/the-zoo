@@ -4,7 +4,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import IssueList from './components/IssueList'
 import MainHeader from './components/MainHeader'
-import 'semantic-ui-css/semantic.min.js'
+import 'fomantic-ui-css/semantic.min.js'
 
 const propStartsWith = R.curry(function (propName, prefix, element) {
   return R.startsWith(prefix, R.prop(propName, element))

@@ -1,6 +1,6 @@
 import '../style/style.less';
 import jQuery from 'jquery/src/jquery';
-import 'semantic-ui-css/semantic.min.js';
+import 'fomantic-ui-css/semantic.min.js';
 import * as Snackbar from 'node-snackbar/dist/snackbar.min.js';
 
 window.jQuery = jQuery;

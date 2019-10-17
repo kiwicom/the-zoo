@@ -1,6 +1,6 @@
 import '../style/project_detail.less'
 import jQuery from 'jquery/src/jquery'
-import 'semantic-ui-css/semantic.min.js'
+import 'fomantic-ui-css/semantic.min.js'
 import Mustache from 'mustache'
 
 $(document).ready(() => {

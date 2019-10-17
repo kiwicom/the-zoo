@@ -1,6 +1,6 @@
 import * as R from 'ramda'
 import jQuery from 'jquery/src/jquery'
-import 'semantic-ui-css/semantic.min.js'
+import 'fomantic-ui-css/semantic.min.js'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import RepoInput from './components/RepoInput'

@@ -1,4 +1,4 @@
-import 'semantic-ui-css/semantic.min.js'
+import 'fomantic-ui-css/semantic.min.js'
 import 'jquery-tablesort/jquery.tablesort.min.js'
 import '../style/analytics_overview.less'
 import 'chart.js'

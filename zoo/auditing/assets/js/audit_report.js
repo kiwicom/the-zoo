@@ -1,6 +1,6 @@
 import '../style/audit_report.less'
 import jQuery from 'jquery/src/jquery'
-import 'semantic-ui-css/semantic.min.js'
+import 'fomantic-ui-css/semantic.min.js'
 import hljs from 'highlight.js/lib'
 
 $('.ui.segment code').each(function (index, block) {

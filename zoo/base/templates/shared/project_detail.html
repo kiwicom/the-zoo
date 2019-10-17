@@ -8,25 +8,25 @@
 
 {% block navtitle %}
 {{ block.super }}
+
 <div class="flex-horizontal">
-  <a target="_blank" rel="noopener noreferrer"
-    {% if object.slack_url %}href="{{ object.slack_url }}" {% endif %}
-    class="ui {% if not object.slack_url %}disabled{% endif %} yellow icon button"
-  >
-    <i class="chat icon"></i>
-    Discussion
-  </a>
-  <a target="_blank" rel="noopener noreferrer"
-    {% if object.docs_url %}href="{{ object.docs_url }}" {% endif %}
-    class="ui {% if not object.docs_url %}disabled{% endif %} yellow icon button">
-    <i class="graduation cup icon"></i>
-    Docs
-  </a>
+  {% if object.status %}
+  <a class="ui {% label_color 'status' object.status %} large circular regular-font label">status:{{ object.status }}</a>
+  {% endif %}
+
+  {% if object.impact %}
+  <a class="ui {% label_color 'impact' object.impact %} large circular regular-font label">impact:{{ object.impact }}</a>
+  {% endif %}
+
   {% block navbuttons %}
   {% endblock %}
-  <div class="ui transparent project-actions floating dropdown icon button">
+
+  <div class="ui transparent project-actions floating right center pointing dropdown icon button">
     <i class="ellipsis vertical icon"></i>
-    <div class="left menu">
+    <div class="large left menu">
+        <div class="item">
+          <a href="{% url project_update_view object.owner_slug object.name_slug %}" class="ui invisible button"><i class="edit icon"></i> Edit</a>
+        </div>
         <div class="item">
           <form method="post" id="project-delete-form" action="{% url project_delete_view object.owner_slug object.name_slug %}">
             {% csrf_token %}
@@ -36,11 +36,42 @@
     </div>
   </div>
 </div>
+
 {% endblock %}
 
 {% block content %}
 <div class="ui stackable grid">
   <div class="sixteen wide column">
+    <div class="ui basic fluid segment">
+      <div class="ui brown project-detail pointing menu">
+      <a class="active item">
+        Overview
+      </a>
+      {% if object.service_url %}
+      <a class="item" href="{{ object.service_url }}" target="_blank" rel="noopener noreferrer" style="color: #4183c4;">
+        <i class="globe americas icon"></i>
+        {{ object.service_url }}
+      </a>
+      {% endif %}
+      <div class="right menu">
+
+        <a class="ui {% if not object.slack_url %}disabled{% endif %} item" href="{{ object.slack_url }}" target="_blank" rel="noopener noreferrer">
+          <i class="comment dots icon"></i>
+          discussion
+        </a>
+        <a class="ui {% if not object.dashboard_url %}disabled{% endif %} item" href="{{ object.dashboard_url }}" target="_blank" rel="noopener noreferrer">
+          <i class="dashboard icon"></i>
+          dashboard
+        </a>
+        <a class="ui {% if not object.docs_url %}disabled{% endif %} item" href="{{ object.docs_url }}" target="_blank" rel="noopener noreferrer">
+          <i class="graduation cap icon"></i>
+          docs
+        </a>
+      </div>
+    </div>
+    </div>
+
+    {% block priority_details %}{% endblock %}
 
     {% if checklist %}
     <div class="ui fluid project-detail segment">
@@ -89,12 +120,12 @@
           </div>
         </h3>
         {% if issue_count > 0 %}
-        <a href="{% url 'audit_report' project_type object.owner_slug object.name_slug %}" class="ui yellow icon button">
+        <a href="{% url 'audit_report' project_type object.owner_slug object.name_slug %}" class="ui yellow black-text icon button">
           <i class="clipboard icon"></i>
           View report
         </a>
         {% else %}
-        <a href="{% url 'audit_report' project_type object.owner_slug object.name_slug %}?force" class="ui yellow icon button">
+        <a href="{% url 'audit_report' project_type object.owner_slug object.name_slug %}?force" class="ui yellow black-text button">
           <i class="redo icon"></i>
           Generate report
         </a>
@@ -120,15 +151,9 @@
     </div>
     {% endif %}
 
-    {% block more_details %}{% endblock %}
+    {% block extra_details %}{% endblock %}
   </div>
 </div>
-
-<a href="{% url project_update_view object.owner_slug object.name_slug %}">
-  <button class="ui huge yellow corner circular icon button">
-    <i class="ui edit icon"></i>
-  </button>
-</a>
 
 <div class="ui basic tiny modal">
   <div class="ui icon header">
@@ -191,7 +216,7 @@
             <i class="user icon"></i> {{ member_count }}
           </div>
         </div>
-        <a href="{{ url }}/issues/new" target="_blank" rel="noopener noreferrer" class="ui red icon button">
+        <a href="{{ url }}/issues/new" target="_blank" rel="noopener noreferrer" class="ui button">
           <i class="code icon"></i>
           Open issue
         </a>

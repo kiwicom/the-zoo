@@ -2,67 +2,98 @@ version: '2'
 services:
   app:
     build: .
-    environment:
-      - DATABASE_URL
-      - GCP_SERVICE_KEY
-      - SECRET_KEY
-      - SENTRY_DSN
-      - SENTRY_PUBLIC_DSN
-      - ZOO_DEBUG
-      - ZOO_SLACK_URL
-      - ZOO_GITLAB_URL
-      - ZOO_GITLAB_TOKEN
-      - ZOO_SENTRY_URL
-      - ZOO_SENTRY_ORGANIZATION
-      - ZOO_GITHUB_TOKEN
-      - ZOO_SONARQUBE_URL
-      - ZOO_SONARQUBE_TOKEN
-      - WEB_CONCURRENCY
+    command:
+      - python
+      - manage.py
+      - runserver
+      - '0.0.0.0:8080'
     ports:
-      - '8080'
+      - 20966:8080
+    environment:
+      DATABASE_URL: 'postgres://postgres:postgres@postgres/postgres'
+      GCP_SERVICE_KEY:
+      SECRET_KEY:
+      SENTRY_DSN:
+      SENTRY_PUBLIC_DSN:
+      ZOO_AUDITING_CHECKS: dummy_standards
+      ZOO_DEBUG: '1'
+      ZOO_SLACK_URL:
+      ZOO_GITLAB_URL:
+      ZOO_GITLAB_TOKEN:
+      ZOO_SENTRY_URL:
+      ZOO_SENTRY_ORGANIZATION:
+      ZOO_GITHUB_TOKEN:
+      ZOO_SONARQUBE_URL:
+      ZOO_SONARQUBE_TOKEN:
+      WEB_CONCURRENCY:
+    tty: true
+    volumes:
+      - ./zoo:/app/zoo
     depends_on:
       - postgres
+      - webpack
+      - redis
+    restart: on-failure
+
+  webpack:
+    build: webpack
+    volumes:
+      - ./zoo/:/app/source
+      - ./webpack/config:/app/config
+    command:
+      ["yarn", "development"]
 
   postgres:
     image: postgres:10.1-alpine
+    ports:
+      - 25966:5432
 
   redis:
     image: redis:4.0-alpine
+    ports:
+      - 26966:6379
 
   scheduler:
     build: .
     command: [celery, beat, -A, zoo, -S, redbeat.RedBeatScheduler, --pidfile, '']
     environment:
-      - ZOO_DEBUG
-      - SECRET_KEY
+      ZOO_DEBUG: '1'
+      SECRET_KEY:
+    volumes:
+      - ./zoo:/app/zoo
+      - /tmp/celerybeat-schedule:/tmp/celerybeat-schedule
     depends_on:
       - redis
+    restart: on-failure
 
   worker:
     build: .
     command: [celery, worker, -A, zoo]
     environment:
-      - DATABASE_URL
-      - GCP_SERVICE_KEY
-      - SECRET_KEY
-      - SENTRY_DSN
-      - SENTRY_PUBLIC_DSN
-      - ZOO_SENTRY_URL
-      - ZOO_SENTRY_ORGANIZATION
-      - ZOO_SENTRY_API_KEY
-      - ZOO_DATADOG_API_KEY
-      - ZOO_DATADOG_APP_KEY
-      - ZOO_DEBUG
-      - ZOO_GITLAB_URL
-      - ZOO_GITLAB_DB_URL
-      - ZOO_GITLAB_TOKEN
-      - ZOO_PINGDOM_EMAIL
-      - ZOO_PINGDOM_PASS
-      - ZOO_PINGDOM_APP_KEY
-      - ZOO_GITHUB_TOKEN
-      - ZOO_AUDITING_CHECKS
-      - ZOO_SONARQUBE_URL
-      - ZOO_SONARQUBE_TOKEN
+      DATABASE_URL: 'postgres://postgres:postgres@postgres/postgres'
+      GCP_SERVICE_KEY:
+      ZOO_AUDITING_CHECKS: dummy_standards
+      ZOO_DEBUG: '1'
+      ZOO_DATADOG_API_KEY:
+      ZOO_DATADOG_APP_KEY:
+      ZOO_GITHUB_TOKEN:
+      ZOO_GITLAB_URL:
+      ZOO_GITLAB_DB_URL:
+      ZOO_GITLAB_TOKEN:
+      ZOO_PINGDOM_EMAIL:
+      ZOO_PINGDOM_PASS:
+      ZOO_PINGDOM_APP_KEY:
+      ZOO_SENTRY_URL:
+      ZOO_SENTRY_ORGANIZATION:
+      ZOO_SENTRY_API_KEY:
+      ZOO_SONARQUBE_URL:
+      ZOO_SONARQUBE_TOKEN:
+      SENTRY_PUBLIC_DSN:
+      SENTRY_DSN:
+      SECRET_KEY:
     depends_on:
       - postgres
       - redis
+    volumes:
+      - ./zoo:/app/zoo
+    restart: on-failure

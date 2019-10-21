@@ -55,18 +55,22 @@
   </div>
 </div>
 {% empty %}
-  <div class="ui basic segment flex-horizontal">
-    <br>
-    <h1 class="ui header">
-      <i class="frown icon"></i>
+<div class="ui basic segment">
+  <div class="ui very padded placeholder segment">
+    <div class="ui icon header">
+      <i class="huge grin beam sweat outline icon"></i>
+      <br>
       <div class="content">
-        No results found
+        Oops! We couldn't find your thing...
         <div class="sub header">
-          Make sure the query is correct or try with a different one
+          Make sure the query is correct or add the project if needed
         </div>
       </div>
-    </h1>
+    </div>
+    <br>
+    <a href="{% url project_create_view %}" class="ui yellow black-text button">Add project</a>
   </div>
+</div>
 {% endfor %}
 {% if is_paginated %}
 <div class="ui basic center aligned segment">

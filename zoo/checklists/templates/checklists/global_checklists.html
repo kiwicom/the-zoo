@@ -39,10 +39,21 @@
   </tbody>
 </table>
 {% else %}
-<div class="ui basic center aligned segment">
-  <h3 class="ui header">
-    There are no services in beta
-  </h3>
+<div class="ui basic segment">
+  <div class="ui very padded placeholder segment">
+    <div class="ui icon header">
+      <i class="huge grin beam sweat outline icon"></i>
+      <br>
+      <div class="content">
+        Oops! We couldn't find your thing...
+        <div class="sub header">
+          There are no services marked as <b>beta</b>
+        </div>
+      </div>
+    </div>
+    <br>
+    <a href="{% url 'service_create' %}" class="ui yellow black-text button">Add project</a>
+  </div>
 </div>
 {% endif %}
 {% endblock %}

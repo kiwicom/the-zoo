@@ -1,9 +1,9 @@
-coverage~=4.3.4  # sonarqube has problems parsing 4.4's output https://github.com/nedbat/coveragepy/issues/578
+coverage~=4.5.4  # sonarqube has problems parsing 4.4's output https://github.com/nedbat/coveragepy/issues/578
 httpretty
 fakeredis
 pylint
 pytest
-pytest-cov~=2.5.1  # otherwise there's a conflict with coverage~=4.3.4
+pytest-cov~=2.5.1  # otherwise there's a conflict with coverage~=4.5.4
 pytest-django
 pytest-env
 pytest-factoryboy

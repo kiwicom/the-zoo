@@ -5,7 +5,7 @@ celery
 celery-redbeat
 colorama
 datadog
-ddtrace==0.23.0
+ddtrace==0.30.2
 django
 djangoql
 django-allauth

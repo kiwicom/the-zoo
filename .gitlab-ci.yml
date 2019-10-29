@@ -25,6 +25,9 @@ docker_build:
   services:
     - docker:19.03-dind
 
+dependency_scanning:
+  tags: []
+
 release_latest:
   services:
     - docker:19.03-dind

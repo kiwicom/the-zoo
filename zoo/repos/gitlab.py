@@ -1,5 +1,7 @@
 from django.conf import settings
 from gitlab import Gitlab, GitlabGetError, GitlabListError
+from requests.exceptions import MissingSchema
+import structlog
 
 from ..base.http import session
 from .exceptions import MissingFilesError, RepositoryNotFoundError
@@ -7,6 +9,8 @@ from .exceptions import MissingFilesError, RepositoryNotFoundError
 gitlab = Gitlab(
     settings.GITLAB_URL, settings.GITLAB_TOKEN, api_version=4, session=session
 )
+
+log = structlog.get_logger()
 
 
 def get_project(remote_id):
@@ -27,14 +31,18 @@ def download_archive(project, archive, sha=None):
 
 
 def get_repositories():
-    for project in gitlab.projects.list(as_list=False):
-        yield {
-            "id": project.id,
-            "provider": "gitlab",
-            "owner": project.namespace["full_path"],
-            "name": project.path,
-            "url": project.web_url,
-        }
+    try:
+        for project in gitlab.projects.list(as_list=False):
+            yield {
+                "id": project.id,
+                "provider": "gitlab",
+                "owner": project.namespace["full_path"],
+                "name": project.path,
+                "url": project.web_url,
+            }
+    except (MissingSchema, GitlabGetError):
+        log.exception("gitlab.get_repositories.error")
+        return []
 
 
 def get_project_details(remote_id):

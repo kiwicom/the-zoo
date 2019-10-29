@@ -1,8 +1,9 @@
 from django.conf import settings
 from github import Github, InputGitTreeElement
-from github.GithubException import UnknownObjectException
+from github.GithubException import GithubException, UnknownObjectException
 from github.GithubObject import NotSet
 import requests
+import structlog
 
 from ..base import http
 from .exceptions import MissingFilesError, RepositoryNotFoundError
@@ -11,16 +12,22 @@ github = Github(
     settings.GITHUB_TOKEN, user_agent=settings.USER_AGENT, retry=http.get_retry_object()
 )
 
+log = structlog.get_logger()
+
 
 def get_repositories():
-    for repo in github.get_user().get_repos():
-        yield {
-            "id": repo.id,
-            "provider": "github",
-            "owner": repo.owner.login,
-            "name": repo.name,
-            "url": repo.svn_url,
-        }
+    try:
+        for repo in github.get_user().get_repos():
+            yield {
+                "id": repo.id,
+                "provider": "github",
+                "owner": repo.owner.login,
+                "name": repo.name,
+                "url": repo.svn_url,
+            }
+    except GithubException:
+        log.exception("github.get_repositories.error")
+        return []
 
 
 def get_project(github_id):

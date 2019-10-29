@@ -13,9 +13,7 @@ def test_service(snapshot, call_api, service_factory):
         impact="sales",
         slack_channel="https://gitlab.slack",
         pagerduty_url="https://pagerduty/sales/",
-        dashboard_url="https://dashboard/skypicker/sale/",
         docs_url="https://docs/skypicker/docs/",
-        health_check_url="https://skypicekr/health",
     )
     id = to_global_id("Service", 10)
     query = f"""
@@ -29,9 +27,7 @@ def test_service(snapshot, call_api, service_factory):
                 impact
                 slackChannel
                 pagerdutyUrl
-                dashboardUrl
                 docsUrl
-                healthCheckUrl
             }}
         }}
     }}

@@ -22,9 +22,7 @@ snapshots['test_repository 1'] = {
 snapshots['test_service 1'] = {
     'data': {
         'node': {
-            'dashboardUrl': 'https://dashboard/skypicker/sale/',
             'docsUrl': 'https://docs/skypicker/docs/',
-            'healthCheckUrl': 'https://skypicekr/health',
             'id': 'U2VydmljZToxMA==',
             'impact': 'sales',
             'name': 'allen-nobles',

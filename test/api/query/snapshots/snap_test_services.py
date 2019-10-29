@@ -23,9 +23,7 @@ snapshots['test_all 1'] = {
             'edges': [
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZTox',
                         'impact': 'profit',
                         'name': 'martinez',
@@ -37,9 +35,7 @@ snapshots['test_all 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZToy',
                         'impact': 'profit',
                         'name': 'alex',
@@ -51,9 +47,7 @@ snapshots['test_all 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZToz',
                         'impact': 'profit',
                         'name': 'artinez',
@@ -65,9 +59,7 @@ snapshots['test_all 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZTo0',
                         'impact': 'profit',
                         'name': 'john',
@@ -79,9 +71,7 @@ snapshots['test_all 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZToxMg==',
                         'impact': 'profit',
                         'name': 'simmons-mitchell',
@@ -109,9 +99,7 @@ snapshots['test_with_repository 1'] = {
             'edges': [
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZTox',
                         'impact': 'profit',
                         'name': 'martinez',
@@ -129,9 +117,7 @@ snapshots['test_with_repository 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZToy',
                         'impact': 'profit',
                         'name': 'alex',
@@ -149,9 +135,7 @@ snapshots['test_with_repository 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZToz',
                         'impact': 'profit',
                         'name': 'artinez',
@@ -169,9 +153,7 @@ snapshots['test_with_repository 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZTo0',
                         'impact': 'profit',
                         'name': 'john',
@@ -189,9 +171,7 @@ snapshots['test_with_repository 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZToxMg==',
                         'impact': 'profit',
                         'name': 'simmons-mitchell',
@@ -225,9 +205,7 @@ snapshots['test_first 1'] = {
             'edges': [
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZTox',
                         'impact': 'profit',
                         'owner': 'michaelbennett',
@@ -238,9 +216,7 @@ snapshots['test_first 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZToy',
                         'impact': 'profit',
                         'owner': 'amstrong',
@@ -251,9 +227,7 @@ snapshots['test_first 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZToz',
                         'impact': 'profit',
                         'owner': 'bennett',
@@ -280,9 +254,7 @@ snapshots['test_first_after 1'] = {
             'edges': [
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZToy',
                         'impact': 'profit',
                         'owner': 'amstrong',
@@ -293,9 +265,7 @@ snapshots['test_first_after 1'] = {
                 },
                 {
                     'node': {
-                        'dashboardUrl': 'https://dashboard',
                         'docsUrl': 'https://docsurl',
-                        'healthCheckUrl': 'https://healtcheck',
                         'id': 'U2VydmljZToz',
                         'impact': 'profit',
                         'owner': 'bennett',
@@ -350,4 +320,65 @@ snapshots['test_last 1'] = {
             ]
         }
     ]
+}
+
+snapshots['test_with_environment 1'] = {
+    'data': {
+        'allServices': {
+            'edges': [
+                {
+                    'node': {
+                        'allEnvironments': {
+                            'edges': [
+                                {
+                                    'node': {
+                                        'dashboardUrl': 'https://dashboardurl',
+                                        'healthCheckUrl': 'https://healthcheckurl',
+                                        'name': 'staging',
+                                        'serviceUrls': [
+                                            'https://serviceurl1',
+                                            'https://serviceurl2'
+                                        ]
+                                    }
+                                },
+                                {
+                                    'node': {
+                                        'dashboardUrl': 'https://dashboardurl',
+                                        'healthCheckUrl': 'https://healthcheckurl',
+                                        'name': 'production',
+                                        'serviceUrls': [
+                                            'https://serviceurl1',
+                                            'https://serviceurl2'
+                                        ]
+                                    }
+                                }
+                            ],
+                            'pageInfo': {
+                                'endCursor': 'Mg==',
+                                'hasNextPage': False,
+                                'hasPreviousPage': False,
+                                'startCursor': 'MQ=='
+                            },
+                            'totalCount': 2
+                        },
+                        'docsUrl': 'https://docsurl',
+                        'id': 'U2VydmljZTox',
+                        'impact': 'profit',
+                        'name': 'martinez',
+                        'owner': 'michaelbennett',
+                        'pagerdutyUrl': 'https://pagerduty',
+                        'slackChannel': 'https://slackchannel',
+                        'status': 'fixed'
+                    }
+                }
+            ],
+            'pageInfo': {
+                'endCursor': 'MQ==',
+                'hasNextPage': False,
+                'hasPreviousPage': False,
+                'startCursor': 'MQ=='
+            },
+            'totalCount': 1
+        }
+    }
 }

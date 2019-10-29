@@ -19,6 +19,7 @@ from .factories import (
     IssueFactory,
     UserFactory,
     ServiceFactory,
+    EnvironmentFactory,
     DependencyFactory,
     DependencyUsageFactory,
     KindFactory,
@@ -31,6 +32,7 @@ register(RepositoryFactory)
 register(IssueFactory)
 register(UserFactory)
 register(ServiceFactory)
+register(EnvironmentFactory)
 register(DependencyFactory)
 register(DependencyUsageFactory)
 register(KindFactory)

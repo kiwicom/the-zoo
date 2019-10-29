@@ -9,7 +9,7 @@ from zoo.auditing.models import Issue
 from zoo.auditing.check_discovery import Kind
 from zoo.datacenters.models import InfraNode
 from zoo.repos.models import Repository
-from zoo.services.models import Service
+from zoo.services.models import Service, Environment
 from zoo.analytics.models import Dependency, DependencyUsage, DependencyType
 from zoo.analytics.tasks.repo_analyzers import unpack_version
 
@@ -45,6 +45,14 @@ class ServiceFactory(DjangoModelFactory):
     name = Faker("domain_word")
     impact = choice(["profit", "customers", "customers"])
     repository = SubFactory(RepositoryFactory)
+
+
+class EnvironmentFactory(DjangoModelFactory):
+    class Meta:
+        model = Environment
+
+    name = Faker("domain_word")
+    service = SubFactory(ServiceFactory)
 
 
 class UserFactory(DjangoModelFactory):

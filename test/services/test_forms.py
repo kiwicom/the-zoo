@@ -1,7 +1,7 @@
 import pytest
 from faker import Faker
 from zoo.services.models import Service
-from zoo.services.forms import ServiceForm
+from zoo.services.forms import ServiceForm, ServiceEnvironmentsFormSet
 from zoo.repos.models import Repository
 
 pytestmark = pytest.mark.django_db
@@ -35,10 +35,8 @@ service_form_data = {
     "slack_channel": "dev-null",
     "repository": "",
     "pagerduty_url": fake.url(),
-    "dashboard_url": fake.url(),
     "docs_url": fake.url(),
     "service_url": fake.url(),
-    "health_check_url": fake.url(),
 }
 
 
@@ -59,10 +57,42 @@ def test_service_form__complete__incorrect_status(repository):
     }
 
 
-def test_service_form__complete__incorrect_dashboard_url(repository):
+def test_service_form__complete__incorrect_pagerduty_url(repository):
     form = ServiceForm(
-        data={**service_form_data, "dashboard_url": "-", "repository": repository.pk}
+        data={**service_form_data, "pagerduty_url": "-", "repository": repository.pk}
     )
 
     assert not form.is_valid()
-    assert form.errors == {"dashboard_url": ["Enter a valid URL."]}
+    assert form.errors == {"pagerduty_url": ["Enter a valid URL."]}
+
+
+service_environments_form__set_data = {
+    "environments-TOTAL_FORMS": "2",
+    "environments-INITIAL_FORMS": "0",
+    "environments-MIN_NUM_FORMS": "2",
+    "environments-MAX_NUM_FORMS": "2",
+    "environments-0-name": fake.word(),
+    "environments-0-healthcheck_url": fake.url(),
+    "environments-0-service_urls_0": fake.url(),
+    "environments-0-service_urls_1": fake.url(),
+    "environments-0-DELETE": False,
+    "environments-1-name": fake.word(),
+    "environments-1-dashboard_url": fake.url(),
+    "environments-1-service_urls_0": fake.url(),
+    "environments-1-service_urls_1": fake.url(),
+    "environments-1-DELETE": False,
+}
+
+
+def test_service_environment_formset__complete__correct(repository):
+    form = ServiceEnvironmentsFormSet(data=service_environments_form__set_data)
+
+    assert form.is_valid()
+
+
+def test_service_environment_formset__complete__incorrect(repository):
+    form = ServiceEnvironmentsFormSet(
+        {**service_environments_form__set_data, "environments-0-dashboard_url": "-"}
+    )
+    assert not form.is_valid()
+    assert form.forms[0].errors == {"dashboard_url": ["Enter a valid URL."]}

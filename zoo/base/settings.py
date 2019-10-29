@@ -109,6 +109,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.gitlab",
+    "zoo.users.apps.UsersConfig",
     "django_extensions",
     "debug_toolbar",
     "raven.contrib.django.raven_compat",
@@ -168,6 +169,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
+AUTH_USER_MODEL = 'users.CustomUser'
 
 LANGUAGE_CODE = "en-us"
 

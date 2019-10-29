@@ -25,6 +25,14 @@
 {% endblock %}
 
 {% block content %}
+{% if services %}
+<div class="ui secondary segment">
+  <h5 class="ui header">Showing dependencies for the following services</h5>
+  <ul class="ui list">
+    {% for svc in services %}<li><a href="{% url 'service_detail' svc.owner_slug svc.name_slug %}">{{ svc.name }}</a></li>{% endfor %}
+  </ul>
+</div>
+{% endif %}
 <table class="ui sortable striped table">
   <thead>
     <tr>

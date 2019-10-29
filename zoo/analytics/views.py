@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.views.generic import TemplateView
 
 from . import models
+from ..services import models as servicemodels
 
 COLOR_PALETTE = [
     "#117510",
@@ -61,7 +62,10 @@ class AnalyticsOverview(TemplateView):
         )
 
         if "q" in self.request.GET:
-            queryset = queryset.filter(Q(name__icontains=self.request.GET["q"]))
+            queryset = queryset.filter(
+                Q(name__icontains=self.request.GET["q"])
+                | Q(depusage__repo__services__name__icontains=self.request.GET["q"])
+            )
 
         if "type" in self.request.GET:
             queryset = queryset.filter(type=self.request.GET["type"])
@@ -112,6 +116,12 @@ class AnalyticsOverview(TemplateView):
         current_page = self._get_queryset()
 
         context["page_obj"] = current_page
+
+        if "q" in self.request.GET:
+            context["services"] = servicemodels.Service.objects.filter(
+                name__icontains=self.request.GET["q"]
+            )
+
         context["dependency_types"] = [option.value for option in models.DependencyType]
         context["dependencies"] = [
             {

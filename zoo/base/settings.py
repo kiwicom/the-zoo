@@ -105,6 +105,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "django.contrib.postgres",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",

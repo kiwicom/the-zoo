@@ -21,7 +21,7 @@
   {% block navbuttons %}
   {% endblock %}
 
-  <div class="ui transparent project-actions floating right center pointing dropdown icon button">
+  <div class="ui transparent project-actions floating right center pointing fade dropdown icon button">
     <i class="ellipsis vertical icon"></i>
     <div class="large left menu">
         <div class="item">
@@ -47,27 +47,8 @@
       <a class="active item">
         Overview
       </a>
-      {% if object.service_url %}
-      <a class="item" href="{{ object.service_url }}" target="_blank" rel="noopener noreferrer" style="color: #4183c4;">
-        <i class="globe americas icon"></i>
-        {{ object.service_url }}
-      </a>
-      {% endif %}
-      <div class="right menu">
-
-        <a class="ui {% if not object.slack_url %}disabled{% endif %} item" href="{{ object.slack_url }}" target="_blank" rel="noopener noreferrer">
-          <i class="comment dots icon"></i>
-          discussion
-        </a>
-        <a class="ui {% if not object.dashboard_url %}disabled{% endif %} item" href="{{ object.dashboard_url }}" target="_blank" rel="noopener noreferrer">
-          <i class="dashboard icon"></i>
-          dashboard
-        </a>
-        <a class="ui {% if not object.docs_url %}disabled{% endif %} item" href="{{ object.docs_url }}" target="_blank" rel="noopener noreferrer">
-          <i class="graduation cap icon"></i>
-          docs
-        </a>
-      </div>
+      {% block content_menu %}
+      {% endblock %}
     </div>
     </div>
 

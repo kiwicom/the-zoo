@@ -13,4 +13,9 @@ class ServiceAdmin(admin.ModelAdmin):
     )
 
 
+class EnvironmentAdmin(admin.ModelAdmin):
+    search_fields = ("name", "service_urls", "dashboard_url")
+
+
 admin.site.register(models.Service, ServiceAdmin)
+admin.site.register(models.Environment, EnvironmentAdmin)

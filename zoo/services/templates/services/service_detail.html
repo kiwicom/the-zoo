@@ -20,6 +20,58 @@
   {% endwith %}
 {% endblock %}
 
+{% block content_menu %}
+  {% if environment.service_urls %}
+    <a class="item" href="{{ environment.service_urls.0 }}" target="_blank" rel="noopener noreferrer" style="color: #4183c4;">
+      <i class="globe americas icon"></i>
+      {{ environment.service_urls.0 }}
+    </a>
+    {% if environment.service_urls|length > 1 %}
+      <div class="ui left top pointing service-urls fade dropdown icon link item">
+        <i class="ellipsis horizontal icon"></i>
+        <div class="large bottom menu transition">
+          {% for service_url in environment.service_urls %}
+            {% if forloop.counter > 1 %}
+              <a class="item" href="{{ service_url }}" target="_blank" rel="noopener noreferrer" style="color: #4183c4;">
+                <i class="globe americas icon"></i> {{ service_url }}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+  <div class="right menu">
+
+    <a class="ui {% if not object.slack_url %}disabled{% endif %} item" href="{{ object.slack_url }}" target="_blank" rel="noopener noreferrer">
+      <i class="comment dots icon"></i>
+      discussion
+    </a>
+    <a class="ui {% if not environment.dashboard_url %}disabled{% endif %} item" href="{{ environment.dashboard_url }}" target="_blank" rel="noopener noreferrer">
+      <i class="dashboard icon"></i>
+      dashboard
+    </a>
+    <a class="ui {% if not object.docs_url %}disabled{% endif %} item" href="{{ object.docs_url }}" target="_blank" rel="noopener noreferrer">
+      <i class="graduation cap icon"></i>
+      docs
+    </a>
+
+    {% if object.environments_dict|length >= 1 %}
+    <div class="ui environments item top pointing fade dropdown">
+      <i class="laptop icon"></i> env:{{ environment.name }}
+      <div class="large bottom menu transition">
+        <h4 class="ui header">Environments</h4>
+        {% for name in object.environments_dict %}
+          <a class="item {% if environment.name == name %}active{% endif %}" href="{{ request.path }}?environment={{ name }}">
+            <i class="laptop icon"></i> {{ name }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
 {% block priority_details %}
   {% if object.pagerduty_service_id %}
   <div

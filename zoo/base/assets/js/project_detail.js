@@ -67,7 +67,7 @@ $(document).ready(() => {
     }
   })
 
-  $('.ui.project-actions.dropdown').dropdown({
+  $('.ui.fade.dropdown').dropdown({
     action: 'hide',
     position: 'right',
     transition: 'fade up'

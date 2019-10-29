@@ -1,4 +1,4 @@
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 from enum import Enum
 import re
 
@@ -57,10 +57,7 @@ class Service(models.Model):
         related_name="services",
     )
     pagerduty_url = models.URLField(max_length=500, null=True, blank=True)
-    dashboard_url = models.URLField(max_length=500, null=True, blank=True)
     docs_url = models.URLField(max_length=500, null=True, blank=True)
-    service_url = models.URLField(max_length=500, null=True, blank=True)
-    health_check_url = models.URLField(max_length=500, null=True, blank=True)
     owner_slug = models.SlugField(max_length=140)
     name_slug = models.SlugField(max_length=140)
     tags = pg_fields.ArrayField(
@@ -105,6 +102,11 @@ class Service(models.Model):
             self.full_clean()
             self.save()
 
+    def get_environment(self, name=None):
+        if name is None:
+            return self.environments.first()
+        return self.environments_dict.get(name)
+
     @property
     def key(self):
         return f"{self.owner}/{self.name}"
@@ -113,6 +115,12 @@ class Service(models.Model):
     def owner_url(self):
         if self.repository:
             return f"{settings.GITLAB_URL}/{self.repository.owner}"
+
+    @property
+    def service_url(self):
+        default_env = self.get_environment()
+        if default_env and default_env.service_urls:
+            return default_env.service_urls[0]
 
     @property
     def slack_url(self):
@@ -137,8 +145,32 @@ class Service(models.Model):
         if service_re:
             return service_re.group(1)
 
+    @property
+    def environments_dict(self):
+        return OrderedDict(
+            (env.name, env) for env in self.environments.order_by("id").all()
+        )
+
     def __str__(self):
         return f"{self.key}"
+
+
+class Environment(models.Model):
+    class Meta:
+        unique_together = ("service", "name")
+
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name="environments",
+        related_query_name="environment",
+    )
+    name = models.CharField(max_length=100)
+    service_urls = pg_fields.ArrayField(
+        models.URLField(max_length=500), null=True, default=list
+    )
+    health_check_url = models.URLField(max_length=500, null=True, blank=True)
+    dashboard_url = models.URLField(max_length=500, null=True, blank=True)
 
 
 def slugify_attribute(attribute):
@@ -204,9 +236,11 @@ class SentryIssueStats(models.Model):
 
 
 class ServiceQLSchema(DjangoQLSchema):
-    include = (Service,)
+    include = (Service, Environment)
 
     def get_fields(self, model):
         if isinstance(model, Service):
-            return ["name", "owner", "status", "impact", "service_url"]
+            return ["name", "owner", "status", "impact"]
+        if isinstance(model, Environment):
+            return ["service_urls", "health_check_url"]
         return super(ServiceQLSchema, self).get_fields(model)

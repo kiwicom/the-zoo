@@ -4,6 +4,7 @@ import re
 from typing import Dict, List
 
 from django.core.exceptions import SuspiciousOperation
+from django.db import transaction
 from django.db.models import Q, query, Sum
 from django.http import Http404
 from django.urls import reverse_lazy
@@ -35,9 +36,33 @@ class ServiceMixin:
             raise Http404("Service.DoesNotExist")
 
 
-class ServiceCreate(generic_views.CreateView):
+class ServiceEnvironmentMixin:
+    def form_valid(self, form):
+        context = self.get_context_data()
+        envs_formset = context["envs_formset"]
+        with transaction.atomic():
+            self.object = form.save()
+            print(form.data)
+
+            if envs_formset.is_valid():
+                envs_formset.instance = self.object
+                envs_formset.save()
+            else:
+                return self.form_invalid(form)
+        return super(ServiceEnvironmentMixin, self).form_valid(form)
+
+
+class ServiceCreate(ServiceEnvironmentMixin, generic_views.CreateView):
     form_class = forms.ServiceForm
     model = form_class.Meta.model
+
+    def get_context_data(self, **kwargs):
+        data = super(ServiceCreate, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data["envs_formset"] = forms.ServiceEnvironmentsFormSet(self.request.POST)
+        else:
+            data["envs_formset"] = forms.ServiceEnvironmentsFormSet()
+        return data
 
 
 class ServiceDelete(generic_views.DeleteView):
@@ -171,6 +196,9 @@ class ServiceDetail(ServiceMixin, generic_views.DetailView):
 
         context["sentry_data"] = self.get_sentry_context()
         context["checklist"] = self.get_checklists_context()
+        context["environment"] = self.object.get_environment(
+            self.request.GET.get("environment")
+        )
 
         return context
 
@@ -198,8 +226,8 @@ class ServiceList(generic_views.ListView):
             elif re.match(URL_QUERY_PATTERN, queryterm):
                 queryset = queryset.filter(
                     Q(docs_url__icontains=queryterm)
-                    | Q(service_url__icontains=queryterm)
-                    | Q(health_check_url__icontains=queryterm)
+                    | Q(environment__health_check_url__icontains=queryterm)
+                    | Q(environment__service_urls__icontains=queryterm)
                 )
 
             else:
@@ -212,6 +240,18 @@ class ServiceList(generic_views.ListView):
         return queryset.order_by("name")
 
 
-class ServiceUpdate(ServiceMixin, generic_views.UpdateView):
+class ServiceUpdate(ServiceEnvironmentMixin, ServiceMixin, generic_views.UpdateView):
     form_class = forms.ServiceForm
     model = form_class.Meta.model
+
+    def get_context_data(self, **kwargs):
+        data = super(ServiceUpdate, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data["envs_formset"] = forms.ServiceEnvironmentsFormSet(
+                self.request.POST, instance=self.object
+            )
+        else:
+            data["envs_formset"] = forms.ServiceEnvironmentsFormSet(
+                instance=self.object
+            )
+        return data

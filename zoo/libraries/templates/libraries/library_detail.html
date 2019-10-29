@@ -19,3 +19,16 @@
     {{ block.super }}
   {% endwith %}
 {% endblock %}
+
+{% block content_menu %}
+  <div class="right menu">
+    <a class="ui {% if not object.slack_url %}disabled{% endif %} item" href="{{ object.slack_url }}" target="_blank" rel="noopener noreferrer">
+      <i class="comment dots icon"></i>
+      discussion
+    </a>
+    <a class="ui {% if not object.docs_url %}disabled{% endif %} item" href="{{ object.docs_url }}" target="_blank" rel="noopener noreferrer">
+      <i class="graduation cap icon"></i>
+      docs
+    </a>
+  </div>
+{% endblock %}

@@ -59,6 +59,49 @@ class IssueConnection(relay.Connection):
         node = Issue
 
 
+class Environment(graphene.ObjectType):
+    name = graphene.String()
+    service_urls = graphene.List(graphene.String)
+    dashboard_url = graphene.String()
+    health_check_url = graphene.String()
+    service = graphene.Field(lambda: Service)
+
+    @classmethod
+    def from_db(cls, environment):
+        return cls(
+            id=environment.id,
+            name=environment.name,
+            service_urls=environment.service_urls,
+            dashboard_url=environment.dashboard_url,
+            health_check_url=environment.health_check_url,
+            service=environment.service_id,
+        )
+
+    @classmethod
+    def get_node(cls, info, environment_id):
+        try:
+            environment = services_models.Environment.objects.get(id=environment_id)
+            return cls.from_db(environment)
+        except ObjectDoesNotExist:
+            return None
+
+    def resolve_service(self, info):
+        try:
+            return Service.from_db(services_models.Service.objects.get(id=self.service))
+        except ObjectDoesNotExist:
+            return None
+
+    class Meta:
+        interfaces = (relay.Node,)
+
+
+class EnvironmentConnection(relay.Connection):
+    total_count = graphene.Int()
+
+    class Meta:
+        node = Environment
+
+
 class Service(graphene.ObjectType):
     owner = graphene.String()
     name = graphene.String()
@@ -67,9 +110,8 @@ class Service(graphene.ObjectType):
     repository = graphene.Field(lambda: Repository)
     slack_channel = graphene.String()
     pagerduty_url = graphene.String()
-    dashboard_url = graphene.String()
     docs_url = graphene.String()
-    health_check_url = graphene.String()
+    all_environments = relay.ConnectionField(EnvironmentConnection)
 
     @classmethod
     def from_db(cls, service):
@@ -81,10 +123,9 @@ class Service(graphene.ObjectType):
             impact=service.impact,
             slack_channel=service.slack_channel,
             pagerduty_url=service.pagerduty_url,
-            dashboard_url=service.dashboard_url,
             docs_url=service.docs_url,
-            health_check_url=service.health_check_url,
             repository=service.repository_id,
+            all_environments=service.environments,
         )
 
     @classmethod
@@ -102,6 +143,28 @@ class Service(graphene.ObjectType):
             )
         except ObjectDoesNotExist:
             return None
+
+    def resolve_all_environments(self, info, **kwargs):
+        paginator = Paginator(**kwargs)
+        edges = []
+        filtered_environments = services_models.Environment.objects.filter(
+            service_id=self.id
+        )
+        total = filtered_environments.count()
+        page_info = paginator.get_page_info(total)
+
+        for i, issue in enumerate(
+            filtered_environments[
+                paginator.slice_from : paginator.slice_to  # Ignore PEP8Bear
+            ]
+        ):
+            cursor = paginator.get_edge_cursor(i + 1)
+            node = Environment.from_db(issue)
+            edges.append(EnvironmentConnection.Edge(node=node, cursor=cursor))
+
+        return EnvironmentConnection(
+            page_info=page_info, edges=edges, total_count=total
+        )
 
     class Meta:
         interfaces = (relay.Node,)

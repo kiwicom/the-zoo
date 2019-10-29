@@ -10,12 +10,16 @@ class BaseConfig(AppConfig):
 
     def ready(self):
         """Set the Celery schedule when Django signals it's ready, after apps load."""
+        # pylint: disable=import-outside-toplevel
+
         from ..repos import tasks as repos_tasks
         from ..services import tasks as service_tasks
         from ..analytics import tasks as analytics_tasks
         from ..auditing import tasks as auditing_tasks
         from ..objectives import tasks as objective_tasks
         from ..datacenters import tasks as datacenters_tasks
+
+        # pylint: enable=import-outside-toplevel
 
         celery_app.add_periodic_task(timedelta(hours=1), repos_tasks.sync_repos)
         celery_app.add_periodic_task(timedelta(hours=1), repos_tasks.schedule_pulls)

@@ -39,8 +39,7 @@ def resolve_caret_version(version: str) -> str:
         temp_version += version_digit
         if version_digit.isdigit() and int(version_digit) != 0:
             break
-        else:
-            temp_version += "."
+        temp_version += "."
     return temp_version
 
 

@@ -26,7 +26,7 @@ class Effort(Enum):
     HIGH = "high"
 
 
-@attr.s(frozen=True, slots=True)
+@attr.s(frozen=True, slots=True)  # pylint: disable=too-many-instance-attributes
 class Kind:
 
     namespace = attr.ib()

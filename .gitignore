@@ -245,3 +245,7 @@ zoo/base/static/*
 
 # Standards
 zoo/auditing/standards/*/
+
+# direnv
+.envrc
+.direnv

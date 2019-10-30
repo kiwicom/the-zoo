@@ -6,10 +6,9 @@ import raven
 
 def _get_app_version():
     """Return current commit SHA of the app."""
-    file_path = Path(__file__)
-    for directory in file_path.parents:
-        if (directory / ".git").exists():
-            return raven.fetch_git_sha(str(directory))
+    basedir = Path(__file__).parent
+    if (basedir / ".git").exists():
+        return raven.fetch_git_sha(str(basedir))
 
     # if there was no git repo in the parent directories
     return os.getenv("PACKAGE_VERSION")

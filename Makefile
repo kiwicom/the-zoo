@@ -24,6 +24,9 @@ test:
 pytest:
 	.tox/tests/bin/py.test
 
+fake:
+	docker-compose run app python manage.py fake
+
 migrate:
 	docker-compose run app python manage.py migrate
 

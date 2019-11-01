@@ -28,6 +28,14 @@ docker_build:
 dependency_scanning:
   tags: []
 
+test_migrations:
+  stage: test
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  services:
+    - postgres:11-alpine
+  script:
+    - python manage.py makemigrations --check
+
 release_latest:
   services:
     - docker:19.03-dind

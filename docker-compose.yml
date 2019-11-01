@@ -45,6 +45,8 @@ services:
 
   postgres:
     image: postgres:10.1-alpine
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
     ports:
       - 25966:5432
 

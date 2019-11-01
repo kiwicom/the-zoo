@@ -1,7 +1,15 @@
 from random import choice, randint
 
 from django.conf import settings
-from factory import DjangoModelFactory, Factory, Faker, LazyAttribute, SubFactory
+from factory import (
+    DjangoModelFactory,
+    Factory,
+    Faker,
+    LazyAttribute,
+    LazyFunction,
+    SelfAttribute,
+    SubFactory,
+)
 from faker import Faker as OriginalFaker
 
 from zoo.analytics.models import Dependency, DependencyType, DependencyUsage
@@ -11,7 +19,7 @@ from zoo.auditing.check_discovery import Kind
 from zoo.auditing.models import Issue
 from zoo.datacenters.models import InfraNode
 from zoo.repos.models import Repository
-from zoo.services.models import Environment, Service
+from zoo.services.models import Environment, Impact, Service, Status
 
 
 class RepositoryFactory(DjangoModelFactory):
@@ -42,9 +50,14 @@ class ServiceFactory(DjangoModelFactory):
         model = Service
 
     owner = Faker("user_name")
-    name = Faker("domain_word")
-    impact = choice(["profit", "customers", "customers"])
-    repository = SubFactory(RepositoryFactory)
+    name = Faker("slug")
+    status = LazyFunction(lambda: choice([item.value for item in Status] + [None]))
+    impact = LazyFunction(lambda: choice([item.value for item in Impact] + [None]))
+    repository = SubFactory(
+        RepositoryFactory, owner=SelfAttribute("..owner"), name=SelfAttribute("..name")
+    )
+    slack_channel = LazyAttribute(lambda o: f"#{o.name}")
+    docs_url = LazyAttribute(lambda o: f"https://example.com/#{o.name}")
 
 
 class EnvironmentFactory(DjangoModelFactory):

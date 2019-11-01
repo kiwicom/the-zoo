@@ -32,7 +32,7 @@ The Zoo also provides analytics about how dependency usage and its versions evol
 ### Initial setup
 
 - Create a database: `$ make migrate`
-- Create a superuser: `$ make superuser`
+- Create a superuser and fake data: `$ make fake`
 - Create `.env` file as documented below
 
 ### How to run
@@ -42,6 +42,7 @@ The Zoo also provides analytics about how dependency usage and its versions evol
 - Stop and/or delete data: `$ make destroy`
 - Django shell: `$ make shell`
 - Containers logs: `$ docker-compose logs`
+- Generate fake data + superuser `$ make fake`
 
 Access web locally:
 
@@ -73,6 +74,8 @@ ZOO_GITLAB_URL=https://gitlab.com
 ```
 
 Version control tokens only need read access to repositories.
+
+For local setup of gitlab auth check [here](docs/gitlab_auth_local.rst)
 
 ## Testing
 

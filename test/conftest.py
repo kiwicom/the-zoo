@@ -11,9 +11,7 @@ from faker import Faker
 from pytest_factoryboy import register
 
 from zoo.auditing.runner import CheckContext
-
-from . import dummy
-from .factories import (
+from zoo.factories import (
     ApiTokenFactory,
     DependencyFactory,
     DependencyUsageFactory,
@@ -25,6 +23,8 @@ from .factories import (
     ServiceFactory,
     UserFactory,
 )
+
+from . import dummy
 
 register(ApiTokenFactory)
 register(RepositoryFactory)

@@ -249,3 +249,5 @@ zoo/auditing/standards/*/
 # direnv
 .envrc
 .direnv
+
+postgres-data

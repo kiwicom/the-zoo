@@ -9,6 +9,7 @@ class DependencyType(Enum):
     OS = "Operating System"
     JS_LIB = "Javascript Library"
     PY_LIB = "Python Library"
+    DOCKER_IMG = "Docker Image"
 
 
 class NameField(models.CharField):

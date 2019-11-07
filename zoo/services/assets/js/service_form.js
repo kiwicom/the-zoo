@@ -1,3 +1,5 @@
+import '../style/service_form.less'
+
 $(document).ready(function () {
     $(".field.service-urls").each(function () {
         var previous = null;

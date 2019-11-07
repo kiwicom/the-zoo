@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{% static 'service_form.css' %}">
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'service_form.css' %}">
 {% endblock %}
 
 {% block menu %}

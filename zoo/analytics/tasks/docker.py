@@ -1,8 +1,8 @@
-from dockerfile_parse import DockerfileParser
+from pathlib import Path
 
-from . import Language, OS
+from . import DockerImage, OS
 from ..models import DependencyType
-from .utils import parse_version
+from .utils import DockerImageId
 
 KNOWN_DEPS = {
     DependencyType.LANG: {"python", "node"},
@@ -11,31 +11,27 @@ KNOWN_DEPS = {
 KNOWN_DEBIAN_IMAGES = {"python", "node"}
 
 
-def analyze(repository, path):
-    """Parse dockerfile for image information about platform."""
-    dockerfile = path / "Dockerfile"
-    if not dockerfile.is_file():
-        return
-    dockerfile.resolve()
-    dfp = DockerfileParser(path=dockerfile.as_posix())
-    for command in dfp.structure:
-        if command["instruction"] != "FROM":
-            continue
-        yield from parse_base_image_name(command["value"], repository=repository)
+def analyze(repository, path: Path):
+    """Parse dockerfiles for image information."""
+    for dockerfile in path.rglob("Dockerfile*"):
+        with open(dockerfile.as_posix()) as f:
+            for line in f:
+                cmd, _, val = line.partition(" ")
 
+                if "FROM" not in cmd.upper():
+                    continue
 
-def parse_base_image_name(base_image: str, repository):
-    lang_fragment, _, os_fragment = base_image.partition("-")
-    for lang_name in KNOWN_DEPS[DependencyType.LANG]:
-        if lang_name not in lang_fragment:
-            continue
-        lang_version = parse_version(lang_fragment.replace(lang_name, "").strip(": "))
-        yield Language(lang_name, lang_version, for_production=True)
+                parsed_image_id = DockerImageId(val)
 
-        if os_fragment == "alpine":
-            yield OS("alpine", for_production=True)
-        elif os_fragment.startswith("alpine"):
-            os_version = parse_version(os_fragment.replace("alpine", "").strip(": "))
-            yield OS("alpine", os_version, for_production=True)
-        elif lang_name in KNOWN_DEBIAN_IMAGES:
-            yield OS("debian", for_production=True)
+                yield DockerImage(
+                    name=parsed_image_id.repository_name,
+                    version=parsed_image_id.version,
+                    for_production=True,
+                )
+
+                if parsed_image_id.os:
+                    yield OS(
+                        name=parsed_image_id.os,
+                        version=parsed_image_id.os_version,
+                        for_production=True,
+                    )

@@ -5,7 +5,7 @@
 #    pip-compile --output-file test-requirements.txt test-requirements.in
 #
 apipkg==1.5               # via execnet
-astroid==2.3.2            # via pylint
+astroid==2.3.3            # via pylint
 atomicwrites==1.3.0       # via pytest
 attrs==19.3.0             # via pytest
 coverage==4.3.4
@@ -19,7 +19,7 @@ httpretty==0.9.7
 importlib-metadata==0.23  # via pluggy, pytest
 inflection==0.3.1         # via pytest-factoryboy
 isort==4.3.21             # via pylint
-lazy-object-proxy==1.4.2  # via astroid
+lazy-object-proxy==1.4.3  # via astroid
 mccabe==0.6.1             # via pylint
 more-itertools==7.2.0     # via pytest, zipp
 packaging==19.2           # via pytest
@@ -27,7 +27,7 @@ pg8000==1.13.2            # via testing-postgresql
 pluggy==0.13.0            # via pytest
 py==1.8.0                 # via pytest
 pylint==2.4.3
-pyparsing==2.4.2          # via packaging
+pyparsing==2.4.4          # via packaging
 pytest-cov==2.5.1
 pytest-django==3.6.0
 pytest-env==0.6.2
@@ -36,11 +36,11 @@ pytest-forked==1.1.3      # via pytest-xdist
 pytest-freezegun==0.3.0.post1
 pytest-mock==1.11.2
 pytest-xdist==1.30.0
-pytest==5.2.1
+pytest==5.2.2
 python-dateutil==2.8.0    # via faker, freezegun
 redis==3.3.11             # via fakeredis
 scramp==1.1.0             # via pg8000
-six==1.12.0               # via astroid, faker, fakeredis, freezegun, httpretty, packaging, pytest-xdist, python-dateutil, snapshottest
+six==1.13.0               # via astroid, faker, fakeredis, freezegun, httpretty, packaging, pytest-xdist, python-dateutil, snapshottest
 snapshottest==0.5.1
 sortedcontainers==2.1.0   # via fakeredis
 termcolor==1.1.0          # via snapshottest

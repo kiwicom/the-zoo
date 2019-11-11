@@ -210,14 +210,25 @@ class AuditReport(TemplateView):
         context["project_type"] = self.kwargs["project_type"]
         context["issues"] = defaultdict(list)
 
+        deleted_issues = []
+
         if project.repository:
-            for issue in project.repository.issues.filter(deleted=False).exclude(
-                status__in=[
-                    models.Issue.Status.FIXED.value,
-                    models.Issue.Status.NOT_FOUND.value,
-                    models.Issue.Status.WONTFIX.value,
-                ]
+            for issue in (
+                project.repository.issues.filter(deleted=False)
+                .exclude(
+                    status__in=[
+                        models.Issue.Status.FIXED.value,
+                        models.Issue.Status.NOT_FOUND.value,
+                        models.Issue.Status.WONTFIX.value,
+                    ]
+                )
+                .filter(kind_key__in=KINDS)  # filter out removed issue kinds
             ):
+                if issue.deleted:
+                    # deleting issues still present in KINDS but not relevant
+                    # for the repository anymore
+                    deleted_issues.append(issue)
+
                 context["issues"][issue.kind.category].append(issue)
 
         # with defaultdict {{ issues.items }} would be empty, and we want consistent issue order anyway
@@ -226,7 +237,6 @@ class AuditReport(TemplateView):
             for key, value in sorted(context["issues"].items())
         )
 
-        deleted_issues = project.repository.issues.filter(deleted=True).all()
         if deleted_issues:
             unknown_ctg = "Deprecated Issues"
             context["issues"][unknown_ctg] = deleted_issues

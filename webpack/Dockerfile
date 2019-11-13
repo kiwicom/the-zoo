@@ -1,7 +1,12 @@
-FROM node:10-alpine
+FROM node:12-alpine
+
 WORKDIR /app
+
 COPY package.json /app/
 COPY yarn.lock /app/
-RUN npm install --global yarn && yarn install
-COPY * /app/
+
+RUN yarn install --frozen-lockfile
+
+COPY . /app/
+
 CMD ["yarn", "production"]

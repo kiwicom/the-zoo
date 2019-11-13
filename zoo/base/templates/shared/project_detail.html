@@ -40,18 +40,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="ui stackable grid">
-  <div class="sixteen wide column">
-    <div class="ui basic fluid segment">
-      <div class="ui brown project-detail pointing menu">
-      <a class="active item">
-        Overview
-      </a>
-      {% block content_menu %}
-      {% endblock %}
-    </div>
-    </div>
+<div class="ui basic fluid segment">
+  <div class="ui brown project-detail pointing menu">
+    <a class="active item" data-tab="overview">
+      Overview
+    </a>
+    {% block content_menu %}{% endblock %}
+  </div>
+</div>
 
+<div class="ui stackable grid active tab" data-tab="overview">
+  <div class="sixteen wide column">
     {% block priority_details %}{% endblock %}
 
     {% if checklist %}
@@ -132,9 +131,11 @@
     </div>
     {% endif %}
 
-    {% block extra_details %}{% endblock %}
+    {% block additional_details %}{% endblock %}
   </div>
 </div>
+
+{% block extra_components%}{% endblock %}
 
 <div class="ui basic tiny modal">
   <div class="ui icon header">

@@ -8,7 +8,11 @@ window.$ = jQuery;
 window.Snackbar = Snackbar;
 
 window.showSnackbar = function (msg) {
-  Snackbar.show({text: msg})
+  Snackbar.show({
+    text: msg,
+    actionTextColor: '#FBC02D',
+    backgroundColor: '#795548'
+  })
 }
 
 $('.user-actions').popup({

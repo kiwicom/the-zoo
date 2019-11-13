@@ -2,6 +2,11 @@
 {% load utils %}
 {% load static %}
 
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'service_detail.css' %}">
+{% endblock %}
+
 {% block menu %}
   {% with selected='services' %}
     {{ block.super }}
@@ -21,6 +26,10 @@
 {% endblock %}
 
 {% block content_menu %}
+  <a class="loading item" data-tab="openapi">
+    <i class="route icon"></i>
+    API
+  </a>
   {% if environment.service_urls %}
     <a class="item" href="{{ environment.service_urls.0 }}" target="_blank" rel="noopener noreferrer" style="color: #4183c4;">
       <i class="globe americas icon"></i>
@@ -32,7 +41,7 @@
         <div class="large bottom menu transition">
           {% for service_url in environment.service_urls %}
             {% if forloop.counter > 1 %}
-              <a class="item" href="{{ service_url }}" target="_blank" rel="noopener noreferrer" style="color: #4183c4;">
+              <a class="item" href="{{ service_url }}" target="_blank" rel="noopener noreferrer">
                 <i class="globe americas icon"></i> {{ service_url }}
               </a>
             {% endif %}
@@ -93,7 +102,7 @@
   {% endif %}
 {% endblock %}
 
-{% block extra_details %}
+{% block additional_details %}
   {% if sentry_data %}
   <div class="sixteen wide column">
     <div class="ui sentry-stats segment">
@@ -188,7 +197,36 @@
     </div>
   </div>
   {% endif %}
+{% endblock %}
 
+{% block extra_components %}
+  {% if object.repository %}
+    {% verbatim %}
+    <div class="ui stackable grid tab" data-tab="openapi">
+      {% endverbatim %}
+      <div id="openapi-visualizer" data-url="{% url 'repo_openapi' object.repository.provider object.repository.remote_id %}">
+      {% verbatim %}
+        <div v-for="spec of specs" class="ui segment">
+          <div class="flex-horizontal--space-between spec-def">
+            <h3 class="ui marginless api header">
+              <i class="route icon"></i>
+              <div class="content">
+                {{ spec.info.title }}
+                <div class="sub header">{{ spec.info.description }}</div>
+              </div>
+            </h3>
+            <div>
+              <div class="ui blue large circular regular-font label">version:<b>{{ spec.info.version }}</b></div>
+              <div class="ui green large circular regular-font label" v-if="spec.openapi">openapi:<b>{{ spec.openapi }}</b></div>
+              <div class="ui brown large circular regular-font label" v-if="spec.swagger">swagger:<b>{{ spec.swagger }}</b></div>
+            </div>
+          </div>
+          <swagger-ui :spec="spec" docExpansion="none" />
+        </div>
+      </div>
+    </div>
+    {% endverbatim %}
+  {% endif %}
 {% endblock %}
 
 {% block scripts %}
@@ -247,4 +285,5 @@
   </script>
 {% endverbatim %}
 {{ block.super }}
+<script src="{% static 'service_detail.js' %}"></script>
 {% endblock %}

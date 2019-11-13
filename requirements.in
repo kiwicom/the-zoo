@@ -23,8 +23,11 @@ hiredis
 ipython
 kubernetes
 markdown
+openapi-spec-validator
+prance
 psycopg2
 pygerduty
+pyicu
 python-gitlab
 PyGithub
 pyyaml

@@ -14,15 +14,18 @@ class FakeGitProject:
 
 
 class FakeGitlabProject(FakeGitProject):
-    def __init__(self, pid, owner, name, url):
+    def __init__(self, pid, owner, name, url, is_fork=False):
         super().__init__(pid)
         self.namespace = {"full_path": self.fake.word() if owner is None else owner}
         self.path = self.fake.word() if name is None else name
         self.web_url = self.fake.url() if url is None else url
 
+        if is_fork:
+            self.forked_from_project = {"id": self.fake.pyint()}
+
 
 class FakeGithubProject(FakeGitProject):
-    def __init__(self, pid, owner, name, url):
+    def __init__(self, pid, owner, name, url, is_fork=False):
         super().__init__(pid)
 
         class FakeOwner:
@@ -33,12 +36,13 @@ class FakeGithubProject(FakeGitProject):
         self.owner = FakeOwner(login)
         self.name = self.fake.word() if name is None else name
         self.svn_url = self.fake.url() if url is None else url
+        self.fork = is_fork
 
 
 def generate_project_list(pid=None, owner=None, name=None, url=None, **kwargs):
     return {
-        "gitlab": [FakeGitlabProject(pid, owner, name, url)],
-        "github": [FakeGithubProject(pid + 1, owner, name, url)],
+        "gitlab": [FakeGitlabProject(pid, owner, name, url, **kwargs)],
+        "github": [FakeGithubProject(pid + 1, owner, name, url, **kwargs)],
     }
 
 
@@ -92,3 +96,30 @@ def test_sync_moved_repo(repository):
     assert github_project.owner.login == repository.owner
     assert github_project.name == repository.name
     assert github_project.svn_url == repository.url
+
+
+def test_sync_skip_forks():
+    project_list = generate_project_list(pid=1, is_fork=True)
+
+    with patch(
+        "gitlab.v4.objects.ProjectManager.list", return_value=project_list["gitlab"]
+    ), patch(
+        "github.AuthenticatedUser.AuthenticatedUser.get_repos",
+        return_value=project_list["github"],
+    ), patch(
+        "zoo.repos.tasks.settings.SYNC_REPOS_SKIP_FORKS", True
+    ):
+        sync_repos()
+
+    gitlab_project = project_list["gitlab"][0]
+    github_project = project_list["github"][0]
+
+    with pytest.raises(Repository.DoesNotExist):
+        Repository.objects.get(
+            remote_id=gitlab_project.id, provider=Provider.GITLAB.value
+        )
+
+    with pytest.raises(Repository.DoesNotExist):
+        Repository.objects.get(
+            remote_id=github_project.id, provider=Provider.GITHUB.value
+        )

@@ -24,6 +24,7 @@ def get_repositories():
                 "owner": repo.owner.login,
                 "name": repo.name,
                 "url": repo.svn_url,
+                "is_fork": repo.fork,
             }
     except GithubException:
         log.exception("github.get_repositories.error")

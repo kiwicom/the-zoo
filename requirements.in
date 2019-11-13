@@ -33,3 +33,4 @@ redis
 requests
 requirements-parser
 structlog
+whitenoise[brotli]

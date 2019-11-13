@@ -3,6 +3,7 @@ import itertools
 import tempfile
 
 from celery import shared_task
+from django.conf import settings
 import structlog
 
 from ..analytics.tasks import repo_analyzers
@@ -22,6 +23,8 @@ def sync_repos():
     for project in itertools.chain(
         get_github_repositories(), get_gitlab_repositories()
     ):
+        if settings.SYNC_REPOS_SKIP_FORKS and project["is_fork"]:
+            continue
         try:
             repo = Repository.objects.get(
                 remote_id=project["id"], provider=project["provider"]

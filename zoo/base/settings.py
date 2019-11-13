@@ -38,6 +38,7 @@ env = environ.Env(
     ZOO_SENTRY_URL=(str, None),
     ZOO_SENTRY_ORGANIZATION=(str, None),
     ZOO_SENTRY_API_KEY=(str, None),
+    ZOO_SYNC_REPOS_SKIP_FORKS=(bool, False),
     ZOO_AUDITING_CHECKS=(list, []),
     ZOO_AUDITING_DROP_ISSUES=(int, 7),
     ZOO_SONARQUBE_URL=(str, None),
@@ -250,5 +251,7 @@ RANCHER_ACCESS_KEY = env("RANCHER_ACCESS_KEY")
 RANCHER_SECRET_KEY = env("RANCHER_SECRET_KEY")
 
 GCP_SERVICE_KEY = env("GCP_SERVICE_KEY")
+
+SYNC_REPOS_SKIP_FORKS = env("ZOO_SYNC_REPOS_SKIP_FORKS")
 
 logs.configure_structlog(DEBUG)

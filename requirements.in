@@ -18,7 +18,7 @@ dockerfile-parse
 google-api-python-client
 graphene
 graphene-django
-gunicorn[gevent]
+gunicorn[gevent]<20.*
 hiredis
 ipython
 kubernetes
@@ -33,4 +33,3 @@ redis
 requests
 requirements-parser
 structlog
-whitenoise

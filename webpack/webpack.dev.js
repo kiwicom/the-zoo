@@ -17,4 +17,7 @@ module.exports = {
   optimization: common.optimization,
   plugins: common.plugins,
   mode: 'development',
+  watchOptions: {
+    poll: true
+  },
 };

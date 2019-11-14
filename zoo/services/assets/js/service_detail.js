@@ -12,18 +12,6 @@ Vue.use(VuePlugin)
 
 $('.project-detail.menu .item').tab()
 
-const repoInputApp = new Vue({
-  el: '#openapi-visualizer',
-  data: {
-    specs: []
-  },
-  components: {
-    'swagger-ui': SwaggerUI
-  },
-})
-
-const apiDefinitionItem = $('.item[data-tab="openapi"]')
-
 function cancelApiLoader() {
   apiDefinitionItem.removeClass('loading')
   apiDefinitionItem.addClass('disabled')
@@ -47,37 +35,52 @@ function cancelApiLoader() {
 $(document).ready(() => {
   const openApiVisualizer = $('#openapi-visualizer')
 
-  $.get(openApiVisualizer.data('url'))
-  .done((response) => {
-    console.log(response)
-    if(response.length > 0) {
-      repoInputApp.specs = response
-      apiDefinitionItem.removeClass('loading')
-    } else {
+  if(openApiVisualizer.length) {
+    const repoInputApp = new Vue({
+      el: '#openapi-visualizer',
+      data: {
+        specs: []
+      },
+      components: {
+        'swagger-ui': SwaggerUI
+      },
+    })
+
+    const apiDefinitionItem = $('.item[data-tab="openapi"]')
+
+    $.get(openApiVisualizer.data('url'))
+    .done((response) => {
+      if(response.length > 0) {
+        repoInputApp.specs = response
+        apiDefinitionItem.removeClass('loading')
+      } else {
+        cancelApiLoader()
+      }
+    })
+    .fail(() => {
       cancelApiLoader()
-    }
-  })
-  .fail(() => {
-    cancelApiLoader()
-  })
+    })
+  }
 
   const pagerdutyDetailsContainer = $('#pagerduty-details-container')
 
-  $.get(pagerdutyDetailsContainer.data('url'))
-  .done((response) => {
-    let template = $('#pagerduty-details').html()
-    pagerdutyDetailsContainer.html(Mustache.render(template, response))
-    pagerdutyDetailsContainer.removeClass('loading')
-    $('.statistic').popup({
-      transition: 'fade down',
-      exclusive: true,
-      position: 'top center'
+  if(pagerdutyDetailsContainer.length) {
+    $.get(pagerdutyDetailsContainer.data('url'))
+    .done((response) => {
+      let template = $('#pagerduty-details').html()
+      pagerdutyDetailsContainer.html(Mustache.render(template, response))
+      pagerdutyDetailsContainer.removeClass('loading')
+      $('.statistic').popup({
+        transition: 'fade down',
+        exclusive: true,
+        position: 'top center'
+      })
     })
-  })
-  .fail(() => {
-    showSnackbar('Failed fetching pagerduty details')
-    pagerdutyDetailsContainer.remove()
-  })
+    .fail(() => {
+      showSnackbar('Failed fetching pagerduty details')
+      pagerdutyDetailsContainer.remove()
+    })
+  }
 
   $('.histogram .hitbox').popup({
     transition: 'fade down',

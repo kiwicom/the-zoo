@@ -12,26 +12,6 @@ Vue.use(VuePlugin)
 
 $('.project-detail.menu .item').tab()
 
-function cancelApiLoader() {
-  apiDefinitionItem.removeClass('loading')
-  apiDefinitionItem.addClass('disabled')
-  apiDefinitionItem.css('pointer-events', 'all')
-  apiDefinitionItem.unbind('click')
-  apiDefinitionItem.popup(
-    {
-      html: `
-        <h3 class="ui header">API Schema not available</h3>
-        <p>The repository either doesn't contain any OpenAPI definitions, or the ones available couldn't be parsed correctly</p>
-        <p>Learn more about <a href="https://swagger.io/docs/specification/about/">OpenAPI</a></p>
-      `,
-      position: 'bottom left',
-      transition: 'fade up',
-      hoverable: true,
-      variation: 'wide'
-    }
-  )
-}
-
 $(document).ready(() => {
   const openApiVisualizer = $('#openapi-visualizer')
 
@@ -47,6 +27,26 @@ $(document).ready(() => {
     })
 
     const apiDefinitionItem = $('.item[data-tab="openapi"]')
+
+    function cancelApiLoader() {
+      apiDefinitionItem.removeClass('loading')
+      apiDefinitionItem.addClass('disabled')
+      apiDefinitionItem.css('pointer-events', 'all')
+      apiDefinitionItem.unbind('click')
+      apiDefinitionItem.popup(
+        {
+          html: `
+            <h3 class="ui header">API Schema not available</h3>
+            <p>The repository either doesn't contain any OpenAPI definitions, or the ones available couldn't be parsed correctly</p>
+            <p>Learn more about <a href="https://swagger.io/docs/specification/about/">OpenAPI</a></p>
+          `,
+          position: 'bottom left',
+          transition: 'fade up',
+          hoverable: true,
+          variation: 'wide'
+        }
+      )
+    }
 
     $.get(openApiVisualizer.data('url'))
     .done((response) => {

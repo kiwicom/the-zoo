@@ -212,24 +212,26 @@ class AuditReport(TemplateView):
 
         deleted_issues = []
 
-        if project.repository:
-            for issue in (
-                project.repository.issues.filter(deleted=False)
-                .exclude(
-                    status__in=[
-                        models.Issue.Status.FIXED.value,
-                        models.Issue.Status.NOT_FOUND.value,
-                        models.Issue.Status.WONTFIX.value,
-                    ]
-                )
-                .filter(kind_key__in=KINDS)  # filter out removed issue kinds
-            ):
-                if issue.deleted:
-                    # deleting issues still present in KINDS but not relevant
-                    # for the repository anymore
-                    deleted_issues.append(issue)
+        if project.repository is None:
+            raise Http404("Repository.DoesNotExist")
 
-                context["issues"][issue.kind.category].append(issue)
+        for issue in (
+            project.repository.issues.filter(deleted=False)
+            .exclude(
+                status__in=[
+                    models.Issue.Status.FIXED.value,
+                    models.Issue.Status.NOT_FOUND.value,
+                    models.Issue.Status.WONTFIX.value,
+                ]
+            )
+            .filter(kind_key__in=KINDS)  # filter out removed issue kinds
+        ):
+            if issue.deleted:
+                # deleting issues still present in KINDS but not relevant
+                # for the repository anymore
+                deleted_issues.append(issue)
+
+            context["issues"][issue.kind.category].append(issue)
 
         # with defaultdict {{ issues.items }} would be empty, and we want consistent issue order anyway
         context["issues"] = OrderedDict(

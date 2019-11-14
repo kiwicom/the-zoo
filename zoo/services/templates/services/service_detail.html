@@ -20,16 +20,18 @@
 {% endblock %}
 
 {% block content %}
-  {% with project_type='services' project_type_singular='service' project_checklist_view='service_checklist' %}
+  {% with project_type='services' project_type_singular='service' project_update_view='service_update' project_checklist_view='service_checklist' %}
     {{ block.super }}
   {% endwith %}
 {% endblock %}
 
 {% block content_menu %}
+  {% if object.repository %}
   <a class="loading item" data-tab="openapi">
     <i class="route icon"></i>
     API
   </a>
+  {% endif %}
   {% if environment.service_urls %}
     <a class="item" href="{{ environment.service_urls.0 }}" target="_blank" rel="noopener noreferrer" style="color: #4183c4;">
       <i class="globe americas icon"></i>

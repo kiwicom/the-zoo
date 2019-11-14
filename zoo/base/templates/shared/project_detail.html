@@ -129,6 +129,23 @@
         </h3>
       </div>
     </div>
+    {% else %}
+    <div class="ui very padded basic segment">
+      <div class="ui very padded placeholder segment">
+        <div class="ui icon header">
+          <i class="huge laugh wink outline icon"></i>
+          <br>
+          <div class="content">
+            Oops! We couldn't find any repo here...
+            <div class="sub header">
+              Most of our features rely on scanning the source code in the repository.<br>Please consider adding one in order to get the most from The Zoo
+            </div>
+          </div>
+        </div>
+        <br>
+        <a href="{% url project_update_view object.owner_slug object.name_slug %}" class="ui yellow black-text button">Add repository</a>
+      </div>
+    </div>
     {% endif %}
 
     {% block additional_details %}{% endblock %}

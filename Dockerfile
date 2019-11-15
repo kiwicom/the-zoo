@@ -1,6 +1,6 @@
 FROM node:12-alpine as fe-builder
 
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 WORKDIR /app/webpack
 COPY webpack ./

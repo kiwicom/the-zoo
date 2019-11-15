@@ -41,9 +41,3 @@ build-docs:
 
 open-docs:
 	open docs/_build/html/index.html
-
-coala:
-		docker run --rm -it -w /app -v $(curr_dir):/app:cached coala/base:0.11 coala -n
-
-black:
-		docker run --rm -it -v $(curr_dir):/app kiwicom/black:19.3b0 black /app

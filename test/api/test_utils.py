@@ -1,8 +1,7 @@
 import pytest
 
-from zoo.auditing.models import Issue
-
 from zoo.api import utils as uut
+from zoo.auditing.models import Issue
 
 
 @pytest.mark.parametrize(

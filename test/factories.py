@@ -1,17 +1,17 @@
 from random import choice, randint
 
 from django.conf import settings
-
-from factory import DjangoModelFactory, Faker, LazyAttribute, SubFactory, Factory
+from factory import DjangoModelFactory, Factory, Faker, LazyAttribute, SubFactory
 from faker import Faker as OriginalFaker
+
+from zoo.analytics.models import Dependency, DependencyType, DependencyUsage
+from zoo.analytics.tasks.repo_analyzers import unpack_version
 from zoo.api.models import ApiToken
-from zoo.auditing.models import Issue
 from zoo.auditing.check_discovery import Kind
+from zoo.auditing.models import Issue
 from zoo.datacenters.models import InfraNode
 from zoo.repos.models import Repository
-from zoo.services.models import Service, Environment
-from zoo.analytics.models import Dependency, DependencyUsage, DependencyType
-from zoo.analytics.tasks.repo_analyzers import unpack_version
+from zoo.services.models import Environment, Service
 
 
 class RepositoryFactory(DjangoModelFactory):

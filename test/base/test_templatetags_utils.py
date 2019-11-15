@@ -1,6 +1,5 @@
 from zoo.base.templatetags import utils as uut
 
-
 STRING_OLD = """import sys
 import os
 
@@ -12,7 +11,7 @@ STRING_NEW = """import sys
 import os
 
 if os.path.exists("test/file"):
-    print("file exists")
+    content = os.read(something, os.O_RDWR)
 """
 
 
@@ -25,5 +24,5 @@ def test_templatetags_utils__diff():
         " \n"
         ' if os.path.exists("test/file"):\n'
         '-    sys.stdout.write("file exists")\n'
-        '+    print("file exists")\n'
+        "+    content = os.read(something, os.O_RDWR)\n"
     )

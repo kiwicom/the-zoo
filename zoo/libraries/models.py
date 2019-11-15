@@ -1,5 +1,5 @@
-from enum import Enum
 import re
+from enum import Enum
 
 from django.conf import settings
 from django.contrib.postgres import fields as pg_fields

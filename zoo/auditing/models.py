@@ -1,9 +1,9 @@
 from enum import Enum
 
+import markdown
 from django.contrib.postgres import fields as pg_fields
 from django.db import models
 from django.utils import timezone
-import markdown
 
 from ..repos.models import Repository
 from .check_discovery import KINDS

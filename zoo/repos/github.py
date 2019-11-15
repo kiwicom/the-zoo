@@ -1,9 +1,9 @@
+import requests
+import structlog
 from django.conf import settings
 from github import Github, InputGitTreeElement
 from github.GithubException import GithubException, UnknownObjectException
 from github.GithubObject import NotSet
-import requests
-import structlog
 
 from ..base import http
 from .exceptions import MissingFilesError, RepositoryNotFoundError

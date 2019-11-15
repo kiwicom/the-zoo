@@ -1,6 +1,6 @@
 import attr
-from django.conf import settings
 import yaml
+from django.conf import settings
 
 
 @attr.s(frozen=True, slots=True)

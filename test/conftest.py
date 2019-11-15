@@ -1,31 +1,30 @@
 import json
 import os
-from pathlib import Path
 import tarfile
+from pathlib import Path
 
+import pytest
+import testing.postgresql
 from django.db import connections
 from environ import Env
 from faker import Faker
-import pytest
 from pytest_factoryboy import register
-import testing.postgresql
 
 from zoo.auditing.runner import CheckContext
 
 from . import dummy
 from .factories import (
     ApiTokenFactory,
-    RepositoryFactory,
-    IssueFactory,
-    UserFactory,
-    ServiceFactory,
-    EnvironmentFactory,
     DependencyFactory,
     DependencyUsageFactory,
-    KindFactory,
+    EnvironmentFactory,
     InfraNodeFactory,
+    IssueFactory,
+    KindFactory,
+    RepositoryFactory,
+    ServiceFactory,
+    UserFactory,
 )
-
 
 register(ApiTokenFactory)
 register(RepositoryFactory)

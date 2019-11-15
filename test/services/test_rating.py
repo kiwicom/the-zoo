@@ -1,6 +1,7 @@
-from zoo.services.ratings import SentryRater
-from zoo.services.models import SentryIssueCounts
 import pytest
+
+from zoo.services.models import SentryIssueCounts
+from zoo.services.ratings import SentryRater
 
 
 @pytest.mark.parametrize(

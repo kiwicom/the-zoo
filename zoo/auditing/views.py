@@ -1,7 +1,7 @@
-from collections import defaultdict, OrderedDict
 import itertools
 import json
 import tempfile
+from collections import OrderedDict, defaultdict
 
 from django.http import Http404, HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect
@@ -9,13 +9,13 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
-from . import models, runner, tasks
 from ..libraries.models import Library
 from ..repos.tasks import pull
 from ..repos.utils import download_repository
 from ..services.models import Service
+from . import models, runner, tasks
 from .check_discovery import KINDS
-from .utils import create_git_issue, PatchHandler
+from .utils import PatchHandler, create_git_issue
 
 
 class AuditOverview(TemplateView):

@@ -1,5 +1,5 @@
-from django.core.exceptions import ObjectDoesNotExist
 import graphene
+from django.core.exceptions import ObjectDoesNotExist
 from graphene import relay
 from graphene.types.json import JSONString
 

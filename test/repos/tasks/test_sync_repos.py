@@ -1,7 +1,9 @@
+from unittest.mock import patch
+
 import pytest
 from faker import Faker
-from unittest.mock import patch
-from zoo.repos.models import Repository, Provider
+
+from zoo.repos.models import Provider, Repository
 from zoo.repos.tasks import sync_repos
 
 pytestmark = pytest.mark.django_db

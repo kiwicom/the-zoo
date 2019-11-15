@@ -4,8 +4,8 @@ from django.core.exceptions import SuspiciousOperation
 from django.http import Http404, JsonResponse
 from django.views.generic import ListView, TemplateView
 
-from . import models
 from ..services import models as service_models
+from . import models
 from .steps import STEPS
 
 

@@ -1,6 +1,5 @@
 import arrow
 import pytest
-
 from django.db.utils import IntegrityError
 
 from zoo.api import models as uut

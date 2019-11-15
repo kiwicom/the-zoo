@@ -1,8 +1,7 @@
 import pytest
 
-from zoo.auditing.models import Issue
 from zoo.auditing.check_discovery import Effort, Kind, Severity
-
+from zoo.auditing.models import Issue
 
 pytestmark = pytest.mark.django_db
 

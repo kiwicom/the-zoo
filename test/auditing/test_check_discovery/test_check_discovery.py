@@ -1,12 +1,13 @@
 import importlib
 import os
-import pytest
 import time
 from pathlib import Path, PosixPath
 from typing import Tuple
 from unittest import TestCase
-from zoo.auditing import check_discovery as uut
 
+import pytest
+
+from zoo.auditing import check_discovery as uut
 
 test_folder_dir = os.path.dirname(os.path.realpath(__file__))
 

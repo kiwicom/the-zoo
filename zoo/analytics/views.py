@@ -1,6 +1,6 @@
+import json
 from collections import Counter
 from itertools import islice
-import json
 
 from arrow import Arrow
 from django.core.paginator import Paginator
@@ -8,8 +8,8 @@ from django.db.models import Count, Prefetch, Q
 from django.utils import timezone
 from django.views.generic import TemplateView
 
-from . import models
 from ..services import models as servicemodels
+from . import models
 
 COLOR_PALETTE = [
     "#117510",

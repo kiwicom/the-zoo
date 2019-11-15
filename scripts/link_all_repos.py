@@ -1,8 +1,12 @@
 import re
 from collections import Counter
 
-from zoo.services.models import Service
+import structlog
+
 from zoo.repos.models import Repository
+from zoo.services.models import Service
+
+log = structlog.get_logger()
 
 
 def normalize(text: str) -> str:
@@ -34,22 +38,22 @@ def score_repos(service, repos):
 
 def main():
     repos = Repository.objects.all()
-    print(f"Got {len(repos)} repos")
+    log.info(f"Got {len(repos)} repos")
     for service in Service.objects.all():
         if service.repository:
-            print(f"Skipping {service} (has repo already)")
+            log.info(f"Skipping {service} (has repo already)")
             continue
-        print(f"Running for {service}")
+        log.info(f"Running for {service}")
         scores = score_repos(service, repos)
         likely_repos = scores.most_common(2)
         if not likely_repos:
-            print(f"No repos matching at all")
+            log.info(f"No repos matching at all")
             continue
         if len(likely_repos) == 2 and likely_repos[0][1] == likely_repos[1][1]:
-            print(f"No certain match between {likely_repos}")
+            log.info(f"No certain match between {likely_repos}")
             continue
         service.repository = likely_repos[0][0]
-        print(f"Linked {service} to {service.repository}")
+        log.info(f"Linked {service} to {service.repository}")
         service.save()
 
 

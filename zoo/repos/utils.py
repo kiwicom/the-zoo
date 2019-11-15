@@ -1,7 +1,7 @@
 import importlib
-from pathlib import Path
 import tarfile
 import tempfile
+from pathlib import Path
 
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 

@@ -1,9 +1,11 @@
 import json
-import faker
 
+import faker
 import httpretty
 import pytest
-from zoo.services import tasks as uut, models
+
+from zoo.services import models
+from zoo.services import tasks as uut
 
 fake = faker.Faker()
 

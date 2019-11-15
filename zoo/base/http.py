@@ -1,5 +1,5 @@
-from django.conf import settings
 import requests
+from django.conf import settings
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 
@@ -36,7 +36,6 @@ def requests_retry_session(retries=3, backoff_factor=0.1, session=None):
     .. code-block:: python
 
         response = requests_retry_session().get('https://www.peterbe.com/')
-        print(response.status_code)
 
         s = requests.Session()
         s.auth = ('user', 'pass')

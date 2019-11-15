@@ -1,8 +1,8 @@
 import arrow
+import structlog
 from celery import shared_task
 from django.conf import settings
 from django.db.models import Count
-import structlog
 
 from .models import Issue, IssueCountByKindSnapshot, IssueCountByRepositorySnapshot
 from .utils import apply_patches, create_git_issue

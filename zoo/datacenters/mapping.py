@@ -1,7 +1,7 @@
 from collections import defaultdict
 
-from django.db import transaction
 import requests
+from django.db import transaction
 
 from . import amazon, gcp, models, rancher
 from .models import InfraNode, NodeKind

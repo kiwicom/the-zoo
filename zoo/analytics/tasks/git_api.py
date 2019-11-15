@@ -1,8 +1,8 @@
 import structlog
 
-from . import Language
 from ...repos.exceptions import RepositoryNotFoundError
 from ...repos.utils import get_scm_module
+from . import Language
 
 log = structlog.get_logger()
 

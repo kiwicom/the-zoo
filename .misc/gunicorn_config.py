@@ -1,4 +1,4 @@
-"""Link to docs: http://docs.gunicorn.org/en/stable/settings.html"""
+"""Link to docs: http://docs.gunicorn.org/en/stable/settings.html."""
 
 worker_class = "gevent"
 

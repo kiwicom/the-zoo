@@ -20,11 +20,11 @@ We will use the [conventional commits](https://www.conventionalcommits.org) conv
 from now on. Besides forcing us to keep a consistent commit message styling, it will also bring much
 more value, like:
 
-  * Automatically generating CHANGELOGs
-  * Automatically determining a semantic version bump (based on the types of commits landed)
-  * Communicating the nature of changes to teammates, the public, and other stakeholders
-  * Having different CI steps based on the nature of the commits added to the MR
-  * Having insights about how much time/effort is spent on the different areas of the development
+* Automatically generating CHANGELOGs
+* Automatically determining a semantic version bump (based on the types of commits landed)
+* Communicating the nature of changes to teammates, the public, and other stakeholders
+* Having different CI steps based on the nature of the commits added to the MR
+* Having insights about how much time/effort is spent on the different areas of the development
 
 ## Consequences
 

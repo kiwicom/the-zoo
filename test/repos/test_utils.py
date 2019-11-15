@@ -1,5 +1,5 @@
-from gitlab import GitlabGetError, GitlabListError
 import pytest
+from gitlab import GitlabGetError, GitlabListError
 
 import zoo.repos.utils as uut
 from zoo.repos.exceptions import MissingFilesError, RepositoryNotFoundError

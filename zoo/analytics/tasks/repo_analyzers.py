@@ -1,8 +1,8 @@
-from django.utils import timezone
 import structlog
+from django.utils import timezone
 
-from . import docker, git_api, package_json, requirements_py
 from ..models import Dependency, DependencyUsage
+from . import docker, git_api, package_json, requirements_py
 
 log = structlog.get_logger()
 

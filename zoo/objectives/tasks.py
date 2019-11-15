@@ -1,15 +1,15 @@
-from decimal import Decimal
 import hashlib
+from decimal import Decimal
 
 import arrow
+import requests
+import structlog
 from celery import shared_task
 from datadog import api, initialize
 from django.conf import settings
-import requests
-import structlog
 
-from . import models
 from ..base.http import session
+from . import models
 
 log = structlog.get_logger()
 initialize(api_key=settings.DATADOG_API_KEY, app_key=settings.DATADOG_APP_KEY)

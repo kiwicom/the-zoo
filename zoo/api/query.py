@@ -1,11 +1,11 @@
 import graphene
 from graphene import relay
 
-from . import types
 from ..analytics.models import Dependency, DependencyType, DependencyUsage
 from ..auditing.models import Issue
 from ..repos.models import Repository
 from ..services.models import Service
+from . import types
 from .paginator import Paginator
 
 DependencyTypeEnum = graphene.Enum.from_enum(DependencyType)

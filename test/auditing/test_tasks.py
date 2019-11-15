@@ -1,12 +1,10 @@
 import arrow
 import pytest
-
 from factory import Faker
 
 from zoo.auditing import tasks as uut
 from zoo.auditing.models import Issue
 from zoo.repos.models import Provider
-
 
 pytestmark = pytest.mark.django_db
 

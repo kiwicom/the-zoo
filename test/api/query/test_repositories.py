@@ -1,9 +1,10 @@
 import pytest
+
 from zoo.repos import models
 from zoo.repos.models import Repository
 
-from .test_issues import generate_issues
 from .test_dependency_usages import generate_dependency_usages
+from .test_issues import generate_issues
 
 pytestmark = pytest.mark.django_db
 

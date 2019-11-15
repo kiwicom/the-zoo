@@ -1,8 +1,8 @@
 from django import forms
 
-from . import models
 from ..checklists.forms import TagInput
 from ..repos.forms import RepoInput
+from . import models
 
 
 class LibraryForm(forms.ModelForm):

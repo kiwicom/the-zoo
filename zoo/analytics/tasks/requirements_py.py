@@ -1,12 +1,12 @@
 import re
 
 import arrow
-from pkg_resources import RequirementParseError
 import requirements
 import structlog
+from pkg_resources import RequirementParseError
 
-from . import PyLibrary
 from ...base.http import session
+from . import PyLibrary
 
 log = structlog.get_logger()
 

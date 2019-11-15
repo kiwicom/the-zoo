@@ -1,8 +1,8 @@
 from collections import namedtuple
 
 import arrow
-from raven.contrib.django.raven_compat.models import client
 import structlog
+from raven.contrib.django.raven_compat.models import client
 
 from .check_discovery import CHECKS
 from .models import Issue

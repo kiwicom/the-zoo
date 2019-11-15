@@ -2,10 +2,10 @@ import pytest
 
 from zoo.api.paginator import (
     DEFAULT_PAGE_LENGHT,
-    encode_cursor,
-    decode_cursor,
-    Paginator,
     MissingBeforeValueError,
+    Paginator,
+    decode_cursor,
+    encode_cursor,
 )
 
 

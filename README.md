@@ -15,7 +15,7 @@ operations.
 | Discussion | [#the-zoo on Discord](https://discord.gg/Tx9FkEz) |
 | Maintainer | [Alex Viscreanu](https://github.com/aexvir/)      |
 
-## What is The Zoo?
+## What is The Zoo
 
 A microservice catalogue that allows performing static code checks and integrates with
 third party services like Sentry, Datadog or Pingdom.
@@ -72,7 +72,7 @@ ZOO_GITLAB_TOKEN=...
 ZOO_GITLAB_URL=https://gitlab.com
 ```
 
-Version control tokens only need read access to repositories. 
+Version control tokens only need read access to repositories.
 
 ## Testing
 

@@ -1,13 +1,12 @@
 import pytest
 
-from zoo.auditing.models import Issue
 from zoo.analytics.models import Dependency, DependencyType, DependencyUsage
+from zoo.auditing.models import Issue
 from zoo.repos import tasks as uut
 from zoo.repos.models import Provider
 from zoo.repos.utils import get_scm_module
 
 from .. import dummy
-
 
 pytestmark = pytest.mark.django_db
 

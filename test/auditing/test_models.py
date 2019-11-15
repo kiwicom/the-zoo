@@ -1,9 +1,9 @@
 import textwrap
 
 import pytest
+
 from zoo.auditing import models as uut
 from zoo.auditing.check_discovery import Kind
-
 
 pytestmark = pytest.mark.django_db
 

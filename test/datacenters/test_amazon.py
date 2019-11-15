@@ -1,7 +1,8 @@
-from faker import Faker
 import pytest
+from faker import Faker
 
-from zoo.datacenters import amazon as uut, models
+from zoo.datacenters import amazon as uut
+from zoo.datacenters import models
 
 fake = Faker()
 pytestmark = pytest.mark.django_db

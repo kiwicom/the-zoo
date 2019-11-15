@@ -1,9 +1,9 @@
-from enum import Enum
 import operator
+from enum import Enum
 
+import structlog
 from django.db import models
 from django.utils import timezone
-import structlog
 
 log = structlog.get_logger()
 

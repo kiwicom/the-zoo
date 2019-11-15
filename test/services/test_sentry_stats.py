@@ -1,15 +1,17 @@
+from unittest.mock import patch
+
 import arrow
 import pytest
+from django.utils import timezone
 from faker import Faker
-from unittest.mock import patch
+
 from zoo.services.models import (
-    Service,
     SentryIssue,
-    SentryIssueStats,
     SentryIssueCategory,
+    SentryIssueStats,
+    Service,
 )
 from zoo.services.tasks import get_sentry_stats
-from django.utils import timezone
 
 pytestmark = pytest.mark.django_db
 fake = Faker()

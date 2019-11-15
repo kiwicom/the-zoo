@@ -1,6 +1,6 @@
+import requests
 from celery import shared_task
 from raven.contrib.django.raven_compat.models import client
-import requests
 
 from ...base.http import session
 from ..models import Dependency, DependencyType

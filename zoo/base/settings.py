@@ -11,8 +11,8 @@ from pathlib import Path
 
 import environ
 
-from . import logs
 from ..utils import _get_app_version
+from . import logs
 
 version = _get_app_version()
 

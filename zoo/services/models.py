@@ -1,6 +1,6 @@
-from collections import namedtuple, OrderedDict
-from enum import Enum
 import re
+from collections import OrderedDict, namedtuple
+from enum import Enum
 
 import arrow
 from django.conf import settings

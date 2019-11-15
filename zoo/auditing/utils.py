@@ -4,12 +4,12 @@ import secrets
 import string
 import tempfile
 
-from django.urls import reverse
 import requests
+from django.urls import reverse
 
-from . import runner
 from ..base import redis
 from ..repos.utils import download_repository
+from . import runner
 
 
 def create_git_issue(issue, user_name, reverse_url):

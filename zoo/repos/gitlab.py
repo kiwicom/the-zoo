@@ -1,7 +1,7 @@
+import structlog
 from django.conf import settings
 from gitlab import Gitlab, GitlabGetError, GitlabListError
 from requests.exceptions import MissingSchema
-import structlog
 
 from ..base.http import session
 from .exceptions import MissingFilesError, RepositoryNotFoundError

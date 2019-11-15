@@ -1,8 +1,9 @@
 import pytest
 from faker import Faker
-from zoo.services.models import Service
-from zoo.services.forms import ServiceForm, ServiceEnvironmentsFormSet
+
 from zoo.repos.models import Repository
+from zoo.services.forms import ServiceEnvironmentsFormSet, ServiceForm
+from zoo.services.models import Service
 
 pytestmark = pytest.mark.django_db
 

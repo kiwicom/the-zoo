@@ -1,10 +1,10 @@
+import json
+
 import fakeredis
 import httpretty
-import json
 import pytest
 
 from zoo.auditing import utils as uut
-
 
 pytestmark = pytest.mark.django_db
 
@@ -49,12 +49,12 @@ def test_context_object_serializer(repository, check_context):
     path_str = check_context.path.resolve().as_posix()
 
     patch1 = check_context.CodePatch(
-        action="create", file_path=f"{path_str}/test.py", content="print('aaa')"
+        action="create", file_path=f"{path_str}/test.py", content="numbers = range(5)"
     )
     assert serializer.to_dict(patch1) == {
         "action": "create",
         "file_path": "test.py",
-        "content": "print('aaa')",
+        "content": "numbers = range(5)",
     }
 
     patch2 = check_context.CodePatch(

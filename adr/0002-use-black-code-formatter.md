@@ -8,7 +8,8 @@ Accepted
 
 ## Context
 
-We would like to use code formatter to standardize code look so we stop bothering about it in code reviews and focus on how code actually works.
+We would like to use code formatter to standardize code look so we stop bothering about it
+in code reviews and focus on how code actually works.
 
 ## Decision
 

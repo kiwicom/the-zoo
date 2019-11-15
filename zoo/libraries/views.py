@@ -1,5 +1,6 @@
 import re
 
+import structlog
 from django.core.exceptions import SuspiciousOperation
 from django.db.models import Q
 from django.http import Http404
@@ -7,11 +8,10 @@ from django.urls import reverse_lazy
 from django.views import generic as generic_views
 from djangoql.exceptions import DjangoQLError
 from djangoql.queryset import apply_search
-import structlog
 
-from . import forms, models
 from ..auditing.models import Issue
 from ..checklists.steps import STEPS
+from . import forms, models
 
 log = structlog.get_logger()
 

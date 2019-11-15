@@ -1,22 +1,22 @@
+import re
 from collections import defaultdict
 from datetime import timedelta
-import re
 from typing import Dict, List
 
+import structlog
 from django.core.exceptions import SuspiciousOperation
 from django.db import transaction
-from django.db.models import Q, query, Sum
+from django.db.models import Q, Sum, query
 from django.http import Http404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic as generic_views
 from djangoql.exceptions import DjangoQLError
 from djangoql.queryset import apply_search
-import structlog
 
-from . import forms, models
 from ..auditing.models import Issue
 from ..checklists.steps import STEPS
+from . import forms, models
 
 log = structlog.get_logger()
 
@@ -42,7 +42,7 @@ class ServiceEnvironmentMixin:
         envs_formset = context["envs_formset"]
         with transaction.atomic():
             self.object = form.save()
-            print(form.data)
+            log.info(form.data)
 
             if envs_formset.is_valid():
                 envs_formset.instance = self.object

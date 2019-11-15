@@ -1,0 +1,55 @@
+site_name: The Zoo
+site_url: https://kiwi.wiki/platform/sls/aws/bacchus
+
+repo_url: https://github.com/kiwicom/the-zoo
+repo_name: kiwicom/the-zoo
+
+theme:
+  name: 'material'
+  custom_dir: 'docs/theme'
+  palette:
+    primary: 'brown'
+    accent: 'deep orange'
+  logo: 'assets/corkscrew.png'
+  favicon: 'theme/img/favicon.ico'
+  feature:
+    tabs: true
+
+nav:
+  - Home:
+    - index.md
+  - Configuration:
+    - config/full.md
+    - config/pd-only.md
+  - FAQ:
+    - faq.md
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - footnotes
+  - markdown.extensions.footnotes
+  - markdown.extensions.toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+plugins:
+  - search
+  - minify:
+      minify_html: true

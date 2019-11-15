@@ -10,17 +10,17 @@ variables:
   PYTEST_COVERAGE_TARGET: zoo
 
 include:
-  - 'https://ci-files.skypicker.com/templates/build/docker_build.yml'
   - 'https://ci-files.skypicker.com/templates/build/black.yml'
-  - 'https://ci-files.skypicker.com/templates/build/coala.yml'
+  - 'https://ci-files.skypicker.com/templates/build/docker_build.yml'
+  - 'https://ci-files.skypicker.com/templates/build/pre_commit.yml'
+  - 'https://ci-files.skypicker.com/templates/linters/commit_style.yml'
+  - 'https://ci-files.skypicker.com/templates/release/release_latest.yml'
+  - 'https://ci-files.skypicker.com/templates/release/sonarqube_scan.yml'
   - 'https://ci-files.skypicker.com/templates/test/container_scanning.yml'
   - 'https://ci-files.skypicker.com/templates/test/dependency_scanning.yml'
   - 'https://ci-files.skypicker.com/templates/test/pylint.yml'
   - 'https://ci-files.skypicker.com/templates/test/pytest.yml'
   - 'https://ci-files.skypicker.com/templates/test/sast.yml'
-  - 'https://ci-files.skypicker.com/templates/release/sonarqube_scan.yml'
-  - 'https://ci-files.skypicker.com/templates/release/release_latest.yml'
-  - 'https://ci-files.skypicker.com/templates/linters/commit_style.yml'
 
 docker_build:
   services:

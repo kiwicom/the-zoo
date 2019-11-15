@@ -2,10 +2,10 @@ from django import forms
 from django.contrib.postgres import forms as pg_forms
 from django.core.exceptions import ValidationError
 
-from . import models
 from ..base.forms import SentryProjectInput
 from ..checklists.forms import TagInput
 from ..repos.forms import RepoInput
+from . import models
 
 
 class SplitArrayField(pg_forms.SplitArrayField):

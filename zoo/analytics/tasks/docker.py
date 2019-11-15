@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from . import DockerImage, OS
 from ..models import DependencyType
+from . import OS, DockerImage
 from .utils import DockerImageId
 
 KNOWN_DEPS = {

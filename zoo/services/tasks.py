@@ -1,16 +1,16 @@
-from datetime import datetime
 import hashlib
+from datetime import datetime
 from urllib.parse import urljoin
 
-from celery import shared_task
 import dateutil.parser
-from django.conf import settings
-from django.utils import timezone
 import requests
 import structlog
+from celery import shared_task
+from django.conf import settings
+from django.utils import timezone
 
-from . import models
 from ..base import http
+from . import models
 
 log = structlog.get_logger()
 

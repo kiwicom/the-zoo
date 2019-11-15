@@ -1,15 +1,18 @@
-from collections import defaultdict
-from enum import Enum
 import importlib
-from pathlib import Path
 import pkgutil
 import re
 import site
+from collections import defaultdict
+from enum import Enum
+from pathlib import Path
 from typing import Dict
 
 import attr
-from django.conf import settings
+import structlog
 import yaml
+from django.conf import settings
+
+log = structlog.get_logger()
 
 
 class Severity(Enum):
@@ -96,8 +99,8 @@ def _parse_metadata_file(package_path: Path, module_name: str) -> Dict:
             raise IncorrectCheckMetadataError("File format not correct") from exc
 
 
-def raise_package_exception(name):
-    print(name)
+def log_error(name):
+    log.info("auditing.check_discovery.scan.fail", name=name)
 
 
 def clear_discovered_checks():
@@ -163,9 +166,7 @@ def discover_checks():
 
 def _get_package_members(package, filter_by_re=None):
     for _, module_full_name, ispkg in pkgutil.walk_packages(
-        path=package.__path__,
-        prefix=package.__name__ + ".",
-        onerror=raise_package_exception,
+        path=package.__path__, prefix=package.__name__ + ".", onerror=log_error,
     ):
         if not ispkg:
             module_name = module_full_name.rsplit(".", 1)[1]

@@ -1,7 +1,7 @@
 import pytest
 
-from zoo.services.models import Service
 from zoo.repos.models import Repository
+from zoo.services.models import Service
 
 pytestmark = pytest.mark.django_db
 

@@ -224,7 +224,7 @@ class DockerImageId:
 
     @property
     def namespaces(self) -> []:
-        """"Namespaces" - all path parts after username and image name as a list.
+        """Namespaces" - all path parts after username and image name as a list.
 
         my.registry.com:5005/special-name/my-image/namespace/another-namespace:0.1.1-alpine3.9 as base-image
                                                    ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾

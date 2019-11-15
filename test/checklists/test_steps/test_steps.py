@@ -1,7 +1,8 @@
 import os
+from pathlib import Path
+
 import pytest
 
-from pathlib import Path
 from zoo.checklists import steps as uut
 
 pytestmark = pytest.mark.django_db

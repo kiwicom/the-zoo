@@ -1,7 +1,8 @@
-from faker import Faker
 import pytest
+from faker import Faker
 
-from zoo.datacenters import rancher as uut, models
+from zoo.datacenters import models
+from zoo.datacenters import rancher as uut
 
 fake = Faker()
 pytestmark = pytest.mark.django_db

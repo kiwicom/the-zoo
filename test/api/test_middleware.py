@@ -5,7 +5,6 @@ import pytest
 from zoo.api import middleware as uut
 from zoo.api.models import ApiToken
 
-
 pytestmark = pytest.mark.django_db
 
 

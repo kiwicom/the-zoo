@@ -1,9 +1,8 @@
 import arrow
 import pytest
 
-from zoo.auditing.models import Issue
 import zoo.auditing.runner as uut
-
+from zoo.auditing.models import Issue
 
 pytestmark = pytest.mark.django_db
 

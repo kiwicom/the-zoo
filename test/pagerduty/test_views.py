@@ -1,10 +1,11 @@
-from datetime import datetime, timedelta
-import httpretty
 import json
-import pytest
+from datetime import datetime, timedelta
 
+import httpretty
+import pytest
 from django.http import Http404, JsonResponse
 from freezegun import freeze_time
+
 from zoo.pagerduty import views as uut
 
 

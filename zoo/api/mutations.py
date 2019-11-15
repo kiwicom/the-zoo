@@ -3,12 +3,12 @@ import tempfile
 import graphene
 from graphene import relay
 
-from . import types
 from ..auditing.check_discovery import CHECKS
 from ..auditing.models import Issue
 from ..auditing.runner import check_repository
 from ..repos.models import Repository
 from ..repos.utils import download_repository
+from . import types
 from .utils import CheckResultStatus, determine_check_result_status
 
 

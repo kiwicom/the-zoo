@@ -2,9 +2,9 @@ import hashlib
 import itertools
 import tempfile
 
+import structlog
 from celery import shared_task
 from django.conf import settings
-import structlog
 
 from ..analytics.tasks import repo_analyzers
 from ..auditing import runner

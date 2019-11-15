@@ -1,7 +1,9 @@
 from unittest.mock import MagicMock
+
 import pytest
 
-from zoo.datacenters import gcp as uut, models
+from zoo.datacenters import gcp as uut
+from zoo.datacenters import models
 
 pytestmark = pytest.mark.django_db
 

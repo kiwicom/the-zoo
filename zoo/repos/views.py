@@ -1,17 +1,17 @@
 import json
 import tempfile
 
+import structlog
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import Http404, JsonResponse
 from django.views.generic import ListView
 from prance import ResolvingParser, ValidationError
 from prance.util.url import ResolutionError
-import structlog
 from yaml.composer import ComposerError
 from yaml.scanner import ScannerError
 
-from . import models
 from ..base import redis
+from . import models
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 from .models import Repository
 from .utils import download_repository, get_scm_module

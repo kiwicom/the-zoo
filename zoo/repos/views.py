@@ -42,11 +42,12 @@ def _parse_file(path, base=None):
         parser = ResolvingParser(str(path))
         return parser.specification
     except (
-        ValidationError,
-        ResolutionError,
-        ComposerError,
-        ScannerError,
+        AssertionError,
         AttributeError,
+        ComposerError,
+        ResolutionError,
+        ScannerError,
+        ValidationError,
     ) as err:
         log.info(
             "repos.views.openapi.invalid", path=str(path.relative_to(base)), error=err

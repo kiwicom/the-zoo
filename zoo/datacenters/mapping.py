@@ -4,7 +4,7 @@ import requests
 from django.db import transaction
 
 from . import amazon, gcp, models, rancher
-from .models import InfraNode, NodeKind
+from .models import Datacenter, InfraNode, NodeKind
 from .utils import GCPClient, KubernetesClient
 
 
@@ -108,7 +108,7 @@ class GoogleCloudPlatformMapper(Mapper):
         _, _, zone, _ = cluster.value.split("_")
 
         datacenter, _ = models.Datacenter.objects.get_or_create(
-            provider="GCP", region=zone
+            provider=Datacenter.PROVIDER_GCP, region=zone
         )
         service_datacenter, _ = models.ServiceDatacenter.objects.get_or_create(
             service=service, datacenter=datacenter
@@ -128,12 +128,14 @@ class GoogleCloudPlatformMapper(Mapper):
                 for member in project_members:
                     models.ServiceDatacenterMember.objects.get_or_create(
                         service_datacenter=datacenter,
-                        name=member,
-                        email=member.split(":", 1)[1],
+                        name=member["name"],
+                        email=member["email"],
                     )
                 models.ServiceDatacenterMember.objects.filter(
                     service_datacenter=datacenter
-                ).exclude(name__in=project_members).delete()
+                ).exclude(
+                    name__in={member["name"] for member in project_members}
+                ).delete()
 
         for workload in image_node.find_sources_by_kind(NodeKind.GCP_WORKLOAD_NAME):
             component_data = self._get_ingress_component(workload)
@@ -200,7 +202,7 @@ class AmazonRancherMapper(Mapper):
             _, zone, _ = elb_node.value.split(".", 2)
 
             datacenter, _ = models.Datacenter.objects.get_or_create(
-                provider="Amazon", region=zone
+                provider=Datacenter.PROVIDER_AWS, region=zone
             )
             service_datacenter, _ = models.ServiceDatacenter.objects.get_or_create(
                 service=service, datacenter=datacenter

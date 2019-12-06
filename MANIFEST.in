@@ -1,2 +1,2 @@
-include requirements.in
-include test-requirements.in
+include requirements.txt
+include test-requirements.txt

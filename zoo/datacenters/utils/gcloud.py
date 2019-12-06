@@ -2,6 +2,8 @@ from django.conf import settings
 from google.oauth2 import service_account
 from googleapiclient import discovery
 
+from .misc import email_to_full_name
+
 
 def _get_credentials():
     if settings.GCP_SERVICE_KEY is None:
@@ -74,12 +76,24 @@ class GCPClient:
         bindings = request.execute()["bindings"]
 
         for binding in bindings:
-            if binding["role"] == "roles/owner":
-                return [
-                    member
-                    for member in binding["members"]
-                    if member.endswith("@kiwi.com")
-                ]
+            if binding["role"] != "roles/owner":
+                continue
+
+            member_list = []
+            for member in binding["members"]:
+                if not member.endswith("@kiwi.com"):
+                    continue
+
+                user_type, email = member.split(":")
+                member_list.append(
+                    {
+                        "name": email_to_full_name(email),
+                        "email": email,
+                        "type": user_type,
+                    }
+                )
+
+            return member_list
 
     def get_clusters_by_name(self, cluster):
         # zoo.datacenters.gcp.CLUSTER_IDENTIFIER

@@ -2,6 +2,8 @@ import arrow
 from django.contrib.postgres import fields as pg_fields
 from django.db import models
 
+from .templates import get_datacenter_template_data
+
 
 def utcnow():
     return arrow.utcnow().datetime
@@ -59,7 +61,7 @@ class InfraNode(models.Model):
             visited.add(source.id)
             if source.kind == kind:
                 sources_of_kind.append(source)
-            sources += list(source.sources.all())
+            sources.extend(source.sources.all())
 
         return sources_of_kind
 
@@ -74,11 +76,14 @@ class InfraNode(models.Model):
 
 
 class Datacenter(models.Model):
-    class Meta:
-        unique_together = ("provider", "region")
+    PROVIDER_GCP = "GCP"
+    PROVIDER_AWS = "AWS"
 
     provider = models.CharField(max_length=100)
     region = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        unique_together = ("provider", "region")
 
     def __str__(self):
         return f"{self.provider} {self.region}" if self.region else self.provider
@@ -89,6 +94,10 @@ class ServiceDatacenter(models.Model):
         "services.Service", on_delete=models.CASCADE, related_name="datacenters"
     )
     datacenter = models.ForeignKey("Datacenter", on_delete=models.PROTECT)
+
+    @property
+    def template_metadata(self):
+        return get_datacenter_template_data(self)
 
     class Meta:
         unique_together = ("service", "datacenter")

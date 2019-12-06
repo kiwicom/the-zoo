@@ -32,6 +32,12 @@
     API
   </a>
   {% endif %}
+  {% if object.datacenters.count %}
+  <a class="item" data-tab="infrastructure">
+    <i class="server icon"></i>
+    Infrastructure
+  </a>
+  {% endif %}
   {% if environment.service_urls %}
     <a class="item" href="{{ environment.service_urls.0 }}" target="_blank" rel="noopener noreferrer" style="color: #4183c4;">
       <i class="globe americas icon"></i>
@@ -228,6 +234,10 @@
       </div>
     </div>
     {% endverbatim %}
+  {% endif %}
+
+  {% if object.datacenters.count %}
+    {% include "datacenters/infra_overview.html" with datacenters=object.datacenters.all only %}
   {% endif %}
 {% endblock %}
 

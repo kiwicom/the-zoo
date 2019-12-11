@@ -24,4 +24,4 @@ line_length = 88
 multi_line_output = 3
 default_sectiont = "THIRDPARTY"
 include_trailing_comma = true
-known_third_party = ["allauth", "arrow", "attr", "boto3", "celery", "datadog", "dateutil", "ddtrace", "django", "djangoql", "environ", "factory", "faker", "fakeredis", "freezegun", "github", "gitlab", "google", "googleapiclient", "graphene", "graphene_django", "graphql_relay", "httpretty", "kubernetes", "markdown", "pkg_resources", "prance", "pygerduty", "pytest", "pytest_factoryboy", "raven", "redis", "requests", "requirements", "setuptools", "snapshottest", "structlog", "testing", "urllib3", "yaml"]
+known_third_party = ["allauth", "arrow", "attr", "boto3", "celery", "datadog", "dateutil", "ddtrace", "django", "djangoql", "environ", "factory", "faker", "fakeredis", "freezegun", "github", "gitlab", "google", "googleapiclient", "graphene", "graphene_django", "graphql_relay", "httpretty", "kubernetes", "markdown", "pkg_resources", "prance", "pygerduty", "pytest", "pytest_factoryboy", "raven", "redis", "requests", "setuptools", "snapshottest", "structlog", "testing", "urllib3", "yaml"]

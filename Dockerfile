@@ -18,16 +18,17 @@ RUN addgroup -S macaque && adduser -H -D -S macaque macaque
 WORKDIR /app
 
 COPY --from=fe-builder /app/zoo ./zoo
-COPY *requirements.txt ./
+COPY requirements/*.txt ./
 
 RUN apk add --no-cache --virtual=.build-deps build-base postgresql-dev icu-dev pkgconfig && \
     apk add --no-cache --virtual=.run-deps libpq icu-libs && \
-    pip install --no-cache-dir -r requirements.txt -r test-requirements.txt && \
+    pip install --no-cache-dir -r base.txt -r test.txt && \
     apk del .build-deps
 
 COPY . ./
 
 RUN pip install -e . && \
+    python manage.py check && \
     python manage.py collectstatic --noinput && \
     chown -R macaque:macaque /app
 

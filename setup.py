@@ -2,10 +2,10 @@ import os
 
 from setuptools import find_packages, setup
 
-with open("requirements.txt") as f:
+with open("base.txt") as f:
     install_requires = [line for line in f if line and line[0] not in "#-"]
 
-with open("test-requirements.txt") as f:
+with open("test.txt") as f:
     tests_require = [line for line in f if line and line[0] not in "#-"]
 
 setup(

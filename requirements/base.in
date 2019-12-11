@@ -6,7 +6,7 @@ celery-redbeat
 colorama
 datadog
 ddtrace==0.23.0
-django
+django<3.*
 djangoql
 django-allauth
 django-debug-toolbar

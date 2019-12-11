@@ -1,3 +1,5 @@
+-r base.in
+
 coverage~=4.3.4  # sonarqube has problems parsing 4.4's output https://github.com/nedbat/coveragepy/issues/578
 httpretty
 fakeredis
@@ -10,5 +12,6 @@ pytest-factoryboy
 pytest-mock
 pytest-xdist
 pytest-freezegun
+python-dateutil<2.8.1
 snapshottest
 testing-postgresql

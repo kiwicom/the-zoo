@@ -1,3 +1,5 @@
+from base64 import b64decode as decode
+
 import requests
 import structlog
 from django.conf import settings
@@ -77,6 +79,15 @@ def get_languages(remote_id):
     for lang, num in langs.items():
         langs_percent[lang] = round(num / sum_of_bytes * 100, 2)
     return langs_percent
+
+
+def get_file_content(github_id, path, ref="master"):
+    try:
+        proj = get_project(github_id)
+    except RepositoryNotFoundError as e:
+        raise FileNotFoundError(e)
+    else:
+        return decode(proj.get_contents(path, ref).raw_data["content"])
 
 
 def create_remote_issue(issue, user_name, reverse_url):

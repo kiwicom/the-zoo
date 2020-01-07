@@ -98,6 +98,48 @@ If you want to pass some env vars to environment, you can list them in env var
 `TOX_TESTENV_PASSENV`. For example if you want to use custom database for tests,
 you can run: `TEST_DATABASE_URL=postgres://... TOX_TESTENV_PASSENV=TEST_DATABASE_URL tox`
 
+## Configuration for repositories
+
+Repositories scanned by the Zoo may contain the .zoo.yml file. This file contains additional
+information about the scanned repository and how and where it's used in production. If the Zoo
+finds this file in the root of the project, it will read it and create a Service or a Library within
+the Zoo with the provided information based on the collected data automatically.
+Otherwise the data have to be added to the Zoo manually.
+
+Here is an example of this file:
+
+```yaml
+type: service
+name: hello-world-service
+owner: booking
+impact: profit
+status: beta
+docs_url: 'https://example.com/hello-world-service'
+slack_channel: 'http://example.com/slack/channel'
+sentry_project: 'http://example.com/sentry/hello-world-service'
+sonarqube_project: hello-world-service
+pagerduty_url: 'https://example.com/pager/hello-world-service'
+tags:
+    - tag1
+    - tag2
+    - tag3
+environments:
+    -
+        name: staging
+        dashboard_url: 'https://staging.example.com/dashboard'
+        service_urls:
+            - 'https://staging.example.com/service'
+        health_check_url: 'https://staging.example.com/health_check'
+    -
+        name: production
+        dashboard_url: 'https://production.example.com/dashboard'
+        service_urls:
+            - 'https://production.example.com/service'
+        health_check_url: 'https://production.example.com/health_check'
+```
+
+Full schema for this file can be found in [zoo_yml.py](zoo/repos/zoo_yml.py)
+
 ## Documentation
 
 ### Architecture Decision Records

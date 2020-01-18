@@ -100,7 +100,7 @@ you can run: `TEST_DATABASE_URL=postgres://... TOX_TESTENV_PASSENV=TEST_DATABASE
 
 ## Configuration for repositories
 
-Repositories scanned by the Zoo may contain the .zoo.yml file. This file contains additional
+Repositories scanned by the Zoo may contain the `.zoo.yml` file. This file contains additional
 information about the scanned repository and how and where it's used in production. If the Zoo
 finds this file in the root of the project, it will read it and create a Service or a Library within
 the Zoo with the provided information based on the collected data automatically.

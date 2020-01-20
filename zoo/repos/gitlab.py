@@ -73,6 +73,15 @@ def get_languages(remote_id):
     return langs
 
 
+def get_file_content(remote_id, path, ref="master"):
+    try:
+        proj = get_project(remote_id)
+    except RepositoryNotFoundError as e:
+        raise FileNotFoundError(e)
+    else:
+        return proj.files.get(file_path=path, ref=ref).decode()
+
+
 def create_remote_issue(issue, user_name, reverse_url):
     gitlab_issue = issue.repository.remote_git_object.issues.create(
         {

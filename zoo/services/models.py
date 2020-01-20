@@ -44,7 +44,7 @@ class Service(models.Model):
         blank=True,
         max_length=100,
     )
-    slack_channel = models.CharField(max_length=22, null=True, blank=True)
+    slack_channel = models.CharField(max_length=80, null=True, blank=True)
     sentry_project = models.CharField(max_length=100, null=True, blank=True)
     sonarqube_project = models.CharField(max_length=250, null=True, blank=True)
     rating_grade = models.CharField(max_length=1, null=True, blank=True)

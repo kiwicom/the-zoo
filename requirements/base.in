@@ -8,7 +8,6 @@ datadog
 ddtrace==0.23.0
 django<3.*
 djangoql
-django-allauth
 django-debug-toolbar
 django-environ
 django-extensions

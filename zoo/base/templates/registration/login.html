@@ -1,0 +1,37 @@
+{% extends 'skeleton.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'auth.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="splash">
+  <div class="ui basic center aligned segment">
+    <h1 class="ui auth header">Welcome to<br> <span class="branding">The Zoo!</span></h1>
+     <form class="ui form" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          {% with field.field.widget.input_type as type %}
+          <div class="field">
+            <div class="ui labeled input">
+                <div class="ui label">
+                  {{ field.label}}
+                </div>
+                {{ field }}
+            </div>
+          </div>
+          {% endwith %}
+        {% endfor %}
+
+        <div class="ui stackable centered grid">
+          <div class="ui six wide column">
+            <button class="ui brown vertical button" type="submit">
+                Login
+            </button>
+          </div>
+        </div>
+      </form>
+  </div>
+</div>
+{% endblock %}

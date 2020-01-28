@@ -109,10 +109,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "django.contrib.postgres",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.gitlab",
     "django_extensions",
     "debug_toolbar",
     "raven.contrib.django.raven_compat",
@@ -187,27 +183,18 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 SITE_ID = 1
 
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",  # for /admin
-    "allauth.account.auth_backends.AuthenticationBackend",
-)
+AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)  # for /admin
 
-ACCOUNT_ADAPTER = "zoo.base.accounts.NoSignupAccountAdapter"
 ACCOUNT_EMAIL_VERIFICATION = "none"
-SOCIALACCOUNT_ADAPTER = "zoo.base.accounts.OpenSignupSocialAccountAdapter"
-SOCIALACCOUNT_PROVIDERS = {"gitlab": {"GITLAB_URL": GITLAB_URL, "SCOPE": ["read_user"]}}
-LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/"
 
 GRAPHENE = {"SCHEMA": "zoo.api.schema.schema"}
 
 ZOO_API_URL = r"^/graphql$"
 
+LOGOUT_REDIRECT_URL = "/"
+
 STRONGHOLD_PUBLIC_URLS = (
     r"^/admin.*?$",  # let Django manage auth for /admin
-    r"^/accounts/login/$",
-    r"^/accounts/gitlab.*?$",
-    r"^/accounts/social/signup/$",
     r"^/robots.txt$",
     r"^/ping$",
     ZOO_API_URL,

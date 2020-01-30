@@ -12,6 +12,5 @@ pytest-factoryboy
 pytest-mock
 pytest-xdist
 pytest-freezegun
-python-dateutil<2.8.1
 snapshottest
 testing-postgresql

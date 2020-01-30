@@ -7,12 +7,12 @@
 #
 -r base.txt
 alabaster==0.7.12         # via sphinx
-babel==2.7.0              # via sphinx
-imagesize==1.1.0          # via sphinx
-packaging==19.2           # via sphinx
-pyparsing==2.4.5          # via packaging
+babel==2.8.0              # via sphinx
+imagesize==1.2.0          # via sphinx
+packaging==20.1           # via sphinx
+pyparsing==2.4.6          # via packaging
 snowballstemmer==2.0.0    # via sphinx
-sphinx==2.2.2
+sphinx==2.3.1
 sphinx-rtd-theme==0.4.3
 sphinxcontrib-applehelp==1.0.1  # via sphinx
 sphinxcontrib-devhelp==1.0.1  # via sphinx

@@ -129,21 +129,18 @@ def _discover_patches(package_name, package_kinds):
     except ModuleNotFoundError:
         return {}
 
-    patches_keys = {
-        kind.patch: kind.key
-        for kind in package_kinds.values()
-        if kind.patch is not None
-    }
+    patches_keys = defaultdict(list)
+    for kind in package_kinds.values():
+        if kind.patch is None:
+            continue
+        patches_keys[kind.patch].append(kind.key)
 
     package_patches = {}
     for module_name, module in _get_package_members(package, PATCH_REGEX):
-        package_patches.update(
-            {
-                patches_keys[f"{module_name}.{member_name}"]: member
-                for member_name, member in _get_module_members(module, PATCH_REGEX)
-                if f"{module_name}.{member_name}" in patches_keys
-            }
-        )
+        for member_name, member in _get_module_members(module, PATCH_REGEX):
+            patch_key = f"{module_name}.{member_name}"
+            for kind_key in patches_keys.get(patch_key, []):
+                package_patches[kind_key] = member
 
     return package_patches
 

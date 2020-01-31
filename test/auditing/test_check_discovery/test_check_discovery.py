@@ -21,24 +21,33 @@ def test_check_discovery__correct_modules(settings):
     uut.discover_checks()
     from zoo.auditing.check_discovery import KINDS, CHECKS, PATCHES
 
-    assert len(CHECKS) == 10
+    assert len(CHECKS) == 11
 
     assert {function.__name__ for function in CHECKS} == {
         "check_another_dummy_function",
         "check_dummy_function",
+        "check_dummy_function_again",
     }
 
     for function in CHECKS:
         assert function() == (function.__name__ == "check_dummy_function")
 
-    assert len(KINDS) == 2
+    assert len(KINDS) == 3
     assert set(KINDS.keys()) == {
         "something:check_dummy_function",
         "something:check_another_dummy_function",
+        "something:check_dummy_function_again",
     }
-    assert len(PATCHES) == 1
-    assert set(PATCHES.keys()) == {"something:check_dummy_function"}
+    assert len(PATCHES) == 2
+    assert set(PATCHES.keys()) == {
+        "something:check_dummy_function",
+        "something:check_dummy_function_again",
+    }
     assert KINDS["something:check_dummy_function"].apply_patch() is True
+    assert (
+        KINDS["something:check_dummy_function"].apply_patch
+        == KINDS["something:check_dummy_function_again"].apply_patch
+    )
 
 
 def test_check_discovery__members_not_functions(settings):

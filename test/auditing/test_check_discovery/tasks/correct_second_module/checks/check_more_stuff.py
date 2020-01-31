@@ -6,6 +6,10 @@ def check_another_dummy_function():
     return False
 
 
+def check_dummy_function_again():
+    return False
+
+
 def _non_check_function():
     pass
 

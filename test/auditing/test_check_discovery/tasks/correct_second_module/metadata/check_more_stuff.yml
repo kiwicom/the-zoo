@@ -12,3 +12,9 @@ category: Something written here
   title: This checks another dummy function
   description: |
     Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.
+
+- id: check_dummy_function_again
+  title: This checks something dummy again
+  patch: patch_more_stuff.patch_dummy_function
+  description: |
+    Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.

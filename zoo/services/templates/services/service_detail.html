@@ -38,26 +38,6 @@
     Infrastructure
   </a>
   {% endif %}
-  {% if environment.service_urls %}
-    <a class="item" href="{{ environment.service_urls.0 }}" target="_blank" rel="noopener noreferrer" style="color: #4183c4;">
-      <i class="globe americas icon"></i>
-      {{ environment.service_urls.0 }}
-    </a>
-    {% if environment.service_urls|length > 1 %}
-      <div class="ui left top pointing service-urls fade dropdown icon link item">
-        <i class="ellipsis horizontal icon"></i>
-        <div class="large bottom menu transition">
-          {% for service_url in environment.service_urls %}
-            {% if forloop.counter > 1 %}
-              <a class="item" href="{{ service_url }}" target="_blank" rel="noopener noreferrer">
-                <i class="globe americas icon"></i> {{ service_url }}
-              </a>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
-  {% endif %}
   <div class="right menu">
 
     <a class="ui {% if not object.slack_url %}disabled{% endif %} item" href="{{ object.slack_url }}" target="_blank" rel="noopener noreferrer">
@@ -67,6 +47,10 @@
     <a class="ui {% if not environment.dashboard_url %}disabled{% endif %} item" href="{{ environment.dashboard_url }}" target="_blank" rel="noopener noreferrer">
       <i class="dashboard icon"></i>
       dashboard
+    </a>
+    <a class="ui {% if not environment.logs_url %}disabled{% endif %} item" href="{{ environment.logs_url }}" target="_blank" rel="noopener noreferrer">
+      <i class="file alternate icon"></i>
+      logs
     </a>
     <a class="ui {% if not object.docs_url %}disabled{% endif %} item" href="{{ object.docs_url }}" target="_blank" rel="noopener noreferrer">
       <i class="graduation cap icon"></i>
@@ -90,6 +74,17 @@
 {% endblock %}
 
 {% block priority_details %}
+  {% if environment.service_urls %}
+  <h4 class="ui grey header">
+    <i class="globe americas icon"></i>
+    <div class="content">
+      <a class="ui small header" href="{{ environment.service_urls.0 }}" target="_blank" rel="noopener noreferrer" style="color: #4183c4;">
+        {{ environment.service_urls.0 }}
+      </a>
+    </div>
+  </h2>
+  {% endif %}
+
   {% if object.pagerduty_service_id %}
   <div
     id="pagerduty-details-container"

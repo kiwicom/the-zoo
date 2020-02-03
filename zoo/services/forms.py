@@ -41,8 +41,8 @@ class EnvironmentForm(forms.ModelForm):
 
     class Meta:
         model = models.Environment
-        fields = ["name", "dashboard_url", "service_urls"]
-        labels = {"dashboard_url": "Dashboard URL"}
+        fields = ["name", "dashboard_url", "logs_url", "service_urls"]
+        labels = {"dashboard_url": "Dashboard URL", "logs_url": "Logs URL"}
 
 
 class ServiceForm(forms.ModelForm):

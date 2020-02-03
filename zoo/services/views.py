@@ -153,9 +153,7 @@ class ServiceDetail(ServiceMixin, generic_views.DetailView):
         all_sentry_issues = sentry_issues_queryset.order_by("-last_seen")
 
         problematic_sentry_issues = sorted(
-            sentry_issues_queryset.exclude(
-                category=models.SentryIssueCategory.FRESH.value
-            ).all(),
+            sentry_issues_queryset.filter(category__in=ISSUE_ORDER.keys()).all(),
             key=lambda k: (ISSUE_ORDER[k.category], k.last_seen),
         )
 

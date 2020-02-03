@@ -171,6 +171,7 @@ class Environment(models.Model):
     )
     health_check_url = models.URLField(max_length=500, null=True, blank=True)
     dashboard_url = models.URLField(max_length=500, null=True, blank=True)
+    logs_url = models.URLField(max_length=500, null=True, blank=True)
 
 
 def slugify_attribute(attribute):

@@ -1,0 +1,53 @@
+autorun:
+  block: true
+formatter:
+- clippy: {}
+tools:
+  bandit:
+    ignore:
+    - any-other-function-with-shell-equals-true
+    - hardcoded-bind-all-interfaces
+    - hardcoded-password-default
+    - hardcoded-password-funcarg
+    - hardcoded-password-string
+    - hardcoded-sql-expressions
+    - hardcoded-tmp-directory
+    - import-lxml
+    - import-subprocess
+    - import-xml-expat
+    - import-xml-minidom
+    - import-xml-pulldom
+    - import-xml-sax
+    - import_xml-etree
+    - md5
+    - random
+    - start-process-with-no-shell
+    - start-process-with-partial-path
+    - subprocess-without-shell-equals-true
+    - try-except-continue
+    - urllib-urlopen
+    run: true
+  flake8:
+    ignore:
+    - bad-wildcard-import
+    - bare-except-bugbear
+    - no-getattr
+    - no-setattr
+    - unused-loop-variable
+    - unused-module
+    run: true
+  hadolint:
+    ignore:
+    - DL3008
+    - DL3010
+    - DL3012
+    - DL3018
+    - DL3020
+    - DL3022
+    - DL3027
+    - DL4001
+    run: true
+  r2c.requests:
+    ignore:
+    - use-timeout
+    run: true

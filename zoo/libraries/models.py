@@ -25,6 +25,7 @@ class Impact(Enum):
 class Library(models.Model):
     class Meta:
         unique_together = ("owner", "name")
+        verbose_name_plural = "libraries"
 
     owner = pg_fields.CICharField(max_length=100)
     name = pg_fields.CICharField(max_length=100)

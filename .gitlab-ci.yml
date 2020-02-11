@@ -11,7 +11,7 @@ variables:
 
 include:
   - 'https://ci-files.skypicker.com/templates/build/black.yml'
-  - 'https://ci-files.skypicker.com/templates/build/docker_build.yml'
+  - 'https://ci-files.skypicker.com/templates/build/kaniko.yml'
   - 'https://ci-files.skypicker.com/templates/build/pre_commit.yml'
   - 'https://ci-files.skypicker.com/templates/linters/commit_style.yml'
   - 'https://ci-files.skypicker.com/templates/release/release_latest.yml'
@@ -23,8 +23,7 @@ include:
   - 'https://ci-files.skypicker.com/templates/test/sast.yml'
 
 docker_build:
-  services:
-    - docker:19.03-dind
+  extends: .kaniko-build
 
 dependency_scanning:
   tags: []

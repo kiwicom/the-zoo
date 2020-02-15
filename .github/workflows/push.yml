@@ -1,0 +1,16 @@
+name: Docker build
+on: push
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Kaniko build
+        uses: outillage/kaniko-action@master
+        with:
+          registry: docker.pkg.github.com
+          password: ${{ secrets.GITHUB_TOKEN }}
+          image: server
+          cache: true
+          cache_registry: cache

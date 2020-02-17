@@ -10,26 +10,32 @@ RUN yarn install --frozen-lockfile && \
 COPY zoo/ source/
 RUN yarn production
 
-FROM python:3.7-alpine
+FROM python:3.7-slim
 
 ENV DJANGO_SETTINGS_MODULE=zoo.base.settings
-RUN addgroup -S macaque && adduser -H -D -S macaque macaque
+RUN addgroup --system macaque && \
+    adduser --no-create-home --disabled-password --system --ingroup macaque macaque
 
 WORKDIR /app
 
 COPY --from=fe-builder /app/zoo ./zoo
 COPY requirements/*.txt ./
 
-RUN apk add --no-cache --virtual=.build-deps build-base postgresql-dev icu-dev pkgconfig && \
-    apk add --no-cache --virtual=.run-deps libpq icu-libs && \
+RUN apt update && \
+    apt install -y --no-install-recommends build-essential ca-certificates libpq-dev && \
+    update-ca-certificates && \
     pip install --no-cache-dir -r base.txt -r test.txt && \
-    apk del .build-deps
+    apt remove -y build-essential && \
+    apt autoremove -y && \
+    apt clean autoclean && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY . ./
 
-RUN pip install -e . && \
-    python manage.py check && \
-    python manage.py collectstatic --noinput && \
+RUN pip install --no-cache-dir -e . && \
+    django-admin check && \
+    mkdir -p /app/zoo/public/static && \
+    django-admin collectstatic --noinput && \
     chown -R macaque:macaque /app
 
 ARG package_version

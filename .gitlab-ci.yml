@@ -10,17 +10,17 @@ variables:
   PYTEST_COVERAGE_TARGET: zoo
 
 include:
-  - 'https://ci-files.skypicker.com/templates/build/black.yml'
-  - 'https://ci-files.skypicker.com/templates/build/kaniko.yml'
-  - 'https://ci-files.skypicker.com/templates/build/pre_commit.yml'
-  - 'https://ci-files.skypicker.com/templates/linters/commit_style.yml'
-  - 'https://ci-files.skypicker.com/templates/release/release_latest.yml'
-  - 'https://ci-files.skypicker.com/templates/release/sonarqube_scan.yml'
-  - 'https://ci-files.skypicker.com/templates/test/container_scanning.yml'
-  - 'https://ci-files.skypicker.com/templates/test/dependency_scanning.yml'
-  - 'https://ci-files.skypicker.com/templates/test/pylint.yml'
-  - 'https://ci-files.skypicker.com/templates/test/pytest.yml'
-  - 'https://ci-files.skypicker.com/templates/test/sast.yml'
+  - "https://ci-files.skypicker.com/templates/build/black.yml"
+  - "https://ci-files.skypicker.com/templates/build/kaniko.yml"
+  - "https://ci-files.skypicker.com/templates/build/pre_commit.yml"
+  - "https://ci-files.skypicker.com/templates/linters/commit_style.yml"
+  - "https://ci-files.skypicker.com/templates/release/release_latest.yml"
+  - "https://ci-files.skypicker.com/templates/release/sonarqube_scan.yml"
+  - "https://ci-files.skypicker.com/templates/test/container_scanning.yml"
+  - "https://ci-files.skypicker.com/templates/test/dependency_scanning.yml"
+  - "https://ci-files.skypicker.com/templates/test/pylint.yml"
+  - "https://ci-files.skypicker.com/templates/test/pytest.yml"
+  - "https://ci-files.skypicker.com/templates/test/sast.yml"
 
 docker_build:
   extends: .kaniko-build
@@ -33,6 +33,8 @@ test_migrations:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   services:
     - postgres:11-alpine
+  variables:
+    POSTGRES_HOST_AUTH_METHOD: trust
   script:
     - python manage.py makemigrations --check
 

@@ -48,6 +48,7 @@ def _parse_file(path, base=None):
         ResolutionError,
         ScannerError,
         ValidationError,
+        UnicodeDecodeError,
     ) as err:
         log.info(
             "repos.views.openapi.invalid", path=str(path.relative_to(base)), error=err

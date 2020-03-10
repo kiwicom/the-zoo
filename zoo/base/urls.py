@@ -32,6 +32,7 @@ urlpatterns = [
     path("", include("zoo.checklists.urls")),
     path("objectives/", include("zoo.objectives.urls")),
     path("analytics/", include("zoo.analytics.urls")),
+    path("resources/", include("zoo.resources.urls")),
     path("silk/", include("silk.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),

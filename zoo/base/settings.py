@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     "zoo.services.apps.ServicesConfig",
     "zoo.libraries.apps.LibrariesConfig",
     "zoo.analytics.apps.AnalyticsConfig",
+    "zoo.resources.apps.ResourcesConfig",
     "zoo.objectives.apps.ObjectivesConfig",
     "zoo.datacenters.apps.DatacentersConfig",
     "zoo.api.apps.ApiConfig",

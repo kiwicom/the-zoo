@@ -1,0 +1,18 @@
+{% url "dependency_overview" as dependency_url %}
+{% url "library_overview" as library_url %}
+
+<header>
+
+  <div class="ui buttons" style="float: right">
+    {% if url == library_url %}
+      <button class="ui button brown">Internal</button>
+      <a class="ui button" href="{{ dependency_url }}">Public</a>
+    {% elif url == dependency_url %}
+      <a href="{{ library_url }}" class="ui button">Internal</a>
+      <button class="ui button brown">Public</button>
+    {% else %}{% endif %}
+  </div>
+
+  <h1><i class="{{ icon }} icon" aria-hidden="true"></i>{{ title }}</h1>
+
+</header>

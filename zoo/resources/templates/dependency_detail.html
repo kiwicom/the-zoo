@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load utils %}
+
+{% block content %}{{ block.super }}
+
+<div class="ui breadcrumb">
+  <a class="section" href="{% url 'library_overview' %}">Libraries</a>
+  <i class="right angle icon divider" aria-hidden="true"></i>
+  <div class="active section">{{ object.name }}</div>
+</div>
+
+<header>
+  <div class="labels" style="float: right">
+    <div class="ui {% label_color 'language' object.type %} large label">
+      {{ object.type|cut:" Library" }}
+    </div>
+
+  </div>
+  <h1><i class="icon book" aria-hidden="true"></i> <a href="{% url 'dependency_detail' pk=object.id %}">{{ object.name }}</a></h1>
+</header>
+
+<div class="ui segment">
+  <h3>Versions</h3>
+  <div class="ui segment">
+    {% include "shared/dependency_versions.html" with id=object.id total=object.usage_count usage=object.depusage only %}
+  </div>
+
+  <div class="ui accordion usage-list">
+    {% regroup object.depusage.all by version as version_list %}
+    {% for version, usage_list in version_list %}
+    <header id="v{{ version }}" class="title {% if usage_list|length <= 2 %}active{% endif %}">
+      <i class="dropdown icon" aria-hidden="true"></i>
+      <span class="ui label">{{ version }}</span>
+    </header>
+
+    <div class="content {% if usage_list|length <= 2 %}active{% endif %}">
+      <div class="ui middle aligned list">
+        {% for object in usage_list %}
+        <div class="item">
+          <div class="content">
+
+            <div class="ui project segment" style="margin-left: 1.5rem">
+              <h3 class="ui header">
+                <span>
+                  <a href="{{ object.repo.get_absolute_url }}">{{ object.repo.name }}</a>
+                  <small>
+                    ·
+                    owned by
+                    {% if object.repo.owner_url %}
+                    <a href="{{ object.repo.owner_url }}">{{ object.repo.owner }}</a>
+                    {% else %}
+                    {{ object.repo.owner }}
+                    {% endif %}
+                  </small>
+                </span>
+
+                {% spaceless %}
+                <div class="flex-horizontal tags-wrapper">
+                  {% if object.repo.status %}
+                  <a
+                    class="ui {% label_color 'status' object.repo.status %} circular label">status:{{ object.repo.status }}</a>
+                  {% endif %}
+                  {% if object.repo.impact %}
+                  <a
+                    class="ui {% label_color 'impact' object.repo.impact %} circular label">impact:{{ object.repo.impact }}</a>
+                  {% endif %}
+                </div>
+                {% endspaceless %}
+
+              </h3>
+              <div class="flex-horizontal actions-wrapper">
+                {% block project_links %}
+                {% endblock %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}{{ block.super }}
+<script>
+  $('.ui.accordion.usage-list').accordion({
+    exclusive: false
+  });
+
+</script>
+{% endblock %}

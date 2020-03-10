@@ -10,9 +10,9 @@
         <i class="settings icon"></i>
         Services
       </a>
-      <a href="{% url 'library_list' %}" class="{% if selected == 'libraries' %}active {% endif %}item">
-        <i class="book icon"></i>
-        Libraries
+      <a href="{% url 'library_overview' %}" class="{% if selected == 'resources' %}active {% endif %}item">
+        <i class="box icon"></i>
+        Resources
       </a>
       <a href="{% url 'audit_overview' %}" class="{% if selected == 'audit_overview' %}active {% endif %}item">
         <i class="heartbeat icon"></i>
@@ -26,10 +26,6 @@
         <i class="chart bar icon"></i>
         Objectives
       </a>
-      <a href="{% url 'analytics_overview' %}" class="{% if selected == 'analytics_overview' %}active {% endif %}item">
-          <i class="chart pie icon"></i>
-          Analytics
-        </a>
       <div class="ui link item user-actions">
         <i class="user icon"></i>
         <span class="text">{{ request.user }}</span>

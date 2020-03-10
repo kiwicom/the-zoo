@@ -1,0 +1,24 @@
+{% load utils %}
+
+<div class="ui multiple progress" data-percent="" style="margin: 0">
+  {% for version, count in usage|dependency_versions:30 %}
+    <div
+      class="bar {% cycle 'blue' 'teal' 'olive' 'green' %}"
+      style="
+        width: {{ count|percent:total }};
+        overflow: initial;
+        min-width: 0;
+        {% if forloop.first %}
+          border-top-right-radius: 0px; border-bottom-right-radius: 0px;
+        {% elif forloop.last %}
+          border-top-left-radius: 0px; border-bottom-left-radius: 0px;
+        {% else %}
+          border-radius: 0px;
+        {% endif %}
+      ">
+      <div class="centered progress" style="right:0" data-tooltip="used in {{ count }} project{{ count|pluralize }}">
+        <a href="{% url 'dependency_detail' pk=id %}#v{{ version }}" style="color: white">{{ version }}</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>

@@ -16,3 +16,4 @@ jobs:
         uses: docker://commitsar/release-notary
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

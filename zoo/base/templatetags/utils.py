@@ -5,6 +5,7 @@ import re
 from django import template
 from django.conf import settings
 
+from ...analytics.models import DependencyType, DependencyUsage
 from ...auditing.check_discovery import Effort, Severity
 from ...objectives.models import Objective
 from ...services.models import Impact, SentryIssueCategory, Status
@@ -52,6 +53,13 @@ known_colors = {
         r"D": "orange",
         r"E": "orange",
         r"F": "red",
+    },
+    "language": {
+        DependencyType.JS_LIB.value: "yellow",
+        DependencyType.PY_LIB.value: "green",
+        DependencyType.GO_LIB.value: "teal",
+        DependencyType.RS_LIB.value: "orange",
+        DependencyType.ER_LIB.value: "red",
     },
     "sentry_issue_category": {
         SentryIssueCategory.SPOILED.value: "yellow",
@@ -105,7 +113,9 @@ def settings_value(name):
 
 
 @register.filter
-def percent(value):
+def percent(value, denominator=None):
+    if denominator:
+        value /= denominator
     return f"{value:.2%}"
 
 
@@ -160,3 +170,8 @@ def objective_label_color(objective: Objective) -> str:
     if objective.latest_value:
         return "green" if objective.meets_target else "red"
     return ""
+
+
+@register.filter
+def dependency_versions(queryset, limit=None):
+    return DependencyUsage.versions(queryset, limit=limit)

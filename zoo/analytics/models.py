@@ -1,3 +1,4 @@
+from collections import Counter
 from enum import Enum
 
 from django.db import models
@@ -9,6 +10,9 @@ class DependencyType(Enum):
     OS = "Operating System"
     JS_LIB = "Javascript Library"
     PY_LIB = "Python Library"
+    GO_LIB = "Go Library"
+    RS_LIB = "Rust Library"
+    ER_LIB = "Erlang Library"
     DOCKER_IMG = "Docker Image"
 
 
@@ -71,3 +75,9 @@ class DependencyUsage(models.Model):
         return f"{self.repo}'s {self.dependency.name}" + (
             f" v{self.version}" if self.version else ""
         )
+
+    @staticmethod
+    def versions(queryset, limit=None):
+        queryset = queryset.exclude(version__isnull=True)
+        counter = Counter(queryset.values_list("version", flat=True))
+        return sorted(counter.most_common(n=limit), key=lambda t: t[0], reverse=True)

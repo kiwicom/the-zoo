@@ -24,7 +24,7 @@ kubernetes
 markdown
 openapi-spec-validator
 prance
-psycopg2
+psycopg2-binary
 pygerduty
 python-gitlab
 PyGithub

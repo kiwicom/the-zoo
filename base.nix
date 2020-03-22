@@ -66,7 +66,7 @@ no-cache-dir = true" > $PWD/.pip.conf
           REQS="''${REQS} -r ''${f}"
       done
     fi
-    pip install $REQS # install all requirements collected
+    pip install $REQS > /dev/null # install all requirements collected
 
     if [ -f setup.py ]; then # if setup.py exists switch to develop mode
       say "setup.py found!"

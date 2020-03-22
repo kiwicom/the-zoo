@@ -17,8 +17,7 @@ in base.overrideAttrs (self: rec {
       say "Running yarn && webpack"
       cd $PROJ_HOME/webpack
 
-      yarn install --frozen-lockfile && \
-           yarn cache clean
+      yarn install
 
       if [ -d source ]; then
         rm -rf source
@@ -37,21 +36,22 @@ in base.overrideAttrs (self: rec {
   '';
 
   databaseHook = ''
-    export PGDATA=$PWD/.postgres/data
-    export PGSOCKET=$PWD/.postgres/socket
-    export LOG_PATH=$PWD/.postgres/LOG
+    export PGBASE=$PWD/.postgres
+    export PGDATA=$PGBASE/data
+    export PGSOCKET=$PGBASE/socket
+    export LOG_PATH=$PGBASE/LOG
     export PGDATABASE=postgres
     export DATABASE_URL="postgres://localhost/postgres"
 
-    if [ ! -d $PGHOST ]; then
-       mkdir -p $PGHOST
+    if [ ! -d $PGBASE ]; then
+       mkdir $PGBASE
     fi
     if [ ! -d $PGSOCKET ]; then
-       mkdir -p $PGSOCKET
+       mkdir $PGSOCKET
     fi
     if [ ! -d $PGDATA ]; then
        say "Initializing postgresql databse"
-       initdb $PGDATA --auth=trust > /dev/null
+       initdb --auth=trust --no-locale --encoding=UTF8 > /dev/null
     fi
 
     say_green "Starting postgres database"

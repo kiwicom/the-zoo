@@ -18,6 +18,7 @@ class BaseConfig(AppConfig):
         from ..auditing import tasks as auditing_tasks
         from ..objectives import tasks as objective_tasks
         from ..datacenters import tasks as datacenters_tasks
+        from ..elasticsearch import tasks as elasticsearch_tasks
 
         # pylint: enable=import-outside-toplevel
 
@@ -45,4 +46,7 @@ class BaseConfig(AppConfig):
         )
         celery_app.add_periodic_task(
             timedelta(days=1), datacenters_tasks.schedule_infra_mapping
+        )
+        celery_app.add_periodic_task(
+            timedelta(hours=1), elasticsearch_tasks.index_documents
         )

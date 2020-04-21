@@ -15,6 +15,7 @@ django-silk
 django-stronghold
 dockerfile-parse
 google-api-python-client
+elasticsearch
 graphene
 graphene-django
 gunicorn[gevent]

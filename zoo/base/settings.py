@@ -101,6 +101,7 @@ INSTALLED_APPS = [
     "zoo.datacenters.apps.DatacentersConfig",
     "zoo.api.apps.ApiConfig",
     "zoo.pagerduty.apps.PagerdutyConfig",
+    "zoo.elasticsearch.apps.ElasticSearchConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -247,5 +248,7 @@ RANCHER_SECRET_KEY = env("RANCHER_SECRET_KEY")
 GCP_SERVICE_KEY = env("GCP_SERVICE_KEY")
 
 SYNC_REPOS_SKIP_FORKS = env("ZOO_SYNC_REPOS_SKIP_FORKS")
+
+ELASTICSEARCH_HOST = 'elasticsearch'
 
 logs.configure_structlog(DEBUG)

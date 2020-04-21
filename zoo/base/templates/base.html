@@ -1,4 +1,5 @@
 {% extends 'skeleton.html' %}
+{% load static %}
 
 {% block body %}
   <div class="ui small brown inverted top fixed pointing main menu">
@@ -26,6 +27,9 @@
         <i class="chart bar icon"></i>
         Objectives
       </a>
+      <div id="search-input">
+        <search-input></search-input>
+      </div>
       <div class="ui link item user-actions">
         <i class="user icon"></i>
         <span class="text">{{ request.user }}</span>
@@ -72,4 +76,5 @@
   </div>
   {% block content %}{% endblock %}
 </div>
+<script src="{% static 'base.js' %}"></script>
 {% endblock %}

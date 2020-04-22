@@ -2,8 +2,6 @@ import arrow
 from django.contrib.postgres import fields as pg_fields
 from django.db import models
 
-from .templates import get_datacenter_template_data
-
 
 def utcnow():
     return arrow.utcnow().datetime
@@ -94,10 +92,6 @@ class ServiceDatacenter(models.Model):
         "services.Service", on_delete=models.CASCADE, related_name="datacenters"
     )
     datacenter = models.ForeignKey("Datacenter", on_delete=models.PROTECT)
-
-    @property
-    def template_metadata(self):
-        return get_datacenter_template_data(self)
 
     class Meta:
         unique_together = ("service", "datacenter")

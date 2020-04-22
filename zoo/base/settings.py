@@ -129,7 +129,6 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware",
     "silk.middleware.SilkyMiddleware",
-    "stronghold.middleware.LoginRequiredMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

@@ -136,7 +136,6 @@ SILKY_AUTHORISATION = True
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "silk.middleware.SilkyMiddleware",
-    "stronghold.middleware.LoginRequiredMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

@@ -35,16 +35,8 @@ services:
       - ./zoo:/app/zoo
     depends_on:
       - postgres
-      - webpack
       - redis
     restart: on-failure
-
-  webpack:
-    build: webpack
-    volumes:
-      - ./zoo/:/app/source
-      - ./webpack/config:/app/config
-    command: ["yarn", "development"]
 
   postgres:
     image: postgres:12-alpine

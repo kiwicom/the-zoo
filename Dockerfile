@@ -1,15 +1,3 @@
-FROM node:12-alpine as fe-builder
-
-ENV NODE_OPTIONS="--max-old-space-size=2048"
-
-WORKDIR /app/webpack
-COPY webpack ./
-RUN yarn install --frozen-lockfile && \
-    yarn cache clean
-
-COPY zoo/ source/
-RUN yarn production
-
 FROM python:3.8-slim
 
 ENV DJANGO_SETTINGS_MODULE=zoo.base.settings

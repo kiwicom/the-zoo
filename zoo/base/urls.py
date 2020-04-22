@@ -20,22 +20,10 @@ from django.conf import settings
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
-from django.views.generic import RedirectView
 
 urlpatterns = [
-    path("", RedirectView.as_view(pattern_name="service_list")),
-    path("repos/", include("zoo.repos.urls")),
-    path("services/", include("zoo.services.urls")),
-    path("libraries/", include("zoo.libraries.urls")),
-    path("pagerduty/", include("zoo.pagerduty.urls")),
-    path("", include("zoo.auditing.urls")),
-    path("", include("zoo.checklists.urls")),
-    path("objectives/", include("zoo.objectives.urls")),
-    path("analytics/", include("zoo.analytics.urls")),
-    path("resources/", include("zoo.resources.urls")),
     path("silk/", include("silk.urls")),
     path("admin/", admin.site.urls),
-    path("accounts/", include("django.contrib.auth.urls")),
     path("graphql", include("zoo.api.urls")),
     path(
         "robots.txt",
@@ -45,17 +33,7 @@ urlpatterns = [
 ]
 
 
-handler404 = "zoo.base.views.not_found"
-handler500 = "zoo.base.views.server_error"
-
-
 if settings.DEBUG:
     import debug_toolbar
 
-    from . import views
-
-    urlpatterns = [
-        path("__debug__/", include(debug_toolbar.urls)),
-        path("http404", views.not_found),
-        path("http500", views.server_error),
-    ] + urlpatterns
+    urlpatterns = [path("__debug__/", include(debug_toolbar.urls)),] + urlpatterns

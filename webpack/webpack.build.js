@@ -1,10 +1,12 @@
-const path = require("path");
-const webpack = require("webpack");
+const path = require("path")
+const webpack = require("webpack")
 
-const common = require("./config/webpack.common.js");
+const common = require("./config/webpack.common.js")
 
 module.exports = {
   entry: common.entry,
+  target: common.target,
+  externals: common.externals,
   output: {
     path: path.resolve(__dirname, "..", "zoo/base/static/"),
     publicPath: "/",
@@ -17,4 +19,4 @@ module.exports = {
   optimization: common.optimization,
   plugins: common.plugins,
   mode: 'production',
-};
+}

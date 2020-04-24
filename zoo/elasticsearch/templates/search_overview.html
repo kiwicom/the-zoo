@@ -27,6 +27,19 @@
 {#  {% project_link 'Alerts' object.pagerduty_url icon='warning' %}#}
 {#  {% project_link 'Documentation' object.docs_url icon='graduation cap' %}#}
 {#{% endblock %}#}
+Services<br>
 {% for s in service %}
-  {{ s }}
+  {{ s }}<br>
+{% endfor %}
+<br>
+
+Service Detail Urls<br>
+{% for ss in service_detail_urls %}
+  {{ ss }}<br>
+{% endfor %}
+
+<br>
+Dependencies<br>
+{% for dep in dependency %}
+  {{ dep }}<br>
 {% endfor %}

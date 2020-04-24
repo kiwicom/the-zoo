@@ -28,9 +28,9 @@ class Indexer:
                                   doc_type=serialized_service['model'].split('.')[1],
                                   id=serialized_service['pk'],
                                   body=serialized_service['fields'])
-                except ElasticsearchException as exception:
-                    log.error(f'ES Failed to Index Model Instance - {model}, {instance} because of'
-                              f'{repr(exception)}')
+                except ElasticsearchException as err:
+                    log.info(f'ES Failed to Index Model Instance',
+                             error=err, model=model, instance=instance)
 
     def index_openapi(self):
         redis_conn = redis.get_connection()
@@ -50,9 +50,8 @@ class Indexer:
                                         'description': description,
                                         'endpoints': paths,
                                     })
-            except ElasticsearchException as exception:
-                log.error(f'ES Failed to Index Open Api definition - {key} because of '
-                          f'{repr(exception)}')
+            except ElasticsearchException as err:
+                log.info(f'ES Failed to Index Open Api definition', error=err)
 
     @staticmethod
     def _get_all_paths(definitions):

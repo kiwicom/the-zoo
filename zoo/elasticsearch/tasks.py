@@ -9,6 +9,7 @@ def index_model_instances():
     indexer.index_specified_models()
 
 
+@shared_task
 def index_openapi_definitions():
     indexer = Indexer()
     indexer.index_specified_models()

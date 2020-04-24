@@ -45,6 +45,7 @@ env = environ.Env(
     ZOO_SONARQUBE_TOKEN=(str, None),
     ZOO_YAML_FILE=(str, ".zoo.yml"),
     ZOO_YAML_DEFAULT_REF=(str, "master"),
+    ZOO_ES_HOST=(str, 'elasticsearch'),
     AWS_CONFIG=(str, None),
     AWS_CONFIG_FILE=(str, "/tmp/aws/config"),
     AWS_SHARED_CREDENTIALS=(str, None),

@@ -28,7 +28,7 @@
 {#  {% project_link 'Documentation' object.docs_url icon='graduation cap' %}#}
 {#{% endblock %}#}
 Services<br>
-{% for s in service %}
+{% for s in services %}
   {{ s }}<br>
 {% endfor %}
 <br>
@@ -40,6 +40,6 @@ Service Detail Urls<br>
 
 <br>
 Dependencies<br>
-{% for dep in dependency %}
+{% for dep in dependecies %}
   {{ dep }}<br>
 {% endfor %}

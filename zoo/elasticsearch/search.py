@@ -33,9 +33,9 @@ class ElasticSearchView(TemplateView):
                     log.info(f'Service With Remote Gitlab ID - {remote_repo_id} does not exists.',
                              error=err)
             else:
-                if result['_type'] not in result_objects.keys():
-                    result_objects[result['_type']] = []
-                result_objects[result['_type']].append(
+                if result['_index'] not in result_objects.keys():
+                    result_objects[result['_index']] = []
+                result_objects[result['_index']].append(
                     apps.get_model(result['_index'], result['_type']).objects.get(
                         id=result['_id']
                     )

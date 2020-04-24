@@ -25,6 +25,9 @@ include:
 black:
   tags: []
 
+commit-style:
+  tags: []
+
 docker_build:
   extends: .kaniko-build
 

@@ -3,6 +3,7 @@ var glob = require("glob")
 const { VueLoaderPlugin } = require("vue-loader")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const StyleLintPlugin = require("stylelint-webpack-plugin")
+const nodeExternals = require('webpack-node-externals')
 
 const extractText = new MiniCssExtractPlugin({
   filename: "[name].css",
@@ -14,10 +15,10 @@ function scanStaticFiles() {
 
   filePaths = glob.sync(basePath + '/*/' + 'assets/js/*.js')
 
-  if(filePaths) {
+  if (filePaths) {
     entryPoints = Object.assign.apply(
       {},
-      filePaths.map((filePath) => ({[path.parse(filePath).name]: filePath}))
+      filePaths.map((filePath) => ({ [path.parse(filePath).name]: filePath }))
     )
   }
 
@@ -26,6 +27,8 @@ function scanStaticFiles() {
 
 module.exports = {
   entry: scanStaticFiles,
+  target: 'node',
+  externals: [nodeExternals()],
   resolve: {
     extensions: [".js", ".vue", ".less"],
     alias: {
@@ -35,53 +38,53 @@ module.exports = {
     }
   },
   rules: [{
-      test: /\.css$/,
-      use: [
-        MiniCssExtractPlugin.loader,
-        "css-loader",
-        "postcss-loader",
-      ],
-    },
-    {
-      test: /\.less$/,
-      use: [
-        MiniCssExtractPlugin.loader,
-        "css-loader",
-        "postcss-loader",
-        "less-loader",
-      ]
-    },
-    {
-      test: /\.vue$/,
-      loader: "vue-loader",
-    },
-    {
-      test: /\.js$/,
-      loader: "babel-loader",
-      exclude: /node_modules/
-    },
-    {
-      test: /\.jpe?g$|\.gif$|\.ico$|\.png$|\.svg$/,
-      loader: "file-loader",
-      options: {
-        name: "img/[name].[ext]",
-        publicPath: "./"
-      }
-    },
-    {
-      test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: "url-loader?mimetype=application/font-woff",
-      options: {
-        name: "fonts/[name].[ext]"
-      }
-    },
-    {
-      test: /\.(ttf|eot|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: "file-loader",
-      options: {
-        name: "fonts/[name].[ext]"
-      }
+    test: /\.css$/,
+    use: [
+      MiniCssExtractPlugin.loader,
+      "css-loader",
+      "postcss-loader",
+    ],
+  },
+  {
+    test: /\.less$/,
+    use: [
+      MiniCssExtractPlugin.loader,
+      "css-loader",
+      "postcss-loader",
+      "less-loader",
+    ]
+  },
+  {
+    test: /\.vue$/,
+    loader: "vue-loader",
+  },
+  {
+    test: /\.js$/,
+    loader: "babel-loader",
+    exclude: /node_modules/
+  },
+  {
+    test: /\.jpe?g$|\.gif$|\.ico$|\.png$|\.svg$/,
+    loader: "file-loader",
+    options: {
+      name: "img/[name].[ext]",
+      publicPath: "./"
     }
+  },
+  {
+    test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+    loader: "url-loader?mimetype=application/font-woff",
+    options: {
+      name: "fonts/[name].[ext]"
+    }
+  },
+  {
+    test: /\.(ttf|eot|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+    loader: "file-loader",
+    options: {
+      name: "fonts/[name].[ext]"
+    }
+  }
   ],
   optimization: {
     splitChunks: {

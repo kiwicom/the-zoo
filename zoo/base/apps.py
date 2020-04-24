@@ -48,5 +48,8 @@ class BaseConfig(AppConfig):
             timedelta(days=1), datacenters_tasks.schedule_infra_mapping
         )
         celery_app.add_periodic_task(
-            timedelta(hours=1), elasticsearch_tasks.index_documents
+            timedelta(hours=1), elasticsearch_tasks.index_model_instances
+        )
+        celery_app.add_periodic_task(
+            timedelta(minutes=30), elasticsearch_tasks.index_openapi_definitions
         )

@@ -10,12 +10,14 @@ def create_new_indexes(apps, schema_editor):
 
     es.indices.create(index='services', ignore=400)
     es.indices.create(index='analytics', ignore=400)
+    es.indices.create(index='open-api', ignore=400)
 
 
 def remove_indexes(apps, schema_editor):
     es = Elasticsearch(hosts=[settings.ELASTICSEARCH_HOST])
     es.indices.delete(index='services', ignore=[400, 401])
     es.indices.delete(index='analytics', ignore=[400, 401])
+    es.indices.delete(index='open-api', ignore=[400, 401])
 
 
 class Migration(migrations.Migration):

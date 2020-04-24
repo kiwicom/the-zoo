@@ -18,7 +18,6 @@ RUN addgroup --system macaque && \
 
 WORKDIR /app
 
-COPY --from=fe-builder /app/zoo ./zoo
 COPY requirements/*.txt ./
 
 RUN apt update && \
@@ -30,6 +29,7 @@ RUN apt update && \
     apt clean autoclean && \
     rm -rf /var/lib/apt/lists/*
 
+COPY --from=fe-builder /app/zoo ./zoo
 COPY . ./
 
 RUN pip install --no-cache-dir -e . && \

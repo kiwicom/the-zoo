@@ -5,7 +5,7 @@ celery
 celery-redbeat
 colorama
 datadog
-ddtrace==0.23.0
+ddtrace
 django<3.*
 djangoql
 django-debug-toolbar
@@ -17,7 +17,7 @@ dockerfile-parse
 google-api-python-client
 graphene
 graphene-django
-gunicorn[gevent]<20.*
+gunicorn[gevent]
 hiredis
 ipython
 kubernetes
@@ -35,3 +35,6 @@ requests
 requirements-parser
 structlog
 whitenoise[brotli]
+
+# constraints
+wrapt<=1.11.2

@@ -22,6 +22,9 @@ include:
   - "https://ci-files.skypicker.com/templates/test/pytest.yml"
   - "https://ci-files.skypicker.com/templates/test/sast.yml"
 
+black:
+  tags: []
+
 docker_build:
   extends: .kaniko-build
 

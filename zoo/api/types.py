@@ -6,6 +6,7 @@ from graphene.types.json import JSONString
 from ..analytics import models as analytics_models
 from ..auditing import check_discovery
 from ..auditing import models as auditing_models
+from ..pagerduty import tasks as pagerduty_tasks
 from ..repos import models as repos_models
 from ..services import models as services_models
 from .paginator import Paginator
@@ -102,6 +103,80 @@ class EnvironmentConnection(relay.Connection):
         node = Environment
 
 
+class ActiveIncident(graphene.ObjectType):
+    id = graphene.String()
+    summary = graphene.String()
+    description = graphene.String()
+    status = graphene.String()
+    html_url = graphene.String()
+    created_at = graphene.String()
+    color = graphene.String()
+
+    @classmethod
+    def from_object(cls, incident):
+        return cls(
+            id=incident.id,
+            summary=incident.summary,
+            description=incident.description,
+            status=incident.status,
+            html_url=incident.html_url,
+            created_at=incident.created_at,
+            color="red" if incident.status == "triggered" else "yellow",
+        )
+
+
+class ActiveIncidentConnection(relay.Connection):
+    total_count = graphene.Int()
+
+    class Meta:
+        node = ActiveIncident
+
+
+class OncallPerson(graphene.ObjectType):
+    id = graphene.String()
+    type = graphene.String()
+    summary = graphene.String()
+    html_url = graphene.String()
+
+    @classmethod
+    def from_object(cls, user):
+        return cls(
+            id=user.id, type=user.type, summary=user.summary, html_url=user.html_url,
+        )
+
+
+class PagerdutyService(graphene.ObjectType):
+    id = graphene.String()
+    summary = graphene.String()
+    html_url = graphene.String()
+    oncall_person = graphene.Field(lambda: OncallPerson)
+    past_week_total = graphene.Int()
+    all_active_incidents = relay.ConnectionField(ActiveIncidentConnection)
+
+    def resolve_oncall_person(self, info):
+        return OncallPerson.from_object(self.oncall_person)
+
+    def resolve_all_active_incidents(self, info, **kwargs):
+        paginator = Paginator(**kwargs)
+        edges = []
+
+        total = len(self.all_active_incidents)
+        page_info = paginator.get_page_info(total)
+
+        for i, issue in enumerate(
+            self.all_active_incidents[
+                paginator.slice_from : paginator.slice_to  # Ignore PEP8Bear
+            ]
+        ):
+            cursor = paginator.get_edge_cursor(i + 1)
+            node = ActiveIncident.from_object(issue)
+            edges.append(ActiveIncidentConnection.Edge(node=node, cursor=cursor))
+
+        return ActiveIncidentConnection(
+            page_info=page_info, edges=edges, total_count=total
+        )
+
+
 class Service(graphene.ObjectType):
     owner = graphene.String()
     name = graphene.String()
@@ -109,7 +184,8 @@ class Service(graphene.ObjectType):
     impact = graphene.String()
     repository = graphene.Field(lambda: Repository)
     slack_channel = graphene.String()
-    pagerduty_service = graphene.String()
+    pagerduty_url = graphene.String()
+    pagerduty_service = graphene.Field(lambda: PagerdutyService)
     docs_url = graphene.String()
     all_environments = relay.ConnectionField(EnvironmentConnection)
 
@@ -135,6 +211,16 @@ class Service(graphene.ObjectType):
             return cls.from_db(service)
         except ObjectDoesNotExist:
             return None
+
+    def resolve_pagerduty_service(self, info):
+        try:
+            service = services_models.Service.objects.get(id=self.id)
+        except ObjectDoesNotExist:
+            return None
+
+        if service.pagerduty_service_id:
+            oncall_info = pagerduty_tasks.get_oncall_info(service.pagerduty_service_id)
+            return PagerdutyService(**oncall_info)
 
     def resolve_repository(self, info):
         try:

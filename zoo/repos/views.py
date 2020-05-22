@@ -45,10 +45,11 @@ def _parse_file(path, base=None):
         AssertionError,
         AttributeError,
         ComposerError,
+        FileNotFoundError,
         ResolutionError,
         ScannerError,
-        ValidationError,
         UnicodeDecodeError,
+        ValidationError,
     ) as err:
         log.info(
             "repos.views.openapi.invalid", path=str(path.relative_to(base)), error=err

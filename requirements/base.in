@@ -33,6 +33,7 @@ raven
 redis
 requests
 requirements-parser
+slacker
 structlog
 whitenoise[brotli]
 

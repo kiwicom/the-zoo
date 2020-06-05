@@ -19,21 +19,21 @@ ZOO_JSON_SCHEMA = """
         owner:
             type: string
         impact:
-            type: string
+            type: ["string", "null"]
             enum: ["profit", "customers", "employees"]
         status:
-            type: string
+            type: ["string", "null"]
             enum: ["beta", "production", "deprecated", "discontinued"]
         docs_url:
-            type: string
+            type: ["string", "null"]
         slack_channel:
-            type: string
+            type: ["string", "null"]
         sentry_project:
-            type: string
+            type: ["string", "null"]
         sonarqube_project:
-            type: string
+            type: ["string", "null"]
         pagerduty_url:
-            type: string
+            type: ["string", "null"]
         tags:
             type: array
             items:
@@ -46,13 +46,13 @@ ZOO_JSON_SCHEMA = """
                     name:
                         type: string
                     dashboard_url:
-                        type: string
+                        type: ["string", "null"]
                     service_urls:
                         type: array
                         items:
                             type: string
                     health_check_url:
-                        type: string
+                        type: ["string", "null"]
     additionalProperties: false
     required:
         - type

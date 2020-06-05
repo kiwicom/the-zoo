@@ -8,43 +8,71 @@ from zoo.services.models import Environment, Service
 pytestmark = pytest.mark.django_db
 
 
-@pytest.fixture()
-def service_1(db) -> Service:
-    repo = Repository.objects.create(
-        remote_id=11,
-        name="test_proj1",
-        owner="john_doe1",
-        url="https://github.com/john_doe1/test_proj1",
-        provider="github",
-    )
-    service = Service.objects.create(
-        owner="test_owner",
-        name="test_service",
-        status="beta",
+@pytest.fixture
+def generate_services_with_environments(service_factory, environment_factory):
+    service = service_factory(
+        id=1,
+        name="martinez",
+        owner="michaelbennett",
         impact="profit",
-        slack_channel="https://test_service/slack",
-        sentry_project="https://test_service/sentry",
-        sonarqube_project="https://test_service/sonarqube",
-        pagerduty_url="https://test_service/pager_duty",
-        docs_url="https://test_service/docs",
-        tags=["test"],
-        repository=repo,
+        docs_url="https://docsurl",
+        pagerduty_url="https://pagerduty",
+        slack_channel="https://slackchannel",
+        status="beta",
+        repository__id=78,
+        repository__remote_id=239,
+        repository__owner="jasckson",
+        repository__name="thiwer",
+        repository__url="https://gitlab.com/thiwer/thiwer",
     )
-
-    env = Environment.objects.create(
+    environment_factory(
+        id=1,
         service=service,
         name="production",
-        service_urls=["https://test_service/production"],
-        health_check_url="https://test_service/health",
-        dashboard_url="https://test_service/dashboard",
-        logs_url="https://test_service/logs",
+        service_urls=["https://serviceurl1", "https://serviceurl2"],
+        dashboard_url="https://dashboardurl",
+        health_check_url="https://healthcheckurl",
+    )
+    environment_factory(
+        id=2,
+        service=service,
+        name="staging",
+        service_urls=["https://serviceurl1", "https://serviceurl2"],
+        dashboard_url="https://dashboardurl",
+        health_check_url="https://healthcheckurl",
     )
 
-    service.environments.add(env)
 
-    return service
+def test_generate(generate_services_with_environments):
+    expected = """
+type: service
+name: martinez
+owner: michaelbennett
+impact: profit
+status: beta
+docs_url: https://docsurl
+slack_channel: https://slackchannel
+sentry_project: null
+sonarqube_project: null
+pagerduty_url: https://pagerduty
+tags:
+- general
+environments:
+- name: staging
+  dashboard_url: https://dashboardurl
+  health_check_url: https://healthcheckurl
+  service_urls:
+  - https://serviceurl1
+  - https://serviceurl2
+- name: production
+  dashboard_url: https://dashboardurl
+  health_check_url: https://healthcheckurl
+  service_urls:
+  - https://serviceurl1
+  - https://serviceurl2
 
-
-def test_generate(service_1):
+"""
+    service_1 = Service.objects.get(pk=1)
     content = uut.generate(service_1)
     assert uut.validate(content)
+    assert expected.strip() == content.strip()

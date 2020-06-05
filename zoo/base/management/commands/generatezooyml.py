@@ -44,8 +44,6 @@ class Command(BaseCommand):
     def file_exists(self, remote_id, path, provider, ref="master"):
         try:
             content = provider.get_file_content(remote_id, path, ref)
-            if not content:
-                return False
-            return True
+            return bool(content)
         except FileNotFoundError:
             return False

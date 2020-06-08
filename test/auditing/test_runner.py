@@ -1,5 +1,6 @@
 import arrow
 import pytest
+from slacker import Error as SlackError
 
 import zoo.auditing.runner as uut
 from zoo.auditing.models import Issue
@@ -243,3 +244,24 @@ def test_run_checks_and_save_results__failing_check(repository, fake_path, mocke
 )
 def test_determine_issue_status(is_found, old_status, new_status):
     assert uut.determine_issue_status(is_found, old_status) == new_status
+
+
+def test_notify_status_change(mocker, issue_factory, service_factory):
+    service = service_factory()
+    issue = issue_factory(repository=service.repository)
+    log = mocker.patch("zoo.auditing.runner.log", mocker.Mock())
+    slack = mocker.patch("zoo.auditing.runner.slack", mocker.Mock())
+
+    uut.notify_status_change(issue)
+    slack.chat.post_message.assert_called_once()
+    channel, text = slack.chat.post_message.call_args[0]
+    assert channel == service.slack_channel
+    assert issue.kind.title in text
+    assert issue.repository.name in text
+
+    # Unhappy path
+    slack.chat.post_message.side_effect = SlackError("channel_not_found")
+    uut.notify_status_change(issue)
+    log.exception.assert_called_once_with(
+        "auditing.update_issue.slack_error", error="Error('channel_not_found')"
+    )

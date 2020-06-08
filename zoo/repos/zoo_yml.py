@@ -3,7 +3,9 @@ from typing import Dict, Union
 import structlog
 from jsonschema import ValidationError
 from jsonschema import validate as schema_validate
-from yaml import FullLoader, load
+from yaml import FullLoader, dump, load
+
+from zoo.services.models import Service
 
 log = structlog.get_logger()
 
@@ -17,21 +19,21 @@ ZOO_JSON_SCHEMA = """
         owner:
             type: string
         impact:
-            type: string
+            type: ["string", "null"]
             enum: ["profit", "customers", "employees"]
         status:
-            type: string
+            type: ["string", "null"]
             enum: ["beta", "production", "deprecated", "discontinued"]
         docs_url:
-            type: string
+            type: ["string", "null"]
         slack_channel:
-            type: string
+            type: ["string", "null"]
         sentry_project:
-            type: string
+            type: ["string", "null"]
         sonarqube_project:
-            type: string
+            type: ["string", "null"]
         pagerduty_url:
-            type: string
+            type: ["string", "null"]
         tags:
             type: array
             items:
@@ -44,13 +46,13 @@ ZOO_JSON_SCHEMA = """
                     name:
                         type: string
                     dashboard_url:
-                        type: string
+                        type: ["string", "null"]
                     service_urls:
                         type: array
                         items:
                             type: string
                     health_check_url:
-                        type: string
+                        type: ["string", "null"]
     additionalProperties: false
     required:
         - type
@@ -71,3 +73,31 @@ def validate(yml: str) -> bool:
 
 def parse(yaml: str) -> Union[Dict, None]:
     return load(yaml, Loader=FullLoader)
+
+
+def generate(service: Service) -> str:
+    result = {
+        "type": "service",
+        "name": service.name,
+        "owner": service.owner,
+        "impact": service.impact,
+        "status": service.status,
+        "docs_url": service.docs_url,
+        "slack_channel": service.slack_channel,
+        "sentry_project": service.sentry_project,
+        "sonarqube_project": service.sonarqube_project,
+        "pagerduty_url": service.pagerduty_url,
+        "tags": service.tags,
+        "environments": [],
+    }
+
+    for env in service.environments.all():
+        environ = {
+            "name": env.name,
+            "dashboard_url": env.dashboard_url,
+            "health_check_url": env.health_check_url,
+            "service_urls": env.service_urls,
+        }
+        result["environments"].append(environ)
+
+    return dump(result, sort_keys=False)

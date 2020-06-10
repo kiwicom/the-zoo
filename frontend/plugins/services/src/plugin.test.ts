@@ -14,4 +14,10 @@
  * limitations under the License.
  */
 
-export { plugin } from './plugin';
+import { plugin } from './plugin';
+
+describe('services', () => {
+  it('should export plugin', () => {
+    expect(plugin).toBeDefined();
+  });
+});

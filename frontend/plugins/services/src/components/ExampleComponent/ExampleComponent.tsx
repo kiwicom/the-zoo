@@ -1,5 +1,21 @@
-import React, { FC } from 'react'
-import { Typography, Grid } from '@material-ui/core'
+/*
+ * Copyright 2020 Spotify AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import React, { FC } from 'react';
+import { Typography, Grid } from '@material-ui/core';
 import {
   InfoCard,
   Header,
@@ -9,9 +25,8 @@ import {
   ContentHeader,
   HeaderLabel,
   SupportButton,
-} from '@backstage/core'
-import ExampleFetchComponent from '../ExampleFetchComponent'
-import ServiceCard from '../ServiceCard'
+} from '@backstage/core';
+import FetchComponent from '../FetchComponent';
 
 const ExampleComponent: FC<{}> = () => (
   <Page theme={pageTheme.tool}>
@@ -24,7 +39,6 @@ const ExampleComponent: FC<{}> = () => (
         <SupportButton>A description of your plugin goes here.</SupportButton>
       </ContentHeader>
       <Grid container spacing={3} direction="column">
-        <ServiceCard />
         <Grid item>
           <InfoCard title="Information card">
             <Typography variant="body1">
@@ -33,13 +47,13 @@ const ExampleComponent: FC<{}> = () => (
           </InfoCard>
         </Grid>
         <Grid item>
-          <InfoCard title="Example User List (fetching data from randomuser.me)">
-            <ExampleFetchComponent />
+          <InfoCard title="FetchComponent">
+            <FetchComponent />
           </InfoCard>
         </Grid>
       </Grid>
     </Content>
   </Page>
-)
+);
 
-export default ExampleComponent
+export default ExampleComponent;

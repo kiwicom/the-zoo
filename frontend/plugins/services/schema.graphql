@@ -1,0 +1,255 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type ActiveIncident {
+  id: String
+  summary: String
+  description: String
+  status: String
+  htmlUrl: String
+  createdAt: String
+  color: String
+}
+
+type ActiveIncidentConnection {
+  pageInfo: PageInfo!
+  edges: [ActiveIncidentEdge]!
+  totalCount: Int
+}
+
+type ActiveIncidentEdge {
+  node: ActiveIncident
+  cursor: String!
+}
+
+input CheckRepositoryByCommitInput {
+  owner: String!
+  name: String!
+  sha: String!
+  onlyFound: Boolean = false
+  clientMutationId: String
+}
+
+type CheckRepositoryByCommitPayload {
+  allCheckResults: [CheckResult]
+  repository: Repository
+  clientMutationId: String
+}
+
+type CheckResult {
+  kindKey: String
+  isFound: Boolean
+  status: CheckResultStatus
+  severity: Severity
+  effort: Effort
+  details: JSONString
+  title: String
+  description: String
+}
+
+enum CheckResultStatus {
+  KNOWN
+  NEW
+  FIXED
+  WONTFIX
+  NOT_FOUND
+  REOPENED
+}
+
+type Dependency implements Node {
+  id: ID!
+  name: String
+  type: String
+  allDependencyUsages(before: String, after: String, first: Int, last: Int): DependencyUsageConnection
+}
+
+type DependencyConnection {
+  pageInfo: PageInfo!
+  edges: [DependencyEdge]!
+  totalCount: Int
+}
+
+type DependencyEdge {
+  node: Dependency
+  cursor: String!
+}
+
+enum DependencyType {
+  LANG
+  OS
+  JS_LIB
+  PY_LIB
+  GO_LIB
+  RS_LIB
+  ER_LIB
+  DOCKER_IMG
+}
+
+type DependencyUsage implements Node {
+  id: ID!
+  dependency: Dependency
+  repository: Repository
+  majorVersion: Int
+  minorVersion: Int
+  patchVersion: Int
+  forProduction: String
+  version: String
+}
+
+type DependencyUsageConnection {
+  pageInfo: PageInfo!
+  edges: [DependencyUsageEdge]!
+  totalCount: Int
+}
+
+type DependencyUsageEdge {
+  node: DependencyUsage
+  cursor: String!
+}
+
+enum Effort {
+  UNDEFINED
+  LOW
+  MEDIUM
+  HIGH
+}
+
+type Environment implements Node {
+  id: ID!
+  name: String
+  serviceUrls: [String]
+  dashboardUrl: String
+  healthCheckUrl: String
+  service: Service
+}
+
+type EnvironmentConnection {
+  pageInfo: PageInfo!
+  edges: [EnvironmentEdge]!
+  totalCount: Int
+}
+
+type EnvironmentEdge {
+  node: Environment
+  cursor: String!
+}
+
+type Issue implements Node {
+  id: ID!
+  repository: Repository
+  kindKey: String
+  status: String
+  details: JSONString
+  remoteIssueId: Int
+  comment: String
+  lastCheck: String
+  deleted: Boolean
+}
+
+type IssueConnection {
+  pageInfo: PageInfo!
+  edges: [IssueEdge]!
+  totalCount: Int
+}
+
+type IssueEdge {
+  node: Issue
+  cursor: String!
+}
+
+scalar JSONString
+
+type Mutation {
+  checkRepositoryByCommit(input: CheckRepositoryByCommitInput!): CheckRepositoryByCommitPayload
+}
+
+interface Node {
+  id: ID!
+}
+
+type OncallPerson {
+  id: String
+  type: String
+  summary: String
+  htmlUrl: String
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type PagerdutyService {
+  id: String
+  summary: String
+  htmlUrl: String
+  oncallPerson: OncallPerson
+  pastWeekTotal: Int
+  allActiveIncidents(before: String, after: String, first: Int, last: Int): ActiveIncidentConnection
+}
+
+type Query {
+  node(id: ID!): Node
+  allIssues(before: String, after: String, first: Int, last: Int): IssueConnection
+  allServices(before: String, after: String, first: Int, last: Int): ServiceConnection
+  allRepositories(before: String, after: String, first: Int, last: Int): RepositoryConnection
+  allDependencies(dependencyType: DependencyType, name: String, before: String, after: String, first: Int, last: Int): DependencyConnection
+  allDependencyUsages(before: String, after: String, first: Int, last: Int): DependencyUsageConnection
+}
+
+type Repository implements Node {
+  id: ID!
+  remoteId: Int
+  owner: String
+  name: String
+  url: String
+  allIssues(before: String, after: String, first: Int, last: Int): IssueConnection
+  allDependencyUsages(before: String, after: String, first: Int, last: Int): DependencyUsageConnection
+}
+
+type RepositoryConnection {
+  pageInfo: PageInfo!
+  edges: [RepositoryEdge]!
+  totalCount: Int
+}
+
+type RepositoryEdge {
+  node: Repository
+  cursor: String!
+}
+
+type Service implements Node {
+  id: ID!
+  owner: String
+  name: String
+  status: String
+  impact: String
+  repository: Repository
+  slackChannel: String
+  pagerdutyUrl: String
+  pagerdutyService: PagerdutyService
+  docsUrl: String
+  allEnvironments(before: String, after: String, first: Int, last: Int): EnvironmentConnection
+}
+
+type ServiceConnection {
+  pageInfo: PageInfo!
+  edges: [ServiceEdge]!
+  totalCount: Int
+}
+
+type ServiceEdge {
+  node: Service
+  cursor: String!
+}
+
+enum Severity {
+  UNDEFINED
+  ADVICE
+  WARNING
+  CRITICAL
+}

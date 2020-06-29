@@ -15,16 +15,23 @@ RUN apt update && \
     apt remove -y build-essential && \
     apt autoremove -y && \
     apt clean autoclean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    rm *.txt
 
-COPY --from=fe-builder /app/zoo ./zoo
-COPY . ./
+COPY zoo ./zoo
+COPY requirements ./requirements
+COPY scripts ./scripts
+COPY .misc ./.misc
+COPY manage.py ./
+COPY setup.py ./
+COPY MANIFEST.in ./
 
 RUN pip install --no-cache-dir -e . && \
     django-admin check && \
     mkdir -p /app/zoo/public/static && \
     django-admin collectstatic --noinput && \
-    chown -R macaque:macaque /app
+    chown -R macaque:macaque /app && \
+    rm -rf requirements
 
 ARG package_version
 ENV PACKAGE_VERSION=$package_version

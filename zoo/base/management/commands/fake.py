@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 
-from ....factories import ServiceFactory
+from ....factories import ApiTokenFactory, ServiceFactory
 from ... import settings
 
 
@@ -31,3 +31,6 @@ class Command(BaseCommand):
 
         ServiceFactory.create_batch(options["amount"])
         self.stdout.write(self.style.SUCCESS(f'{options["amount"]} services created.'))
+
+        auth = ApiTokenFactory.create()
+        self.stdout.write(self.style.SUCCESS(f'graphql api token {auth.token} created.'))

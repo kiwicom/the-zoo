@@ -4,7 +4,7 @@
 curr_dir = $(shell pwd)
 
 run:
-	docker-compose up app webpack worker
+	docker-compose up app
 
 run-detached:
 	docker-compose up -d app webpack worker

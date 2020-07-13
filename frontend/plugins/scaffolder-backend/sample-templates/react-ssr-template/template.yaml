@@ -1,0 +1,27 @@
+apiVersion: backstage.io/v1alpha1
+kind: Template
+metadata:
+  name: react-ssr-template
+  title: React SSR Template
+  description: Create a website powered with Next.js
+  tags:
+    - recommended
+    - react
+spec:
+  owner: web@example.com
+  templater: cookiecutter
+  type: website
+  path: '.'
+  schema:
+    required:
+      - component_id
+      - description
+    properties:
+      component_id:
+        title: Name
+        type: string
+        description: Unique name of the component
+      description:
+        title: Description
+        type: string
+        description: Help others understand what this website is for.

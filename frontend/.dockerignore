@@ -1,0 +1,5 @@
+.git
+node_modules
+packages/*/node_modules
+plugins/*/node_modules
+plugins/*/dist

@@ -8,6 +8,7 @@ venv/
 .postgres
 .pip.conf
 webpack/source
+node_modules
 __pycache__
 *.egg-info
 .coverage

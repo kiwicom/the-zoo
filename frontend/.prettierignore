@@ -1,0 +1,8 @@
+.yarn
+dist
+microsite
+coverage
+*.hbs
+templates
+plugins/scaffolder-backend/sample-templates
+.vscode

@@ -1,0 +1,252 @@
+app:
+  title: Backstage Example App
+  baseUrl: http://localhost:7000
+
+backend:
+  baseUrl: http://localhost:7000
+  listen:
+    port: 7000
+  database:
+    client: sqlite3
+    connection: ':memory:'
+  csp:
+    connect-src: ["'self'", 'https:']
+
+# See README.md in the proxy-backend plugin for information on the configuration format
+proxy:
+  '/circleci/api':
+    target: https://circleci.com/api/v1.1
+    headers:
+      Circle-Token:
+        $env: CIRCLECI_AUTH_TOKEN
+
+  '/jenkins/api':
+    target: http://localhost:8080
+    headers:
+      Authorization:
+        $env: JENKINS_BASIC_AUTH_HEADER
+
+  '/travisci/api':
+    target: https://api.travis-ci.com
+    changeOrigin: true
+    headers:
+      Authorization:
+        $env: TRAVISCI_AUTH_TOKEN
+      travis-api-version: 3
+
+organization:
+  name: Spotify
+
+techdocs:
+  storageUrl: http://localhost:7000/api/techdocs/static/docs
+  requestUrl: http://localhost:7000/api/techdocs
+  generators:
+    techdocs: 'docker'
+
+sentry:
+  organization: spotify
+
+rollbar:
+  organization: spotify
+  accountToken:
+    $env: ROLLBAR_ACCOUNT_TOKEN
+
+newrelic:
+  api:
+    baseUrl: 'https://api.newrelic.com/v2'
+    key: NEW_RELIC_REST_API_KEY
+
+lighthouse:
+  baseUrl: http://localhost:3003
+
+kubernetes:
+  clusterLocatorMethod: 'configMultiTenant'
+  clusters: []
+
+integrations:
+  github:
+    - host: github.com
+      token:
+        $env: GITHUB_TOKEN
+    ### Example for how to add your GitHub Enterprise instance using the API:
+    # - host: ghe.example.net
+    #   apiBaseUrl: https://ghe.example.net/api/v3
+    #   token:
+    #     $env: GHE_TOKEN
+    ### Example for how to add your GitHub Enterprise instance using raw HTTP fetches (token is optional):
+    # - host: ghe.example.net
+    #   rawBaseUrl: https://ghe.example.net/raw
+    #   token:
+    #     $env: GHE_TOKEN
+  gitlab:
+    - host: gitlab.com
+      token:
+        $env: GITLAB_TOKEN
+  bitbucket:
+    - host: bitbucket.org
+      username:
+        $env: BITBUCKET_USERNAME
+      appPassword:
+        $env: BITBUCKET_APP_PASSWORD
+  azure:
+    - host: dev.azure.com
+      token:
+        $env: AZURE_TOKEN
+
+catalog:
+  rules:
+    - allow: [Component, API, Group, User, Template, Location]
+
+  processors:
+    githubOrg:
+      providers:
+        - target: https://github.com
+          token:
+            $env: GITHUB_TOKEN
+        #### Example for how to add your GitHub Enterprise instance using the API:
+        # - target: https://ghe.example.net
+        #   apiBaseUrl: https://ghe.example.net/api/v3
+        #   token:
+        #     $env: GHE_TOKEN
+    ldapOrg:
+      ### Example for how to add your enterprise LDAP server
+      # providers:
+      #   - target: ldaps://ds.example.net
+      #     bind:
+      #       dn: uid=ldap-reader-user,ou=people,ou=example,dc=example,dc=net
+      #       secret: { $secret: { env: LDAP_SECRET } }
+      #     users:
+      #       dn: ou=people,ou=example,dc=example,dc=net
+      #       options:
+      #         filter: (uid=*)
+      #       map:
+      #         description: l
+      #     groups:
+      #       dn: ou=access,ou=groups,ou=example,dc=example,dc=net
+      #       options:
+      #         filter: (&(objectClass=some-group-class)(!(groupType=email)))
+
+  locations:
+    # Backstage example components
+    - type: url
+      target: https://github.com/spotify/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
+    # Example component for github-actions
+    - type: url
+      target: https://github.com/spotify/backstage/blob/master/plugins/github-actions/examples/sample.yaml
+    # Example component for techdocs
+    - type: url
+      target: https://github.com/spotify/backstage/blob/master/plugins/techdocs-backend/examples/documented-component/documented-component.yaml
+    # Backstage example APIs
+    - type: url
+      target: https://github.com/spotify/backstage/blob/master/packages/catalog-model/examples/all-apis.yaml
+    # Backstage example templates
+    - type: url
+      target: https://github.com/spotify/backstage/blob/master/plugins/scaffolder-backend/sample-templates/all-templates.yaml
+
+scaffolder:
+  github:
+    token:
+      $env: GITHUB_TOKEN
+    visibility: public # or 'internal' or 'private'
+  gitlab:
+    api:
+      baseUrl: https://gitlab.com
+      token:
+        $env: GITLAB_TOKEN
+  azure:
+    baseUrl: https://dev.azure.com/{your-organization}
+    api:
+      token:
+        $env: AZURE_TOKEN
+
+auth:
+  providers:
+    google:
+      development:
+        clientId:
+          $env: AUTH_GOOGLE_CLIENT_ID
+        clientSecret:
+          $env: AUTH_GOOGLE_CLIENT_SECRET
+    github:
+      development:
+        clientId:
+          $env: AUTH_GITHUB_CLIENT_ID
+        clientSecret:
+          $env: AUTH_GITHUB_CLIENT_SECRET
+        enterpriseInstanceUrl:
+          $env: AUTH_GITHUB_ENTERPRISE_INSTANCE_URL
+    gitlab:
+      development:
+        clientId:
+          $env: AUTH_GITLAB_CLIENT_ID
+        clientSecret:
+          $env: AUTH_GITLAB_CLIENT_SECRET
+        audience:
+          $env: GITLAB_BASE_URL
+    saml:
+      entryPoint: 'http://localhost:7001/'
+      issuer: 'passport-saml'
+    okta:
+      development:
+        clientId:
+          $env: AUTH_OKTA_CLIENT_ID
+        clientSecret:
+          $env: AUTH_OKTA_CLIENT_SECRET
+        audience:
+          $env: AUTH_OKTA_AUDIENCE
+    oauth2:
+      development:
+        clientId:
+          $env: AUTH_OAUTH2_CLIENT_ID
+        clientSecret:
+          $env: AUTH_OAUTH2_CLIENT_SECRET
+        authorizationUrl:
+          $env: AUTH_OAUTH2_AUTH_URL
+        tokenUrl:
+          $env: AUTH_OAUTH2_TOKEN_URL
+    auth0:
+      development:
+        clientId:
+          $env: AUTH_AUTH0_CLIENT_ID
+        clientSecret:
+          $env: AUTH_AUTH0_CLIENT_SECRET
+        domain:
+          $env: AUTH_AUTH0_DOMAIN
+    microsoft:
+      development:
+        clientId:
+          $env: AUTH_MICROSOFT_CLIENT_ID
+        clientSecret:
+          $env: AUTH_MICROSOFT_CLIENT_SECRET
+        tenantId:
+          $env: AUTH_MICROSOFT_TENANT_ID
+costInsights:
+  engineerCost: 200000
+  products:
+    computeEngine:
+      name: Compute Engine
+      icon: compute
+    cloudDataflow:
+      name: Cloud Dataflow
+      icon: data
+    cloudStorage:
+      name: Cloud Storage
+      icon: storage
+    bigQuery:
+      name: Big Query
+      icon: search
+  metrics:
+    dailyCost:
+      name: Your Company's Daily Cost
+    DAU:
+      name: Cost Per DAU
+homepage:
+  clocks:
+    - label: UTC
+      timzone: UTC
+    - label: NYC
+      timezone: 'America/New_York'
+    - label: STO
+      timezone: 'Europe/Stockholm'
+    - label: TYO
+      timezone: 'Asia/Tokyo'

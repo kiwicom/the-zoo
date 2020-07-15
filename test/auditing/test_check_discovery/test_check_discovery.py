@@ -19,7 +19,7 @@ def test_check_discovery__correct_modules(settings):
     settings.ZOO_AUDITING_CHECKS = check_modules
 
     uut.discover_checks()
-    from zoo.auditing.check_discovery import KINDS, CHECKS, PATCHES
+    from zoo.auditing.check_discovery import CHECKS, KINDS, PATCHES
 
     assert len(CHECKS) == 11
 
@@ -57,7 +57,7 @@ def test_check_discovery__members_not_functions(settings):
     settings.ZOO_AUDITING_CHECKS = check_modules
 
     uut.discover_checks()
-    from zoo.auditing.check_discovery import KINDS, CHECKS
+    from zoo.auditing.check_discovery import CHECKS, KINDS
 
     assert len(CHECKS) == 4
 

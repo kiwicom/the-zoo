@@ -24,8 +24,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import ContentHeader from '../ContentHeader'
 
 const ServiceDetail: FC<{}> = () => {
-  const { name = '' } = useParams();
-  const [response] = useQuery({ query: getService, variables: { name } });
+  const { id } = useParams();
+  const [response] = useQuery({ query: getService, variables: { id } });
 
   if (response.fetching) {
     return <Progress />;

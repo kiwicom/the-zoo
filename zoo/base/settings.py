@@ -121,6 +121,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.postgres",
     "django_extensions",
+    "django_filters",
     "debug_toolbar",
     "stronghold",
     "silk",

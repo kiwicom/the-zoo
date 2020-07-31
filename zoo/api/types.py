@@ -1,7 +1,9 @@
 import graphene
 from django.core.exceptions import ObjectDoesNotExist
-from graphene import relay
+from graphene.relay import Connection, ConnectionField, Node
 from graphene.types.json import JSONString
+from graphene_django.filter import DjangoFilterConnectionField
+from graphene_django.types import DjangoObjectType
 
 from ..analytics import models as analytics_models
 from ..auditing import check_discovery
@@ -17,86 +19,24 @@ IssueSeverityEnum = graphene.Enum.from_enum(check_discovery.Severity)
 IssueEffortEnum = graphene.Enum.from_enum(check_discovery.Effort)
 
 
-class Issue(graphene.ObjectType):
+class Issue(DjangoObjectType, interfaces=[Node]):
     repository = graphene.Field(lambda: Repository)
-    kind_key = graphene.String()
-    status = graphene.String()
-    details = JSONString()
-    remote_issue_id = graphene.Int()
-    comment = graphene.String()
-    last_check = graphene.String()
-    deleted = graphene.Boolean()
 
     class Meta:
-        interfaces = (relay.Node,)
-
-    @classmethod
-    def from_db(cls, issue):
-        return cls(
-            id=issue.id,
-            repository=issue.repository,
-            kind_key=issue.kind_key,
-            status=issue.status,
-            details=issue.details,
-            remote_issue_id=issue.remote_issue_id,
-            comment=issue.comment,
-            last_check=issue.last_check,
-            deleted=issue.deleted,
-        )
-
-    @classmethod
-    def get_node(cls, info, issue_id):
-        try:
-            issue = auditing_models.Issue.objects.get(id=issue_id)
-            return cls.from_db(issue)
-        except ObjectDoesNotExist:
-            return None
+        model = auditing_models.Issue
+        filter_fields = ["kind_key"]
 
 
-class IssueConnection(relay.Connection):
-    total_count = graphene.Int()
-
-    class Meta:
-        node = Issue
-
-
-class Environment(graphene.ObjectType):
-    name = graphene.String()
+class Environment(DjangoObjectType, interfaces=[Node]):
     service_urls = graphene.List(graphene.String)
-    dashboard_url = graphene.String()
-    health_check_url = graphene.String()
     service = graphene.Field(lambda: Service)
 
-    @classmethod
-    def from_db(cls, environment):
-        return cls(
-            id=environment.id,
-            name=environment.name,
-            service_urls=environment.service_urls,
-            dashboard_url=environment.dashboard_url,
-            health_check_url=environment.health_check_url,
-            service=environment.service_id,
-        )
-
-    @classmethod
-    def get_node(cls, info, environment_id):
-        try:
-            environment = services_models.Environment.objects.get(id=environment_id)
-            return cls.from_db(environment)
-        except ObjectDoesNotExist:
-            return None
-
-    def resolve_service(self, info):
-        try:
-            return Service.from_db(services_models.Service.objects.get(id=self.service))
-        except ObjectDoesNotExist:
-            return None
-
     class Meta:
-        interfaces = (relay.Node,)
+        model = services_models.Environment
+        filter_fields = ["name"]
 
 
-class EnvironmentConnection(relay.Connection):
+class EnvironmentConnection_(Connection):
     total_count = graphene.Int()
 
     class Meta:
@@ -125,7 +65,7 @@ class ActiveIncident(graphene.ObjectType):
         )
 
 
-class ActiveIncidentConnection(relay.Connection):
+class ActiveIncidentConnection(Connection):
     total_count = graphene.Int()
 
     class Meta:
@@ -154,7 +94,7 @@ class PagerdutyService(graphene.ObjectType):
     html_url = graphene.String()
     oncall_person = graphene.Field(lambda: OncallPerson)
     past_week_total = graphene.Int()
-    all_active_incidents = relay.ConnectionField(ActiveIncidentConnection)
+    all_active_incidents = ConnectionField(ActiveIncidentConnection)
 
     def resolve_oncall_person(self, info):
         return OncallPerson.from_object(self.oncall_person)
@@ -180,17 +120,11 @@ class PagerdutyService(graphene.ObjectType):
         )
 
 
-class Service(graphene.ObjectType):
-    owner = graphene.String()
-    name = graphene.String()
-    status = graphene.String()
-    impact = graphene.String()
+class Service(DjangoObjectType):
     repository = graphene.Field(lambda: Repository)
-    slack_channel = graphene.String()
-    pagerduty_url = graphene.String()
     pagerduty_service = graphene.Field(lambda: PagerdutyService)
     docs_url = graphene.String()
-    all_environments = relay.ConnectionField(EnvironmentConnection)
+    all_environments = ConnectionField(EnvironmentConnection_)
 
     @classmethod
     def from_db(cls, service):
@@ -206,32 +140,12 @@ class Service(graphene.ObjectType):
             repository=service.repository_id,
             all_environments=service.environments,
         )
+    environments = DjangoFilterConnectionField(Environment)
 
-    @classmethod
-    def get_node(cls, info, service_id):
-        try:
-            service = services_models.Service.objects.get(id=service_id)
-            return cls.from_db(service)
-        except ObjectDoesNotExist:
-            return None
-
-    def resolve_pagerduty_service(self, info):
-        try:
-            service = services_models.Service.objects.get(id=self.id)
-        except ObjectDoesNotExist:
-            return None
-
-        if service.pagerduty_service_id:
-            oncall_info = pagerduty_tasks.get_oncall_info(service.pagerduty_service_id)
-            return PagerdutyService(**oncall_info)
-
-    def resolve_repository(self, info):
-        try:
-            return Repository.from_db(
-                repos_models.Repository.objects.get(id=self.repository)
-            )
-        except ObjectDoesNotExist:
-            return None
+    class Meta:
+        model = services_models.Service
+        interfaces = [Node]
+        filter_fields = ["name", "owner"]
 
     def resolve_all_environments(self, info, **kwargs):
         paginator = Paginator(**kwargs)
@@ -249,108 +163,28 @@ class Service(graphene.ObjectType):
         ):
             cursor = paginator.get_edge_cursor(i + 1)
             node = Environment.from_db(issue)
-            edges.append(EnvironmentConnection.Edge(node=node, cursor=cursor))
+            edges.append(EnvironmentConnection_.Edge(node=node, cursor=cursor))
 
-        return EnvironmentConnection(
-            page_info=page_info, edges=edges, total_count=total
-        )
-
-    class Meta:
-        interfaces = (relay.Node,)
-
-
-class ServiceConnection(relay.Connection):
-    total_count = graphene.Int()
-
-    class Meta:
-        node = Service
-
-
-class Repository(graphene.ObjectType):
-    remote_id = graphene.Int()
-    owner = graphene.String()
-    name = graphene.String()
-    url = graphene.String()
-    all_issues = relay.ConnectionField(IssueConnection)
-    all_dependency_usages = relay.ConnectionField(lambda: DependencyUsageConnection)
-
-    class Meta:
-        interfaces = (relay.Node,)
-
-    @classmethod
-    def from_db(cls, repository):
-        return cls(
-            id=repository.id,
-            remote_id=repository.remote_id,
-            owner=repository.owner,
-            name=repository.name,
-            url=repository.url,
-            all_issues=repository.issues,
-        )
-
-    @classmethod
-    def get_node(cls, info, repository_id):
-        try:
-            repository = repos_models.Repository.objects.get(id=repository_id)
-            return cls.from_db(repository)
-        except ObjectDoesNotExist:
-            return None
-
-    def resolve_all_issues(self, info, **kwargs):
-        paginator = Paginator(**kwargs)
-        edges = []
-        filtered_issues = auditing_models.Issue.objects.filter(repository_id=self.id)
-        total = filtered_issues.count()
-        page_info = paginator.get_page_info(total)
-
-        for i, issue in enumerate(
-            filtered_issues[
-                paginator.slice_from : paginator.slice_to  # Ignore PEP8Bear
-            ]
-        ):
-            cursor = paginator.get_edge_cursor(i + 1)
-            node = Issue.from_db(issue)
-            edges.append(IssueConnection.Edge(node=node, cursor=cursor))
-
-        return IssueConnection(page_info=page_info, edges=edges, total_count=total)
-
-    def resolve_all_dependency_usages(self, info, **kwargs):
-        paginator = Paginator(**kwargs)
-        edges = []
-        filtered_dependencies = analytics_models.DependencyUsage.objects.filter(
-            repo_id=self.id
-        )
-        total = filtered_dependencies.count()
-        page_info = paginator.get_page_info(total)
-
-        for i, dependency_usage in enumerate(
-            filtered_dependencies[
-                paginator.slice_from : paginator.slice_to  # Ignore PEP8Bear
-            ]
-        ):
-            cursor = paginator.get_edge_cursor(i + 1)
-            node = DependencyUsage.from_db(dependency_usage)
-            edges.append(DependencyUsageConnection.Edge(node=node, cursor=cursor))
-
-        return DependencyUsageConnection(
+        return EnvironmentConnection_(
             page_info=page_info, edges=edges, total_count=total
         )
 
 
-class RepositoryConnection(relay.Connection):
-    total_count = graphene.Int()
+class Repository(DjangoObjectType, interfaces=[Node]):
+    issues = DjangoFilterConnectionField(lambda: Issue)
+    dependency_usages = DjangoFilterConnectionField(lambda: DependencyUsage)
 
     class Meta:
-        node = Repository
+        model = repos_models.Repository
+        filter_fields = ["name", "owner"]
 
 
-class Dependency(graphene.ObjectType):
-    name = graphene.String()
-    type = graphene.String()
-    all_dependency_usages = relay.ConnectionField(lambda: DependencyUsageConnection)
+class Dependency(DjangoObjectType, interfaces=[Node]):
+    dependency_usages = DjangoFilterConnectionField(lambda: DependencyUsage)
 
     class Meta:
-        interfaces = (relay.Node,)
+        model = analytics_models.Dependency
+        filter_fields = ["name", "type"]
 
     @classmethod
     def from_db(cls, dependency):
@@ -389,24 +223,13 @@ class Dependency(graphene.ObjectType):
             return None
 
 
-class DependencyConnection(relay.Connection):
-    total_count = graphene.Int()
-
-    class Meta:
-        node = Dependency
-
-
-class DependencyUsage(graphene.ObjectType):
+class DependencyUsage(DjangoObjectType, interfaces=[Node]):
     dependency = graphene.Field(lambda: Dependency)
     repository = graphene.Field(lambda: Repository)
-    major_version = graphene.Int()
-    minor_version = graphene.Int()
-    patch_version = graphene.Int()
-    for_production = graphene.String()
-    version = graphene.String()
 
     class Meta:
-        interfaces = (relay.Node,)
+        model = analytics_models.DependencyUsage
+        filter_fields = ["version"]
 
     @classmethod
     def from_db(cls, dependency_usage):
@@ -442,13 +265,6 @@ class DependencyUsage(graphene.ObjectType):
         )
 
 
-class DependencyUsageConnection(relay.Connection):
-    total_count = graphene.Int()
-
-    class Meta:
-        node = DependencyUsage
-
-
 CheckResultStatusEnum = graphene.Enum.from_enum(CheckResultStatus)
 
 
@@ -461,6 +277,26 @@ class CheckResult(graphene.ObjectType):
     details = JSONString()
     title = graphene.String()
     description = graphene.String()
+
+    class Meta:
+        interfaces = [Node]
+
+    @classmethod
+    def get_node(cls, info, issue_id):
+        try:
+            issue = auditing_models.Issue.objects.get(id=issue_id)
+            return cls.from_db(issue)
+        except ObjectDoesNotExist:
+            return None
+
+    @classmethod
+    def from_db(cls, issue):
+        return cls(
+            id=issue.id,
+            kind_key=issue.kind_key,
+            is_found=issue.is_found,
+            details=issue.details,
+        )
 
     @property
     def kind(self):

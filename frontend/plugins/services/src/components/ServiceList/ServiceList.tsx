@@ -4,7 +4,7 @@ import { Grid } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import Alert from '@material-ui/lab/Alert';
 import { useQuery } from 'urql';
-import { getServices, Service } from 'zoo-api';
+import { getServices, Service, Edge } from 'zoo-api';
 import ServiceCard from '../ServiceCard';
 
 
@@ -30,7 +30,8 @@ const ServiceList: FC<{}> = () => {
     </Grid>;
   }
 
-  const services: Service[] = response.data.services;
+  const services: Service[] = response.data.services.edges.map((edge: Edge) => edge.node);
+
   return (
     <Grid container spacing={1} direction="column">
       {services.map(service => (

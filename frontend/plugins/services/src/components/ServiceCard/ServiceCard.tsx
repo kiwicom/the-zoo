@@ -48,7 +48,7 @@ const ServiceCard: FC<{ service: Service }> = ({ service }) => (
           <Grid container alignItems="baseline">
             <Grid item>
               <Typography variant="h5">
-                <Link component={RouterLink} to={`/services/${service.name}`}>{service.name}</Link>
+                <Link component={RouterLink} to={`/services/${service.id}/${service.name}`}>{service.name}</Link>
               </Typography>
             </Grid>
             <Grid item>

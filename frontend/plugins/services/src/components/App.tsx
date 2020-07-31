@@ -16,9 +16,9 @@ export const App = () => (
         <Routes>
           <Route path="/" element={<ServicePage />}>
             <Route path="/" element={<ServiceList />} />
-            <Route path="/:name/" element={<ServiceDetail />} />
-            <Route path="/:name/issues/" element={<ServiceIssueList />} />
-            <Route path="/:name/issuse/:id/" element={<ServiceIssueDetail />} />
+            <Route path="/:id/:name/" element={<ServiceDetail />} />
+            <Route path="/:id/:name/issues/" element={<ServiceIssueList />} />
+            <Route path="/:id/:name/issuse/:id/" element={<ServiceIssueDetail />} />
           </Route>
         </Routes>
         <Settings />

@@ -18,8 +18,9 @@ function getToken(): string {
   return token ? token : "";
 }
 
-export const theZooClient = createClient({
+export const theZooClient = new Client({
   url: 'http://127.0.0.1:8000/graphql',
+  exchanges: [cache, dedupExchange, fetchExchange],
   fetchOptions: () => {
     const token: string = getToken();
     return {

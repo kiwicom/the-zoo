@@ -1,43 +1,71 @@
 export const getServices = `
-  {
-    services {
-      id
-      name
-      owner
-      status
-      impact
-      slackChannel
-      pagerdutyUrl
-      docsUrl
-      repository {
+{
+  services(first: 10) {
+    edges {
+      node {
         id
-        remoteId
         name
         owner
-        url
-        issues {
-          kindKey
-          status
-          remoteIssueId
-          comment
-          lastCheck
+        status
+        impact
+        slackChannel
+        pagerdutyService {
+          id
+          summary
+          htmlUrl
+          oncallPerson { 
+            type
+            summary
+            htmlUrl
+          }
+          pastWeekTotal
+        }
+        docsUrl
+        repository {
+          id
+          remoteId
+          name
+          owner
+          url
+          issues {
+            edges {
+              node {
+                kindKey
+                status
+                remoteIssueId
+                comment
+                lastCheck
+              }
+            }
+          }
         }
       }
     }
   }
+}
 `;
 
 export const getService = `
-query ($name: String!)
+query ($id: ID!)
   {
-    service (name: $name) {
+    service (id: $id) {
       id
       name
       owner
       status
       impact
       slackChannel
-      pagerdutyUrl
+      pagerdutyService {
+        id
+        summary
+        htmlUrl
+        oncallPerson { 
+          type
+          summary
+          htmlUrl
+        }
+        pastWeekTotal
+      }
       docsUrl
       repository {
         id
@@ -46,11 +74,15 @@ query ($name: String!)
         owner
         url
         issues {
-          kindKey
-          status
-          remoteIssueId
-          comment
-          lastCheck
+          edges {
+            node {
+              kindKey
+              status
+              remoteIssueId
+              comment
+              lastCheck
+            }
+          }
         }
       }
     }
@@ -97,7 +129,7 @@ export type Service = {
   status: string;
   impact: string;
   slackChannel: string;
-  pagerdutyUrl: string;
+  pagerdutyService: PagerdutyService;
   docsUrl: string;
   repository: Repository;
 };
@@ -119,4 +151,28 @@ export type Issue = {
   remoteIssueId: string;
   comment: string;
   lastCheck: string;
+}
+
+export type CheckResult = {
+  kindKey: string;
+  // isFound: boolean;
+  // status: Field
+  // severity: Field
+  // effort: Field
+  // details:
+  title: string;
+  description: string;
+}
+
+export type PagerdutyService = {
+  summary: string;
+  html_url: string;
+  oncall_person: OncallPerson;
+  past_week_total: number;
+}
+
+export type OncallPerson = {
+  type: string;
+  summary: string;
+  html_url: string;
 }

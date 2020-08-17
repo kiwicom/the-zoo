@@ -20,7 +20,7 @@ TECHDOCS_PREVIEW_SOURCE=../../plugins/techdocs/dist
 TECHDOCS_PREVIEW_DEST=../../packages/techdocs-cli/dist/techdocs-preview-bundle
 
 # Build the CLI
-yarn run backstage-cli -- build --outputs cjs
+yarn run backstage-cli build --outputs cjs
 
 # Create export of the TechDocs plugin
 APP_CONFIG_techdocs_storageUrl='"http://localhost:3000/api"' yarn workspace @backstage/plugin-techdocs export

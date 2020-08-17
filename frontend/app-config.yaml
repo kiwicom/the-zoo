@@ -1,5 +1,5 @@
 app:
-  title: Scaffolded Backstage App
+  title: Hangar App
   baseUrl: http://localhost:7000
 
 organization:

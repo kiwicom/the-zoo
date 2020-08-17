@@ -1,5 +1,5 @@
 app:
-  title: Backstage Example App
+  title: Hangar App
   baseUrl: http://localhost:7000
 
 backend:

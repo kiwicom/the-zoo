@@ -11,45 +11,44 @@ appdirs==1.4.4            # via virtualenv
 astroid==2.4.2            # via pylint
 coverage==5.3             # via -r requirements/test.in, pytest-cov
 distlib==0.3.1            # via virtualenv
-docker==4.3.1             # via tox-docker
+docker==4.4.0             # via tox-docker
 execnet==1.7.1            # via pytest-xdist
-factory-boy==3.0.1        # via pytest-factoryboy
-faker==4.1.3              # via factory-boy
-fakeredis==1.4.3          # via -r requirements/test.in
+factory-boy==3.1.0        # via pytest-factoryboy
+faker==5.0.2              # via factory-boy
+fakeredis==1.4.5          # via -r requirements/test.in
 fastdiff==0.2.0           # via snapshottest
 filelock==3.0.12          # via tox, virtualenv
 freezegun==1.0.0          # via pytest-freezegun
-httpretty==1.0.2          # via -r requirements/test.in
+httpretty==1.0.3          # via -r requirements/test.in
 inflection==0.5.1         # via pytest-factoryboy
-iniconfig==1.0.1          # via pytest
-isort==5.5.3              # via pylint
+iniconfig==1.1.1          # via pytest
+isort==5.6.4              # via pylint
 lazy-object-proxy==1.4.3  # via astroid
 mccabe==0.6.1             # via pylint
-more-itertools==8.5.0     # via pytest
-packaging==20.4           # via pytest, tox
-pg8000==1.16.5            # via testing-postgresql
+packaging==20.8           # via pytest, tox
+pg8000==1.16.6            # via testing-postgresql
 pluggy==0.13.1            # via pytest, tox
-py==1.9.0                 # via pytest, pytest-forked, tox
+py==1.10.0                # via pytest, pytest-forked, tox
 pylint==2.6.0             # via -r requirements/test.in
 pyparsing==2.4.7          # via packaging
-pytest==6.0.2             # via -r requirements/test.in, pytest-cov, pytest-django, pytest-env, pytest-factoryboy, pytest-forked, pytest-freezegun, pytest-mock, pytest-xdist
+pytest==6.2.1             # via -r requirements/test.in, pytest-cov, pytest-django, pytest-env, pytest-factoryboy, pytest-forked, pytest-freezegun, pytest-mock, pytest-xdist
 pytest-cov==2.10.1        # via -r requirements/test.in
-pytest-django==3.10.0     # via -r requirements/test.in
+pytest-django==4.1.0      # via -r requirements/test.in
 pytest-env==0.6.2         # via -r requirements/test.in
 pytest-factoryboy==2.0.3  # via -r requirements/test.in
 pytest-forked==1.3.0      # via pytest-xdist
 pytest-freezegun==0.4.2   # via -r requirements/test.in
-pytest-mock==3.3.1        # via -r requirements/test.in
-pytest-xdist==2.1.0       # via -r requirements/test.in
+pytest-mock==3.4.0        # via -r requirements/test.in
+pytest-xdist==2.2.0       # via -r requirements/test.in
 scramp==1.2.0             # via pg8000
-snapshottest==0.5.1       # via -r requirements/test.in
+snapshottest==0.6.0       # via -r requirements/test.in
 termcolor==1.1.0          # via snapshottest
 testing-postgresql==1.3.0  # via -r requirements/test.in
 testing.common.database==2.0.3  # via testing-postgresql
 text-unidecode==1.3       # via faker
-tox==3.20.0               # via -r requirements/test.in, tox-docker
-tox-docker==2.0.0a3       # via -r requirements/test.in
-virtualenv==20.0.31       # via tox
+tox==3.20.1               # via -r requirements/test.in, tox-docker
+tox-docker==1.7.0         # via -r requirements/test.in
+virtualenv==20.2.2        # via tox
 wasmer==0.4.1             # via fastdiff
 
 # The following packages are considered to be unsafe in a requirements file:

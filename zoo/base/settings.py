@@ -98,6 +98,7 @@ INTERNAL_IPS = [
 ]
 
 INSTALLED_APPS = [
+    "corsheaders",
     "graphene_django",
     "zoo.base.apps.BaseConfig",
     "zoo.analytics.apps.AnalyticsConfig",
@@ -123,6 +124,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.postgres",
     "django_extensions",
+    "django_filters",
     "debug_toolbar",
     "stronghold",
     "silk",
@@ -137,6 +139,7 @@ SILKY_AUTHENTICATION = True
 SILKY_AUTHORISATION = True
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "silk.middleware.SilkyMiddleware",
     "stronghold.middleware.LoginRequiredMiddleware",
@@ -202,6 +205,15 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 GRAPHENE = {"SCHEMA": "zoo.api.schema.schema"}
 
 ZOO_API_URL = r"^/graphql$"
+
+# CORS_ORIGIN_WHITELIST = [
+#     "http://localhost:3000",
+#     "https://localhost:3000",
+#     "http://127.0.0.1:3000",
+#     "https://127.0.0.1:3000",
+# ]
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 LOGOUT_REDIRECT_URL = "/"
 

@@ -56,6 +56,7 @@ import { ApiAggregator } from '../apis/ApiAggregator';
 import { useAsync } from 'react-use';
 import { AppIdentity } from './AppIdentity';
 
+
 type FullAppOptions = {
   apis: Apis;
   icons: SystemIcons;

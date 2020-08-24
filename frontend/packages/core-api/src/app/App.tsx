@@ -57,6 +57,7 @@ import { AppIdentity } from './AppIdentity';
 import { ApiFactoryRegistry } from '../apis/ApiFactoryRegistry';
 import { ApiResolver } from '../apis/ApiResolver';
 
+
 type FullAppOptions = {
   apis: Iterable<AnyApiFactory>;
   icons: SystemIcons;

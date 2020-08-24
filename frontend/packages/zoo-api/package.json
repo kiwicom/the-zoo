@@ -1,0 +1,14 @@
+{
+  "name": "zoo-api",
+  "version": "0.1.0",
+  "description": "Interact with The Zoo GraphQL API",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "author": "baptiste.darthenay@kiwi.com",
+  "license": "MIT",
+  "dependencies": {
+    "@urql/exchange-graphcache": "^3.0.2",
+    "graphql": "^15.3.0",
+    "urql": "^1.10.0"
+  }
+}

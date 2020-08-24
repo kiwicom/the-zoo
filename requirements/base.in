@@ -8,9 +8,11 @@ datadog
 ddtrace
 django<3.*
 djangoql
+django-cors-headers
 django-debug-toolbar
 django-environ
 django-extensions
+django-filter
 django-silk
 django-stronghold
 dockerfile-parse

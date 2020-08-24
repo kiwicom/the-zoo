@@ -14,3 +14,5 @@
 /packages/techdocs-container                @spotify/techdocs-core
 /.github/workflows/techdocs.yml             @spotify/techdocs-core
 /.github/workflows/techdocs-pypi.yml        @spotify/techdocs-core
+
+/plugins/services               @batist

@@ -42,6 +42,7 @@ in base.overrideAttrs (self: rec {
     export LOG_PATH=$PGBASE/LOG
     export PGDATABASE=postgres
     export DATABASE_URL="postgres://localhost/postgres"
+    export TEST_DATABASE_URL="postgres://localhost/postgres"
 
     if [ ! -d $PGBASE ]; then
        mkdir $PGBASE

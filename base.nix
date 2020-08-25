@@ -21,6 +21,7 @@ stdenv.mkDerivation rec {
     GREEN='\033[1;32m'
     NC="$(printf '\033[0m')"
     PROJ_HOME=$PWD
+    VENV=".venv"
 
     function say {
       echo -e "''${YELLOW}$1...''${NC}"
@@ -43,13 +44,13 @@ no-cache-dir = true" > $PWD/.pip.conf
 
     say "Initializing development environment"
 
-    if [ ! -d venv ]; then
-      say_green "Initializing virtualenv environment (venv)"
-      virtualenv venv > /dev/null
+    if [ ! -d $VENV ]; then
+      say_green "Initializing virtualenv environment ($VENV)"
+      virtualenv $VENV > /dev/null
     fi
 
-    say_green "Activating virtualenv (venv)"
-    source $PWD/venv/bin/activate
+    say_green "Activating virtualenv ($VENV)"
+    source $PWD/$VENV/bin/activate
 
     say_green "Installing requirements"
     REQS=""

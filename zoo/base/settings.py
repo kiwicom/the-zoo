@@ -66,7 +66,9 @@ GITLAB_URL = env("ZOO_GITLAB_URL")
 USER_AGENT = env("ZOO_USER_AGENT").format(version=version)
 
 DATABASES = {
-    "default": env.db(default="postgres://postgres:postgres@postgres/postgres")
+    "default": env.db(
+        "DATABASE_URL", default="postgres://postgres:postgres@postgres/postgres"
+    )
 }
 DATABASES["default"]["OPTIONS"] = env("ZOO_DATABASE_OPTIONS")
 

@@ -19,7 +19,7 @@ destroy:
 	docker-compose down -v
 
 test:
-	tox
+	TOX_TESTENV_PASSENV=TEST_DATABASE_URL tox
 
 pytest:
 	.tox/tests/bin/py.test

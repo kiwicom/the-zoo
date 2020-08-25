@@ -47,7 +47,8 @@ def db_url():
         yield os.environ["TEST_DATABASE_URL"]
 
     except KeyError:
-        with testing.postgresql.Postgresql() as db:
+        initdb_args = "-U postgres -A trust --no-locale --encoding=UTF8"
+        with testing.postgresql.Postgresql(initdb_args=initdb_args) as db:
             yield db.url()
 
 

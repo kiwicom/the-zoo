@@ -53,6 +53,7 @@ class ServiceForm(forms.ModelForm):
             "name",
             "impact",
             "status",
+            "tier",
             "slack_channel",
             "sentry_project",
             "sonarqube_project",

@@ -21,6 +21,7 @@ from zoo.factories import (
     KindFactory,
     RepositoryFactory,
     ServiceFactory,
+    TierFactory,
     UserFactory,
 )
 
@@ -29,6 +30,7 @@ from . import dummy
 register(ApiTokenFactory)
 register(RepositoryFactory)
 register(IssueFactory)
+register(TierFactory)
 register(UserFactory)
 register(ServiceFactory)
 register(EnvironmentFactory)

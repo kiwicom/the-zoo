@@ -19,7 +19,7 @@ from zoo.auditing.check_discovery import Kind
 from zoo.auditing.models import Issue
 from zoo.datacenters.models import InfraNode
 from zoo.repos.models import Repository
-from zoo.services.models import Environment, Impact, Service, Status
+from zoo.services.models import Environment, Impact, Service, Status, Tier
 
 
 class RepositoryFactory(DjangoModelFactory):
@@ -45,6 +45,16 @@ class IssueFactory(DjangoModelFactory):
     )
 
 
+class TierFactory(DjangoModelFactory):
+    class Meta:
+        model = Tier
+        django_get_or_create = ["level"]
+
+    level = Faker("pyint")
+    name = LazyAttribute(lambda o: f"Tier {o.level}")
+    description = Faker("paragraph", nb_sentences=3)
+
+
 class ServiceFactory(DjangoModelFactory):
     class Meta:
         model = Service
@@ -53,6 +63,7 @@ class ServiceFactory(DjangoModelFactory):
     name = Faker("slug")
     status = LazyFunction(lambda: choice([item.value for item in Status] + [None]))
     impact = LazyFunction(lambda: choice([item.value for item in Impact] + [None]))
+    tier = SubFactory(TierFactory, level=LazyFunction(lambda: randint(1, 4)))
     repository = SubFactory(
         RepositoryFactory, owner=SelfAttribute("..owner"), name=SelfAttribute("..name")
     )

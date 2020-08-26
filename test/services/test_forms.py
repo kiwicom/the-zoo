@@ -33,6 +33,7 @@ service_form_data = {
     "name": fake.word(),
     "status": "production",
     "impact": "profit",
+    "tier": "",
     "slack_channel": "dev-null",
     "repository": "",
     "pagerduty_url": fake.url(),

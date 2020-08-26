@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.postgres import forms as pg_forms
 from django.core.exceptions import ValidationError
 
-from ..base.forms import SentryProjectInput
+from ..base.forms import SentryProjectInput, SlackChannelInput, WidgetAttrsMixin
 from ..checklists.forms import TagInput
 from ..repos.forms import RepoInput
 from . import models
@@ -45,7 +45,7 @@ class EnvironmentForm(forms.ModelForm):
         labels = {"dashboard_url": "Dashboard URL", "logs_url": "Logs URL"}
 
 
-class ServiceForm(forms.ModelForm):
+class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
     class Meta:
         model = models.Service
         fields = [
@@ -65,11 +65,15 @@ class ServiceForm(forms.ModelForm):
         labels = {
             "pagerduty_url": "PagerDuty URL",
             "docs_url": "Documentation URL",
-            "sonarqube_project": "Sonarqube project Key",
+            "sonarqube_project": "Sonarqube project key",
+        }
+        _placeholders = {
+            "name": "New cool service",
         }
         widgets = {
             "repository": RepoInput(),
             "sentry_project": SentryProjectInput(),
+            "slack_channel": SlackChannelInput(),
             "tags": TagInput(),
         }
 

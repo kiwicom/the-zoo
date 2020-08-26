@@ -231,7 +231,8 @@ SENTRY_ORGANIZATION = env("ZOO_SENTRY_ORGANIZATION")
 SENTRY_API_KEY = env("ZOO_SENTRY_API_KEY")
 
 sentry_sdk.init(
-    integrations=[DjangoIntegration()], release=version,
+    integrations=[DjangoIntegration()],
+    release=version,
 )
 
 

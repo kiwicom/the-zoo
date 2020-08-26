@@ -163,7 +163,9 @@ def discover_checks():
 
 def _get_package_members(package, filter_by_re=None):
     for _, module_full_name, ispkg in pkgutil.walk_packages(
-        path=package.__path__, prefix=package.__name__ + ".", onerror=log_error,
+        path=package.__path__,
+        prefix=package.__name__ + ".",
+        onerror=log_error,
     ):
         if not ispkg:
             module_name = module_full_name.rsplit(".", 1)[1]

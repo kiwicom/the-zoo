@@ -11,9 +11,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="service", name="name", field=models.CharField(max_length=100),
+            model_name="service",
+            name="name",
+            field=models.CharField(max_length=100),
         ),
         migrations.AlterField(
-            model_name="service", name="owner", field=models.CharField(max_length=100),
+            model_name="service",
+            name="owner",
+            field=models.CharField(max_length=100),
         ),
     ]

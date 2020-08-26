@@ -11,6 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name="environment", options={"ordering": ["name"]},
+            name="environment",
+            options={"ordering": ["name"]},
         ),
     ]

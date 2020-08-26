@@ -79,7 +79,9 @@ class Migration(migrations.Migration):
                     models.CharField(blank=True, max_length=250, null=True),
                 ),
             ],
-            options={"verbose_name_plural": "helpers",},
+            options={
+                "verbose_name_plural": "helpers",
+            },
         ),
         migrations.CreateModel(
             name="Hints",
@@ -96,7 +98,9 @@ class Migration(migrations.Migration):
                 ("library_form_explanation", models.TextField(max_length=1500)),
                 ("service_form_explanation", models.TextField(max_length=1500)),
             ],
-            options={"verbose_name_plural": "hints",},
+            options={
+                "verbose_name_plural": "hints",
+            },
         ),
         migrations.CreateModel(
             name="Placeholders",
@@ -167,6 +171,8 @@ class Migration(migrations.Migration):
                     models.CharField(blank=True, max_length=250, null=True),
                 ),
             ],
-            options={"verbose_name_plural": "placeholders",},
+            options={
+                "verbose_name_plural": "placeholders",
+            },
         ),
     ]

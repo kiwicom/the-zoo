@@ -11,6 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name="library", options={"verbose_name_plural": "libraries"},
+            name="library",
+            options={"verbose_name_plural": "libraries"},
         ),
     ]

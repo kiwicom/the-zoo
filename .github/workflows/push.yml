@@ -33,7 +33,7 @@ jobs:
     name: Code style
     runs-on: ubuntu-latest
     container:
-      image: kiwicom/black:19.10b0
+      image: kiwicom/black:20.8b1
       options: -u root
 
     steps:

@@ -11,6 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name="apitoken", options={"verbose_name": "API token"},
+            name="apitoken",
+            options={"verbose_name": "API token"},
         ),
     ]

@@ -27,7 +27,9 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(blank=True, default="", max_length=80)),
                 ("description", models.TextField()),
             ],
-            options={"ordering": ["level"],},
+            options={
+                "ordering": ["level"],
+            },
         ),
         migrations.AddField(
             model_name="service",

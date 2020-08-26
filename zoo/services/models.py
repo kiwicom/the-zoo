@@ -44,6 +44,13 @@ class Service(models.Model):
         blank=True,
         max_length=100,
     )
+    tier = models.ForeignKey(
+        "services.Tier",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="services",
+    )
     slack_channel = models.CharField(max_length=80, null=True, blank=True)
     sentry_project = models.CharField(max_length=100, null=True, blank=True)
     sonarqube_project = models.CharField(max_length=250, null=True, blank=True)
@@ -153,6 +160,21 @@ class Service(models.Model):
 
     def __str__(self):
         return f"{self.key}"
+
+
+class Tier(models.Model):
+    class Meta:
+        ordering = ["level"]
+
+    level = models.PositiveSmallIntegerField(unique=True)
+    name = models.CharField(max_length=80, default="", blank=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name or f"Tier {self.level}"
+
+    def __repr__(self):
+        return f"<Tier {self.level}: {self.name}>"
 
 
 class Environment(models.Model):

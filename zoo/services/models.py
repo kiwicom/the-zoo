@@ -30,8 +30,8 @@ class Service(models.Model):
     class Meta:
         unique_together = ("owner", "name")
 
-    owner = pg_fields.CICharField(max_length=100)
-    name = pg_fields.CICharField(max_length=100)
+    owner = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     status = models.CharField(
         choices=((item.value, item.value) for item in Status),
         null=True,
@@ -197,7 +197,7 @@ class Environment(models.Model):
 
 
 def slugify_attribute(attribute):
-    return re.sub("[^0-9a-zA-Z]+", "-", attribute)
+    return re.sub("[^0-9a-zA-Z]+", "-", attribute.lower())
 
 
 @receiver(models.signals.pre_save, sender=Service)

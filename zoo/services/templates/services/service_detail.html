@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block navtitle %}
-  {% with project_delete_view='service_delete' icon='cogs' to_url='/services' header=object.name|add:' service' project_update_view='service_update' subheader='owned by '|add:object.owner %}
+  {% with project_delete_view='service_delete' icon='cogs' to_url='/services' header=object.name project_update_view='service_update' subheader='owned by '|add:object.owner %}
     {{ block.super }}
   {% endwith %}
 {% endblock %}

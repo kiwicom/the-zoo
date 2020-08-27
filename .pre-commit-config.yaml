@@ -37,7 +37,7 @@ repos:
         language_version: system
 
   - repo: https://github.com/asottile/seed-isort-config
-    rev: v1.9.3
+    rev: v2.2.0
     hooks:
       - id: seed-isort-config
 

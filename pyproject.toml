@@ -22,6 +22,6 @@ exclude = '''
 # config compatible with Black
 line_length = 88
 multi_line_output = 3
-default_section = "THIRDPARTY"
 include_trailing_comma = true
+known_first_party = ["zoo"]
 known_third_party = ["arrow", "attr", "boto3", "celery", "datadog", "dateutil", "ddtrace", "django", "djangoql", "environ", "factory", "faker", "fakeredis", "freezegun", "github", "gitlab", "google", "googleapiclient", "graphene", "graphene_django", "graphql_relay", "httpretty", "jsonschema", "kubernetes", "markdown", "pkg_resources", "prance", "pygerduty", "pytest", "pytest_factoryboy", "raven", "redis", "requests", "setuptools", "slacker", "snapshottest", "structlog", "testing", "urllib3", "yaml"]

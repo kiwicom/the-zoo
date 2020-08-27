@@ -19,6 +19,7 @@
           <div class="field">
             <label>{{ field.label }}</label>
             {{ field }}
+            {% if field.field.help_text %}<p><span class="ui small grey text">{{ field.field.help_text }}</span></p>{% endif %}
           </div>
           {% endwith %}
         {% endfor %}

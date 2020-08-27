@@ -51,6 +51,7 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
         fields = [
             "owner",
             "name",
+            "description",
             "impact",
             "status",
             "tier",

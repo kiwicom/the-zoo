@@ -70,6 +70,7 @@ class Service(models.Model):
         related_name="services",
     )
     pagerduty_url = models.URLField(max_length=500, null=True, blank=True)
+    pagerduty_service = models.CharField(max_length=80, default="", blank=True)
     docs_url = models.URLField(max_length=500, null=True, blank=True)
     owner_slug = models.SlugField(max_length=140)
     name_slug = models.SlugField(max_length=140)

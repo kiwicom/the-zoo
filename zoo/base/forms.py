@@ -15,6 +15,10 @@ class WidgetAttrsMixin:
             widget.attrs = {**widget.attrs, **{"placeholder": placeholder}}
 
 
+class PagerdutyServiceInput(widgets.TextInput):
+    template_name = "shared/fields/pagerduty_input.html"
+
+
 class SentryProjectInput(widgets.TextInput):
     template_name = "shared/fields/sentry_input.html"
 

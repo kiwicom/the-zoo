@@ -34,6 +34,8 @@ ZOO_JSON_SCHEMA = """
             type: ["string", "null"]
         pagerduty_url:
             type: ["string", "null"]
+        pagerduty_service:
+            type: string
         tags:
             type: array
             items:
@@ -87,6 +89,7 @@ def generate(service: Service) -> str:
         "sentry_project": service.sentry_project,
         "sonarqube_project": service.sonarqube_project,
         "pagerduty_url": service.pagerduty_url,
+        "pagerduty_service": service.pagerduty_service,
         "tags": service.tags,
         "environments": [],
     }

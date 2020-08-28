@@ -64,7 +64,6 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
             "sentry_project",
             "sonarqube_project",
             "repository",
-            "pagerduty_url",
             "pagerduty_service",
             "docs_url",
             "tags",

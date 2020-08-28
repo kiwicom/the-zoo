@@ -126,7 +126,6 @@ def update_or_create_service(data: Dict, proj: Dict) -> None:
         "slack_channel": data["slack_channel"],
         "sentry_project": data["sentry_project"],
         "sonarqube_project": data["sonarqube_project"],
-        "pagerduty_url": data["pagerduty_url"],
         "pagerduty_service": data["pagerduty_service"],
         "tags": data["tags"],
     }

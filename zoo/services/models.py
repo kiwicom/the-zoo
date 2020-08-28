@@ -69,7 +69,6 @@ class Service(models.Model):
         blank=True,
         related_name="services",
     )
-    pagerduty_url = models.URLField(max_length=500, null=True, blank=True)
     pagerduty_service = models.CharField(max_length=80, default="", blank=True)
     docs_url = models.URLField(max_length=500, null=True, blank=True)
     owner_slug = models.SlugField(max_length=140)
@@ -150,12 +149,10 @@ class Service(models.Model):
 
     @property
     def pagerduty_service_id(self):
-        if self.pagerduty_url is None:
+        if not self.pagerduty_service:
             return
 
-        service_re = re.search(
-            r"pagerduty.com\/services\/([A-Z0-9]+)", self.pagerduty_url
-        )
+        service_re = re.match(r"services\/([A-Z0-9]+)", self.pagerduty_service)
         if service_re:
             return service_re.group(1)
 

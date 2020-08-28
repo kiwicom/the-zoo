@@ -65,7 +65,7 @@ class DependencyUsage(models.Model):
     major_version = models.BigIntegerField(null=True, blank=True)
     minor_version = models.BigIntegerField(null=True, blank=True)
     patch_version = models.BigIntegerField(null=True, blank=True)
-    version = models.CharField(max_length=100, null=True, blank=True)
+    version = models.CharField(max_length=200, null=True, blank=True)
     for_production = models.NullBooleanField(
         null=True, blank=True, verbose_name="production"
     )

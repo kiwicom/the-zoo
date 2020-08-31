@@ -20,18 +20,17 @@ snapshots['test_repository 1'] = {
 }
 
 snapshots['test_service 1'] = {
-    'data': {
-        'node': {
-            'docsUrl': 'https://docs/skypicker/docs/',
-            'id': 'U2VydmljZToxMA==',
-            'impact': 'sales',
-            'name': 'allen-nobles',
-            'owner': 'bradltwat',
-            'pagerdutyUrl': 'https://pagerduty/sales/',
-            'slackChannel': 'https://gitlab.slack',
-            'status': 'fixed'
+    'errors': [
+        {
+            'locations': [
+                {
+                    'column': 17,
+                    'line': 11
+                }
+            ],
+            'message': 'Cannot query field "pagerdutyUrl" on type "Service". Did you mean "pagerdutyService"?'
         }
-    }
+    ]
 }
 
 snapshots['test_issue 1'] = {

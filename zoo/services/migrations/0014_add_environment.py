@@ -12,7 +12,7 @@ def move_data(apps, schema_editor):
     for service in Service.objects.all():
         Environment.objects.create(
             service_id=service.id,
-            name="default",
+            name="production",
             service_urls=[service.service_url] if service.service_url else [],
             health_check_url=service.health_check_url,
             dashboard_url=service.dashboard_url,
@@ -23,7 +23,7 @@ def move_data_reverse(apps, schema_editor):
     Service = apps.get_model("services", "Service")
     Environment = apps.get_model("services", "Environment")
 
-    for environment in Environment.objects.filter(name="default").all():
+    for environment in Environment.objects.filter(name="production").all():
         service = Service.objects.get(id=environment.service_id)
         service.service_url = (
             environment.service_urls[0] if environment.service_urls else None

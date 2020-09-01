@@ -12,6 +12,7 @@
       <h2 class="ui header">
         {% if project %}Update {{ project }}{% else %}New {{ project_type_singular }}{% endif %}
       </h2>
+      <p class="ui secondary yellow segment">This form is only meant to be used for a <strong>{{ project_type_singular }}</strong>.</p>
       <form class="ui form" method="post">
         {% csrf_token %}
         {% for field in form %}

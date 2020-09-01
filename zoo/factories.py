@@ -2,7 +2,6 @@ from random import choice, randint
 
 from django.conf import settings
 from factory import (
-    DjangoModelFactory,
     Factory,
     Faker,
     LazyAttribute,
@@ -10,6 +9,7 @@ from factory import (
     SelfAttribute,
     SubFactory,
 )
+from factory.django import DjangoModelFactory
 from faker import Faker as OriginalFaker
 
 from zoo.analytics.models import Dependency, DependencyType, DependencyUsage

@@ -96,12 +96,6 @@ def generate_slugs(sender, instance, *args, **kwargs):
     instance.name_slug = slugify_attribute(instance.name)
 
 
-@receiver(models.signals.pre_save, sender=Library)
-def generate_tags(sender, instance, *args, **kwargs):
-    if "general" not in instance.tags:
-        instance.tags.append("general")
-
-
 class LibraryQLSchema(DjangoQLSchema):
     include = (Library,)
 

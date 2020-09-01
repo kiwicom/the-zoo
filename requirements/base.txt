@@ -17,8 +17,8 @@ boto3==1.14.52            # via -r base.in
 botocore==1.17.52         # via boto3, s3transfer
 brotli==1.0.9             # via whitenoise
 cachetools==4.1.1         # via google-auth
-celery-redbeat==1.0.0     # via -r base.in
 celery==4.4.7             # via -r base.in, celery-redbeat
+celery-redbeat==1.0.0     # via -r base.in
 certifi==2020.6.20        # via kubernetes, requests
 chardet==3.0.4            # via prance, requests
 colorama==0.4.3           # via -r base.in
@@ -26,24 +26,24 @@ datadog==0.39.0           # via -r base.in
 ddtrace==0.41.2           # via -r base.in
 decorator==4.4.2          # via datadog, ipython
 deprecated==1.2.10        # via pygithub
+django==2.2.16            # via -r base.in, django-debug-toolbar, django-silk, graphene-django
 django-debug-toolbar==2.2  # via -r base.in
 django-environ==0.4.5     # via -r base.in
 django-extensions==3.0.6  # via -r base.in
 django-silk==4.1.0        # via -r base.in
 django-stronghold==0.4.0  # via -r base.in
-django==2.2.16            # via -r base.in, django-debug-toolbar, django-silk, graphene-django
 djangoql==0.14.0          # via -r base.in
 dockerfile-parse==1.0.0   # via -r base.in
 docutils==0.15.2          # via botocore
 gevent==20.6.2            # via gunicorn
 google-api-core==1.22.1   # via google-api-python-client
 google-api-python-client==1.11.0  # via -r base.in
-google-auth-httplib2==0.0.4  # via google-api-python-client
 google-auth==1.21.0       # via google-api-core, google-api-python-client, google-auth-httplib2, kubernetes
+google-auth-httplib2==0.0.4  # via google-api-python-client
 googleapis-common-protos==1.52.0  # via google-api-core
 gprof2dot==2019.11.30     # via django-silk
-graphene-django==2.13.0   # via -r base.in
 graphene==2.1.8           # via -r base.in, graphene-django
+graphene-django==2.13.0   # via -r base.in
 graphql-core==2.3.2       # via graphene, graphene-django, graphql-relay
 graphql-relay==2.0.1      # via graphene
 greenlet==0.4.16          # via gevent
@@ -52,8 +52,8 @@ hiredis==1.1.0            # via -r base.in
 httplib2==0.18.1          # via google-api-python-client, google-auth-httplib2
 idna==2.10                # via requests
 intervaltree==3.1.0       # via ddtrace
-ipython-genutils==0.2.0   # via traitlets
 ipython==7.18.1           # via -r base.in
+ipython-genutils==0.2.0   # via traitlets
 jedi==0.17.2              # via ipython
 jinja2==2.11.2            # via django-silk
 jmespath==0.10.0          # via boto3, botocore
@@ -74,8 +74,8 @@ prompt-toolkit==3.0.7     # via ipython
 protobuf==3.13.0          # via ddtrace, google-api-core, googleapis-common-protos
 psycopg2-binary==2.8.5    # via -r base.in
 ptyprocess==0.6.0         # via pexpect
-pyasn1-modules==0.2.8     # via google-auth
 pyasn1==0.4.8             # via pyasn1-modules, rsa
+pyasn1-modules==0.2.8     # via google-auth
 pycodestyle==2.6.0        # via autopep8
 pygerduty==0.38.3         # via -r base.in
 pygithub==1.53            # via -r base.in
@@ -88,8 +88,8 @@ pytz==2020.1              # via celery, django, django-silk, google-api-core
 pyyaml==5.3.1             # via -r base.in, kubernetes, openapi-spec-validator, prance
 raven==6.10.0             # via -r base.in
 redis==3.5.3              # via -r base.in, celery-redbeat
-requests-oauthlib==1.3.0  # via kubernetes
 requests==2.24.0          # via -r base.in, datadog, django-silk, google-api-core, kubernetes, prance, pygithub, python-gitlab, requests-oauthlib, slacker
+requests-oauthlib==1.3.0  # via kubernetes
 requirements-parser==0.2.0  # via -r base.in
 rsa==4.6                  # via google-auth
 rx==1.6.1                 # via graphql-core

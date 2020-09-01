@@ -3,7 +3,7 @@
 A smart service catalogue providing an overview of your services' development and
 operations.
 
-[![Python: 3.6](https://img.shields.io/badge/python-3.7-blue.svg)](https://python.org)
+[![Python: 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://python.org)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-black.svg)](https://github.com/ambv/black)
 [![Discord](https://img.shields.io/discord/427417507276783616.svg)](https://discord.gg/Tx9FkEz)
 [![Gitlab pipeline status (branch)](https://img.shields.io/gitlab/pipeline/kiwicom/the-zoo/master.svg)](https://gitlab.com/kiwicom/the-zoo/pipelines)

@@ -10,7 +10,7 @@ RUN yarn install --frozen-lockfile && \
 COPY zoo/ source/
 RUN yarn production
 
-FROM python:3.7-slim
+FROM python:3.8-slim
 
 ENV DJANGO_SETTINGS_MODULE=zoo.base.settings
 RUN addgroup --system macaque && \

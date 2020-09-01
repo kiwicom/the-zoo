@@ -1,6 +1,6 @@
 { version, pkgs ? import <nixpkgs> {}}:
 with pkgs;
-with pkgs.python37Packages;
+with pkgs.python38Packages;
 
 stdenv.mkDerivation rec {
   name = "the-zoo";

@@ -2,19 +2,19 @@ from zoo.analytics.tasks.utils import DockerImageId
 
 
 def test_docker_image_id_parsing_short():
-    parsed = DockerImageId("python:3.7")
-    assert parsed.full_image_id == "python:3.7"
+    parsed = DockerImageId("python:3.8")
+    assert parsed.full_image_id == "python:3.8"
     assert parsed.registry is None
     assert parsed.registry_host_name is None
     assert parsed.registry_port is None
-    assert parsed.full_image_name == "python:3.7"
+    assert parsed.full_image_name == "python:3.8"
     assert parsed.full_image_name_no_tag == "python"
     assert parsed.username is None
     assert parsed.full_repository_name == "python"
     assert parsed.repository_name == "python"
     assert parsed.namespaces is None
-    assert parsed.tag == "3.7"
-    assert parsed.version == "3.7"
+    assert parsed.tag == "3.8"
+    assert parsed.version == "3.8"
     assert parsed.full_os is None
     assert parsed.os is None
     assert parsed.os_version is None
@@ -22,19 +22,19 @@ def test_docker_image_id_parsing_short():
 
 
 def test_docker_image_id_parsing_short_with_os():
-    parsed = DockerImageId("python:3.7-alpine")
-    assert parsed.full_image_id == "python:3.7-alpine"
+    parsed = DockerImageId("python:3.8-alpine")
+    assert parsed.full_image_id == "python:3.8-alpine"
     assert parsed.registry is None
     assert parsed.registry_host_name is None
     assert parsed.registry_port is None
-    assert parsed.full_image_name == "python:3.7-alpine"
+    assert parsed.full_image_name == "python:3.8-alpine"
     assert parsed.full_image_name_no_tag == "python"
     assert parsed.username is None
     assert parsed.full_repository_name == "python"
     assert parsed.repository_name == "python"
     assert parsed.namespaces is None
-    assert parsed.tag == "3.7-alpine"
-    assert parsed.version == "3.7"
+    assert parsed.tag == "3.8-alpine"
+    assert parsed.version == "3.8"
     assert parsed.full_os == "alpine"
     assert parsed.os == "alpine"
     assert parsed.os_version is None
@@ -42,19 +42,19 @@ def test_docker_image_id_parsing_short_with_os():
 
 
 def test_docker_image_id_parsing_short_with_os_version():
-    parsed = DockerImageId("python:3.7-alpine3.9")
-    assert parsed.full_image_id == "python:3.7-alpine3.9"
+    parsed = DockerImageId("python:3.8-alpine3.9")
+    assert parsed.full_image_id == "python:3.8-alpine3.9"
     assert parsed.registry is None
     assert parsed.registry_host_name is None
     assert parsed.registry_port is None
-    assert parsed.full_image_name == "python:3.7-alpine3.9"
+    assert parsed.full_image_name == "python:3.8-alpine3.9"
     assert parsed.full_image_name_no_tag == "python"
     assert parsed.username is None
     assert parsed.full_repository_name == "python"
     assert parsed.repository_name == "python"
     assert parsed.namespaces is None
-    assert parsed.tag == "3.7-alpine3.9"
-    assert parsed.version == "3.7"
+    assert parsed.tag == "3.8-alpine3.9"
+    assert parsed.version == "3.8"
     assert parsed.full_os == "alpine3.9"
     assert parsed.os == "alpine"
     assert parsed.os_version == "3.9"

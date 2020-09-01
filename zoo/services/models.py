@@ -74,7 +74,10 @@ class Service(models.Model):
     owner_slug = models.SlugField(max_length=140)
     name_slug = models.SlugField(max_length=140)
     tags = pg_fields.ArrayField(
-        base_field=models.CharField(max_length=50), blank=True, default=list
+        base_field=models.CharField(max_length=50),
+        blank=True,
+        default=list,
+        help_text="Used for filtering and defining presets of checks",
     )
 
     def get_absolute_url(self):

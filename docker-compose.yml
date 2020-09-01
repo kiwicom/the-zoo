@@ -44,7 +44,7 @@ services:
       ["yarn", "development"]
 
   postgres:
-    image: postgres:10.1-alpine
+    image: postgres:12-alpine
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     environment:

@@ -1,4 +1,4 @@
-import * as R from 'ramda'
+import { filter, where, contains, propSatisfies, find, propEq } from "ramda"
 import jQuery from 'jquery/src/jquery'
 import 'fomantic-ui-css/semantic.min.js'
 import Vue from 'vue'
@@ -21,14 +21,14 @@ const store = new Vuex.Store({
   },
   getters: {
     getFilteredSuggestions (state) {
-      return R.filter(R.where({
-        reference: R.contains(state.enteredText)
+      return filter(where({
+        reference: contains(state.enteredText)
       }), state.repoList)
     },
     getRepoId (state) {
       return (repoName) => {
-        return R.filter(
-          R.propSatisfies(
+        return filter(
+          propSatisfies(
             ref => ref.split(' - ')[1] === repoName,
             'reference'
           ), state.repoList
@@ -37,7 +37,7 @@ const store = new Vuex.Store({
     },
     getRepoReference (state) {
       return (repoId) => {
-        return R.find(R.propEq('id', repoId), state.repoList).reference
+        return find(propEq('id', repoId), state.repoList).reference
       }
     }
   },
@@ -49,7 +49,7 @@ const store = new Vuex.Store({
       state.inputValue = id
     },
     refreshEnteredText (state) {
-      const matchedValue = R.find(R.propEq('id', state.inputValue), state.repoList)
+      const matchedValue = find(propEq('id', state.inputValue), state.repoList)
       state.enteredText = matchedValue ? matchedValue.reference : ''
     },
     clearInputs (state) {

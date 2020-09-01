@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import * as R from "ramda"
+import { take } from "ramda"
 
 export default {
   template: "#repo-input-suggestions-markup",
@@ -48,7 +48,7 @@ export default {
       return this.$store.getters.getFilteredSuggestions;
     },
     visibleSuggestions () {
-      return R.take(this.showCount, this.suggestions);
+      return take(this.showCount, this.suggestions);
     },
     count () {
       return this.suggestions.length;

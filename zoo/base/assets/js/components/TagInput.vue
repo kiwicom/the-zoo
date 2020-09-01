@@ -35,18 +35,18 @@
 </style>
 
 <script>
-    import * as R from "ramda"
+    import { difference, split } from "ramda"
 
     export default {
         data () {
             return {
-                selectedTags: tagInputInfo.initialValue ? R.split(',', tagInputInfo.initialValue) : [],
+                selectedTags: tagInputInfo.initialValue ? split(',', tagInputInfo.initialValue) : [],
                 inputName: tagInputInfo.name
             }
         },
         computed: {
             availableTags () {
-                return R.difference(tagList, this.selectedTags)
+                return difference(tagList, this.selectedTags)
             },
             value () {
                 return this.selectedTags.join(',')
@@ -54,7 +54,7 @@
         },
         methods: {
             removeTag (tag) {
-                this.selectedTags = R.difference(this.selectedTags, [tag])
+                this.selectedTags = difference(this.selectedTags, [tag])
             }
         }
     }

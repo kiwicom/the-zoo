@@ -1,13 +1,29 @@
 import '../style/audit_overview.less'
-import * as R from 'ramda'
+import {
+  contains,
+  curry,
+  difference,
+  differenceWith,
+  filter,
+  find,
+  map,
+  pick,
+  prop,
+  propEq,
+  startsWith,
+  sum,
+  uniq,
+  whereEq,
+  without,
+} from "ramda"
 import Vue from 'vue'
 import Vuex from 'vuex'
 import IssueList from './components/IssueList'
 import MainHeader from './components/MainHeader'
 import 'fomantic-ui-css/semantic.min.js'
 
-const propStartsWith = R.curry(function (propName, prefix, element) {
-  return R.startsWith(prefix, R.prop(propName, element))
+const propStartsWith = curry(function (propName, prefix, element) {
+  return startsWith(prefix, prop(propName, element))
 })
 
 Vue.filter('pluralize', pluralize)
@@ -30,7 +46,7 @@ const store = new Vuex.Store({
     selectedPatches (state) {
       const issues = state.data.issues;
       const selected = state.selectedIssues;
-      return R.filter(
+      return filter(
         (name) => issues[name].patch !== null && selected.hasOwnProperty(name),
         Object.keys(issues),
       )
@@ -39,15 +55,15 @@ const store = new Vuex.Store({
       return Object.keys(state.selectedIssues).length
     },
     selectedIssuesCount (state) {
-      return R.sum(
-        R.map((repos) => repos.length, Object.values(state.selectedIssues))
+      return sum(
+        map((repos) => repos.length, Object.values(state.selectedIssues))
       )
     },
     selectedPatchesCount (state, getters) {
-      return R.sum(
-        R.map(
+      return sum(
+        map(
           (repos) => repos.length,
-          Object.values(R.pick(getters.selectedPatches, state.selectedIssues))
+          Object.values(pick(getters.selectedPatches, state.selectedIssues))
         )
       )
     },
@@ -60,16 +76,16 @@ const store = new Vuex.Store({
       return (issue_name, repo_id) => {
         return (
           state.selectedIssues.hasOwnProperty(issue_name) &&
-          R.contains(repo_id, state.selectedIssues[issue_name])
+          contains(repo_id, state.selectedIssues[issue_name])
         )
       }
     },
     filteredFilters (state) {
-      return R.filter(propStartsWith('name', state.filteringTerm), state.data.filters.available)
+      return filter(propStartsWith('name', state.filteringTerm), state.data.filters.available)
     },
     appliedFiltersByType (state) {
       return function (type) {
-        return R.filter(R.propEq('type', type), state.data.filters.applied)
+        return filter(propEq('type', type), state.data.filters.applied)
       }
     }
   },
@@ -84,25 +100,25 @@ const store = new Vuex.Store({
       state.data.filters = filters
     },
     initFilters (state) {
-      state.data.filters.available = R.differenceWith(
-        R.whereEq,
+      state.data.filters.available = differenceWith(
+        whereEq,
         state.data.filters.available,
         state.data.filters.applied
       )
     },
     addAppliedFilter (state, filter) {
-      const filterObj = R.find(R.whereEq(filter), state.data.filters.available)
+      const filterObj = find(whereEq(filter), state.data.filters.available)
 
       if (filterObj) {
-        state.data.filters.available = R.difference(state.data.filters.available, [filterObj])
+        state.data.filters.available = difference(state.data.filters.available, [filterObj])
         state.data.filters.applied.push(filterObj)
       }
     },
     removeAppliedFilter (state, filter) {
-      const filterObj = R.find(R.whereEq(filter), state.data.filters.applied)
+      const filterObj = find(whereEq(filter), state.data.filters.applied)
 
       if (filterObj) {
-        state.data.filters.applied = R.difference(state.data.filters.applied, [filterObj])
+        state.data.filters.applied = difference(state.data.filters.applied, [filterObj])
         state.data.filters.available.push(filterObj)
       }
     },
@@ -110,8 +126,8 @@ const store = new Vuex.Store({
       state.filteringTerm = term
     },
     selectIssues (state, { name, repos_ids }) {
-      var selected = repos_ids || R.uniq(
-        R.map(
+      var selected = repos_ids || uniq(
+        map(
           (element) => element.repository.id,
           state.data.issues[name].projects
         )
@@ -121,7 +137,7 @@ const store = new Vuex.Store({
     },
     unselectIssues (state, { name, repos_ids }) {
       if (repos_ids !== undefined) {
-        state.selectedIssues[name] = R.without(repos_ids, state.selectedIssues[name])
+        state.selectedIssues[name] = without(repos_ids, state.selectedIssues[name])
       }
       if (repos_ids === undefined || state.selectedIssues[name].length === 0) {
         Vue.delete(state.selectedIssues, name)

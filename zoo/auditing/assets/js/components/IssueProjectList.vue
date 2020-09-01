@@ -22,12 +22,12 @@
 
 <script>
   import ProjectHeader from "./ProjectHeader";
-  import * as R from "ramda";
+  import { curry, prepend, take, group, drop } from "ramda"
 
-  var groupsOf = R.curry(function group(n, list) {
-    return R.isEmpty(list)
+  var groupsOf = curry(function group(n, list) {
+    return isEmpty(list)
       ? []
-      : R.prepend(R.take(n, list), group(n, R.drop(n, list)));
+      : prepend(take(n, list), group(n, drop(n, list)));
   });
 
   export default {

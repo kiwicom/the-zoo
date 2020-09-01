@@ -25,7 +25,6 @@
 <script>
   import IssueProjectList from './IssueProjectList'
   import IssueDescription from './IssueDescription'
-  import * as R from "ramda";
 
 
   const URI = require("urijs");

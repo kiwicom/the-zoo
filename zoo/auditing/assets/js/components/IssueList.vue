@@ -44,18 +44,18 @@
 </template>
 
 <script>
-  import * as R from "ramda";
+  import { groupBy, sortBy } from "ramda"
   import IssueHeader from "./IssueHeader";
 
   const actionModal = $(".ui.basic.modal");
   const actionModalText = actionModal.find("#action-modal-text");
 
-  const bySeverity = R.groupBy(issue => {
+  const bySeverity = groupBy(issue => {
     const data = issue[1];
     return data.severity;
   });
 
-  const severityOrder = R.sortBy(category => {
+  const severityOrder = sortBy(category => {
     const key = category[0];
     switch (key) {
       case "critical":

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import * as R from "ramda"
+import { match } from "ramda"
 import RepoInputSuggestions from "./RepoInputSuggestions"
 import $ from 'jquery/src/jquery'
 
@@ -84,7 +84,7 @@ export default {
       set: function(val) {
         // Here I'm capturing the hostname, the user and the repo name even if right now
         // we only use the last two
-        const regexMatch = R.match(
+        const regexMatch = match(
           /https?\:\/\/([^\/]+)?\/(.+)\/([^\/]+)\/?/,
           val
         )

@@ -6,7 +6,7 @@
 
 <script>
   import SearchInput from './SearchInput'
-  import * as R from 'ramda'
+  import { map, prop } from "ramda"
   const URI = require('urijs')
 
   export default {
@@ -27,13 +27,13 @@
         const newUrl = URI(auditOverviewUrl)
 
         newUrl.addSearch({
-          owner: R.map(R.prop('name'), store.getters.appliedFiltersByType('owner'))
+          owner: map(prop('name'), store.getters.appliedFiltersByType('owner'))
         })
         newUrl.addSearch({
-          namespace: R.map(R.prop('name'), store.getters.appliedFiltersByType('namespace'))
+          namespace: map(prop('name'), store.getters.appliedFiltersByType('namespace'))
         })
         newUrl.addSearch({
-          status: R.map(R.prop('name'), store.getters.appliedFiltersByType('status'))
+          status: map(prop('name'), store.getters.appliedFiltersByType('status'))
         })
 
         window.location = newUrl

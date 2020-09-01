@@ -3,7 +3,6 @@ var glob = require("glob")
 const { VueLoaderPlugin } = require("vue-loader")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const StyleLintPlugin = require("stylelint-webpack-plugin")
-const nodeExternals = require('webpack-node-externals')
 
 const extractText = new MiniCssExtractPlugin({
   filename: "[name].css",
@@ -27,8 +26,6 @@ function scanStaticFiles() {
 
 module.exports = {
   entry: scanStaticFiles,
-  target: 'node',
-  externals: [nodeExternals()],
   resolve: {
     extensions: [".js", ".vue", ".less"],
     alias: {
@@ -101,10 +98,6 @@ module.exports = {
   plugins: [
     extractText,
     new VueLoaderPlugin(),
-    new StyleLintPlugin({
-      configFile: path.resolve(__dirname, "..", "source/base/assets/.stylelintrc"),
-      context: path.resolve(__dirname, "..", "source/**/assets/"),
-      files: '**/*.less'
-    }),
+    new MiniCssExtractPlugin()
   ]
 }

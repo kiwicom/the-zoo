@@ -145,8 +145,6 @@ def assert_environment(got: Environment, expected: Dict) -> None:
 
 def assert_tags(got: List, expected: List):
     # because pre_save signal on Service
-    if "general" not in expected:
-        expected.append("general")
 
     assert len(got) == len(expected)
     assert sorted(got) == sorted(expected)

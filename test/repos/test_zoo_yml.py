@@ -55,22 +55,20 @@ slack_channel: https://slackchannel
 sentry_project: null
 sonarqube_project: null
 pagerduty_service: /services
-tags:
-- general
+tags: []
 environments:
-- name: staging
-  dashboard_url: https://dashboardurl
-  health_check_url: https://healthcheckurl
-  service_urls:
-  - https://serviceurl1
-  - https://serviceurl2
 - name: production
   dashboard_url: https://dashboardurl
   health_check_url: https://healthcheckurl
   service_urls:
   - https://serviceurl1
   - https://serviceurl2
-
+- name: staging
+  dashboard_url: https://dashboardurl
+  health_check_url: https://healthcheckurl
+  service_urls:
+  - https://serviceurl1
+  - https://serviceurl2
 """
     service_1 = Service.objects.get(pk=1)
     content = uut.generate(service_1)

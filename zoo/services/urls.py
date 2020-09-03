@@ -11,6 +11,11 @@ urlpatterns = [
         name="service_detail",
     ),
     path(
+        "<str:owner_slug>/<str:name_slug>/openapi",
+        views.ServiceOpenApiDefinition.as_view(),
+        name="service_openapi",
+    ),
+    path(
         "<str:owner_slug>/<str:name_slug>/update",
         views.ServiceUpdate.as_view(),
         name="service_update",

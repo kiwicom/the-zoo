@@ -1,13 +1,15 @@
+import json
 import re
 from collections import defaultdict
 from datetime import timedelta
 from typing import Dict, List
 
+import requests
 import structlog
 from django.core.exceptions import SuspiciousOperation
 from django.db import transaction
 from django.db.models import Q, Sum, query
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic as generic_views
@@ -16,7 +18,9 @@ from djangoql.queryset import apply_search
 
 from ..auditing.models import Issue
 from ..checklists.steps import STEPS
+from ..repos.utils import openapi_definition
 from . import forms, models
+from .models import Service
 
 log = structlog.get_logger()
 
@@ -253,3 +257,22 @@ class ServiceUpdate(ServiceEnvironmentMixin, ServiceMixin, generic_views.UpdateV
                 instance=self.object
             )
         return data
+
+
+class ServiceOpenApiDefinition(ServiceMixin, generic_views.View):
+    def dispatch(self, request, *args, **kwargs):
+        if request.method != "GET":
+            return
+
+        service = self.get_object(queryset=Service.objects.all())
+
+        specs = []
+        if service:
+            environments = service.environments_dict
+            for _, environment in environments.items():
+                spec = requests.get(environment.open_api_url)
+                specs.append(json.loads(spec.text))
+        specs = list(filter(None, specs))
+        if specs:
+            return JsonResponse(specs, safe=False)
+        openapi_definition(request, service.repository)

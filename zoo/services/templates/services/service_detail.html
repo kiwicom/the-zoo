@@ -203,11 +203,10 @@
 {% endblock %}
 
 {% block extra_components %}
-  {% if object.repository %}
     {% verbatim %}
     <div class="ui stackable grid tab" data-tab="openapi">
       {% endverbatim %}
-      <div id="openapi-visualizer" data-url="{% url 'repo_openapi' object.repository.provider object.repository.remote_id %}">
+      <div id="openapi-visualizer" data-url="{% url 'service_openapi' object.owner_slug object.name_slug %}">
       {% verbatim %}
         <div v-for="spec of specs" class="ui segment">
           <div class="flex-horizontal--space-between spec-def">
@@ -229,7 +228,6 @@
       </div>
     </div>
     {% endverbatim %}
-  {% endif %}
 
   {% if object.datacenters.count %}
     {% include "datacenters/infra_overview.html" with datacenters=object.datacenters.all only %}

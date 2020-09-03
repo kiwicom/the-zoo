@@ -105,7 +105,7 @@ class ServiceDetail(ServiceMixin, generic_views.DetailView):
 
         for issue in sentry_issues:
             last_two_weeks = sorted(issue.stats.all(), key=lambda x: x.timestamp)[:14]
-            max_events_count = max([day.count for day in last_two_weeks])
+            max_events_count = max(day.count for day in last_two_weeks)
 
             for day in last_two_weeks:
                 bar_height = (
@@ -179,7 +179,9 @@ class ServiceDetail(ServiceMixin, generic_views.DetailView):
 
         return {
             "total": sum(
-                [len(steps) for tag, steps in STEPS.items() if tag in self.object.tags]
+                len(steps)
+                for tag, steps in STEPS.items()
+                if tag in self.object.tags
             ),
             "completed": self.object.checkmarks.count(),
         }
@@ -209,10 +211,10 @@ class ServiceList(generic_views.ListView):
         queryset = self.model.objects.select_related("repository")
         queryterm = self.request.GET.get("q", None)
 
-        SIMPLE_QUERY_PATTERN = r"^[\w-]+$"
-        URL_QUERY_PATTERN = r"^https?[:][/][/]\S+$"
-
         if queryterm:
+            SIMPLE_QUERY_PATTERN = r"^[\w-]+$"
+            URL_QUERY_PATTERN = r"^https?[:][/][/]\S+$"
+
             if re.match(SIMPLE_QUERY_PATTERN, queryterm):
                 queryset = queryset.filter(
                     Q(name__icontains=queryterm)

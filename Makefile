@@ -30,7 +30,7 @@ fake:
 migrate:
 	docker-compose run app python manage.py migrate
 
-makemigrations:
+migrations:
 	docker-compose run app python manage.py makemigrations
 
 superuser:

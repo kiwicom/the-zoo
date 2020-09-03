@@ -267,4 +267,4 @@ class ServiceQLSchema(DjangoQLSchema):
             return ["name", "owner", "status", "impact"]
         if isinstance(model, Environment):
             return ["service_urls", "health_check_url"]
-        return super(ServiceQLSchema, self).get_fields(model)
+        return super().get_fields(model)

@@ -102,4 +102,4 @@ class LibraryQLSchema(DjangoQLSchema):
     def get_fields(self, model):
         if isinstance(model, Library):
             return ["name", "owner", "status", "impact", "library_url"]
-        return super(LibraryQLSchema, self).get_fields(model)
+        return super().get_fields(model)

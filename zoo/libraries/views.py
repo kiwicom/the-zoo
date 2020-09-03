@@ -49,7 +49,7 @@ class LibraryDelete(generic_views.DeleteView):
 
         if owner_slug is None or name_slug is None:
             raise SuspiciousOperation(
-                f"LibraryDelete view must be called with owner_slug and name_slug"
+                "LibraryDelete view must be called with owner_slug and name_slug"
             )
 
         try:

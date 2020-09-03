@@ -49,7 +49,7 @@ class ServiceEnvironmentMixin:
                 envs_formset.save()
             else:
                 return self.form_invalid(form)
-        return super(ServiceEnvironmentMixin, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class ServiceCreate(ServiceEnvironmentMixin, generic_views.CreateView):
@@ -57,7 +57,7 @@ class ServiceCreate(ServiceEnvironmentMixin, generic_views.CreateView):
     model = form_class.Meta.model
 
     def get_context_data(self, **kwargs):
-        data = super(ServiceCreate, self).get_context_data(**kwargs)
+        data = super().get_context_data(**kwargs)
         if self.request.POST:
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet(self.request.POST)
         else:
@@ -78,7 +78,7 @@ class ServiceDelete(generic_views.DeleteView):
 
         if owner_slug is None or name_slug is None:
             raise SuspiciousOperation(
-                f"ServiceDelete view must be called with owner_slug and name_slug"
+                "ServiceDelete view must be called with owner_slug and name_slug"
             )
 
         try:
@@ -243,7 +243,7 @@ class ServiceUpdate(ServiceEnvironmentMixin, ServiceMixin, generic_views.UpdateV
     model = form_class.Meta.model
 
     def get_context_data(self, **kwargs):
-        data = super(ServiceUpdate, self).get_context_data(**kwargs)
+        data = super().get_context_data(**kwargs)
         if self.request.POST:
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet(
                 self.request.POST, instance=self.object

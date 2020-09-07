@@ -334,7 +334,7 @@ snapshots['test_with_environment 1'] = {
                                     'node': {
                                         'dashboardUrl': 'https://dashboardurl',
                                         'healthCheckUrl': 'https://healthcheckurl',
-                                        'name': 'staging',
+                                        'name': 'production',
                                         'serviceUrls': [
                                             'https://serviceurl1',
                                             'https://serviceurl2'
@@ -345,7 +345,7 @@ snapshots['test_with_environment 1'] = {
                                     'node': {
                                         'dashboardUrl': 'https://dashboardurl',
                                         'healthCheckUrl': 'https://healthcheckurl',
-                                        'name': 'production',
+                                        'name': 'staging',
                                         'serviceUrls': [
                                             'https://serviceurl1',
                                             'https://serviceurl2'

@@ -180,6 +180,7 @@ class Tier(models.Model):
 class Environment(models.Model):
     class Meta:
         unique_together = ("service", "name")
+        ordering = ["name"]
 
     service = models.ForeignKey(
         Service,

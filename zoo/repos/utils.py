@@ -26,8 +26,7 @@ def get_scm_module(provider):
     e.g.: repository.provider = 'gitlab' => return zoo.repos.gitlab
     """
     current_module = ".".join(__name__.split(".")[:-1])
-    scm_module = importlib.import_module(f".{provider}", current_module)
-    return scm_module
+    return importlib.import_module(f".{provider}", current_module)
 
 
 def download_repository(repository, fake_dir, sha=None):

@@ -40,6 +40,7 @@ def get_repositories():
                 "name": project.path,
                 "url": project.web_url,
                 "is_fork": hasattr(project, "forked_from_project"),
+                "is_personal": project.namespace["kind"] == "user",
             }
     except (MissingSchema, GitlabGetError):
         log.exception("gitlab.get_repositories.error")

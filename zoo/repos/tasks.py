@@ -28,6 +28,9 @@ def sync_repos():
     ):
         if settings.SYNC_REPOS_SKIP_FORKS and project["is_fork"]:
             continue
+        if settings.SYNC_REPOS_SKIP_PERSONAL and project["is_personal"]:
+            continue
+
         try:
             repo = Repository.objects.get(
                 remote_id=project["id"], provider=project["provider"]

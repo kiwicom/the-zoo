@@ -27,25 +27,13 @@ snapshots['test_all 1'] = {
                             'edges': [
                                 {
                                     'node': {
-                                        'dashboardUrl': 'https://dashboardurlD',
-                                        'healthCheckUrl': 'https://healthcheckurlD',
-                                        'id': 'RW52aXJvbm1lbnQ6NA==',
-                                        'name': 'staging3',
+                                        'dashboardUrl': 'https://dashboardurlA',
+                                        'healthCheckUrl': 'https://healthcheckurlA',
+                                        'id': 'RW52aXJvbm1lbnQ6MQ==',
+                                        'name': 'production',
                                         'serviceUrls': [
-                                            'https://serviceurlD1',
-                                            'https://serviceurlD2'
-                                        ]
-                                    }
-                                },
-                                {
-                                    'node': {
-                                        'dashboardUrl': 'https://dashboardurlC',
-                                        'healthCheckUrl': 'https://healthcheckurlC',
-                                        'id': 'RW52aXJvbm1lbnQ6Mw==',
-                                        'name': 'staging2',
-                                        'serviceUrls': [
-                                            'https://serviceurlC1',
-                                            'https://serviceurlC2'
+                                            'https://serviceurlA1',
+                                            'https://serviceurlA2'
                                         ]
                                     }
                                 },
@@ -63,13 +51,25 @@ snapshots['test_all 1'] = {
                                 },
                                 {
                                     'node': {
-                                        'dashboardUrl': 'https://dashboardurlA',
-                                        'healthCheckUrl': 'https://healthcheckurlA',
-                                        'id': 'RW52aXJvbm1lbnQ6MQ==',
-                                        'name': 'production',
+                                        'dashboardUrl': 'https://dashboardurlC',
+                                        'healthCheckUrl': 'https://healthcheckurlC',
+                                        'id': 'RW52aXJvbm1lbnQ6Mw==',
+                                        'name': 'staging2',
                                         'serviceUrls': [
-                                            'https://serviceurlA1',
-                                            'https://serviceurlA2'
+                                            'https://serviceurlC1',
+                                            'https://serviceurlC2'
+                                        ]
+                                    }
+                                },
+                                {
+                                    'node': {
+                                        'dashboardUrl': 'https://dashboardurlD',
+                                        'healthCheckUrl': 'https://healthcheckurlD',
+                                        'id': 'RW52aXJvbm1lbnQ6NA==',
+                                        'name': 'staging3',
+                                        'serviceUrls': [
+                                            'https://serviceurlD1',
+                                            'https://serviceurlD2'
                                         ]
                                     }
                                 }
@@ -100,25 +100,25 @@ snapshots['test_first 1'] = {
                             'edges': [
                                 {
                                     'node': {
-                                        'dashboardUrl': 'https://dashboardurlD',
-                                        'healthCheckUrl': 'https://healthcheckurlD',
-                                        'id': 'RW52aXJvbm1lbnQ6NA==',
-                                        'name': 'staging3',
+                                        'dashboardUrl': 'https://dashboardurlA',
+                                        'healthCheckUrl': 'https://healthcheckurlA',
+                                        'id': 'RW52aXJvbm1lbnQ6MQ==',
+                                        'name': 'production',
                                         'serviceUrls': [
-                                            'https://serviceurlD1',
-                                            'https://serviceurlD2'
+                                            'https://serviceurlA1',
+                                            'https://serviceurlA2'
                                         ]
                                     }
                                 },
                                 {
                                     'node': {
-                                        'dashboardUrl': 'https://dashboardurlC',
-                                        'healthCheckUrl': 'https://healthcheckurlC',
-                                        'id': 'RW52aXJvbm1lbnQ6Mw==',
-                                        'name': 'staging2',
+                                        'dashboardUrl': 'https://dashboardurlB',
+                                        'healthCheckUrl': 'https://healthcheckurlB',
+                                        'id': 'RW52aXJvbm1lbnQ6Mg==',
+                                        'name': 'staging',
                                         'serviceUrls': [
-                                            'https://serviceurlC1',
-                                            'https://serviceurlC2'
+                                            'https://serviceurlB1',
+                                            'https://serviceurlB2'
                                         ]
                                     }
                                 }
@@ -149,13 +149,13 @@ snapshots['test_last 1'] = {
                             'edges': [
                                 {
                                     'node': {
-                                        'dashboardUrl': 'https://dashboardurlD',
-                                        'healthCheckUrl': 'https://healthcheckurlD',
-                                        'id': 'RW52aXJvbm1lbnQ6NA==',
-                                        'name': 'staging3',
+                                        'dashboardUrl': 'https://dashboardurlA',
+                                        'healthCheckUrl': 'https://healthcheckurlA',
+                                        'id': 'RW52aXJvbm1lbnQ6MQ==',
+                                        'name': 'production',
                                         'serviceUrls': [
-                                            'https://serviceurlD1',
-                                            'https://serviceurlD2'
+                                            'https://serviceurlA1',
+                                            'https://serviceurlA2'
                                         ]
                                     }
                                 }

@@ -16,7 +16,7 @@ def generate_services_with_environments(service_factory, environment_factory):
         owner="michaelbennett",
         impact="profit",
         docs_url="https://docsurl",
-        pagerduty_url="https://pagerduty",
+        pagerduty_service="/services",
         slack_channel="https://slackchannel",
         status="beta",
         repository__id=78,
@@ -54,9 +54,8 @@ docs_url: https://docsurl
 slack_channel: https://slackchannel
 sentry_project: null
 sonarqube_project: null
-pagerduty_url: https://pagerduty
-tags:
-- general
+pagerduty_service: /services
+tags: []
 environments:
 - name: production
   dashboard_url: https://dashboardurl

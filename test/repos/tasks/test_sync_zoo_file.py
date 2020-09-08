@@ -33,7 +33,7 @@ def test_update_or_create_service(generate_repositories):
         "slack_channel": "#test_proj1",
         "sentry_project": "http://test_proj1/sentry",
         "sonarqube_project": "http://test_proj1/sonarqube",
-        "pagerduty_url": "http://test_proj1/pager_duty",
+        "pagerduty_service": "/services",
         "tags": ["tag1", "tag2", "tag3"],
         "environments": [
             {
@@ -86,7 +86,7 @@ def test_update_project_from_zoo_file(mocker):
     slack_channel: "#test_proj1"
     sentry_project: http://test_proj1/sentry
     sonarqube_project: http://test_proj1/sonarqube
-    pagerduty_url: http://test_proj1/pager_duty
+    pagerduty_service: /services
     tags:
         - tag1
         - tag2
@@ -132,7 +132,7 @@ def assert_service(got: Service, expected: Dict) -> None:
     assert got.slack_channel == expected["slack_channel"]
     assert got.sentry_project == expected["sentry_project"]
     assert got.sonarqube_project == expected["sonarqube_project"]
-    assert got.pagerduty_url == expected["pagerduty_url"]
+    assert got.pagerduty_service == expected["pagerduty_service"]
     assert_tags(got.tags, expected["tags"])
 
 
@@ -145,8 +145,6 @@ def assert_environment(got: Environment, expected: Dict) -> None:
 
 def assert_tags(got: List, expected: List):
     # because pre_save signal on Service
-    if "general" not in expected:
-        expected.append("general")
 
     assert len(got) == len(expected)
     assert sorted(got) == sorted(expected)

@@ -109,7 +109,7 @@ class Service(graphene.ObjectType):
     impact = graphene.String()
     repository = graphene.Field(lambda: Repository)
     slack_channel = graphene.String()
-    pagerduty_url = graphene.String()
+    pagerduty_service = graphene.String()
     docs_url = graphene.String()
     all_environments = relay.ConnectionField(EnvironmentConnection)
 
@@ -122,7 +122,7 @@ class Service(graphene.ObjectType):
             status=service.status,
             impact=service.impact,
             slack_channel=service.slack_channel,
-            pagerduty_url=service.pagerduty_url,
+            pagerduty_service=service.pagerduty_service,
             docs_url=service.docs_url,
             repository=service.repository_id,
             all_environments=service.environments,

@@ -19,21 +19,6 @@ snapshots['test_repository 1'] = {
     }
 }
 
-snapshots['test_service 1'] = {
-    'data': {
-        'node': {
-            'docsUrl': 'https://docs/skypicker/docs/',
-            'id': 'U2VydmljZToxMA==',
-            'impact': 'sales',
-            'name': 'allen-nobles',
-            'owner': 'bradltwat',
-            'pagerdutyUrl': 'https://pagerduty/sales/',
-            'slackChannel': 'https://gitlab.slack',
-            'status': 'fixed'
-        }
-    }
-}
-
 snapshots['test_issue 1'] = {
     'data': {
         'node': {
@@ -67,6 +52,21 @@ snapshots['test_dependency 1'] = {
             'id': 'RGVwZW5kZW5jeToxMA==',
             'name': 'python',
             'type': 'Language'
+        }
+    }
+}
+
+snapshots['test_service 1'] = {
+    'data': {
+        'node': {
+            'docsUrl': 'https://docs/skypicker/docs/',
+            'id': 'U2VydmljZToxMA==',
+            'impact': 'sales',
+            'name': 'allen-nobles',
+            'owner': 'bradltwat',
+            'pagerdutyService': 'sales/P019873X9',
+            'slackChannel': 'https://gitlab.slack',
+            'status': 'fixed'
         }
     }
 }

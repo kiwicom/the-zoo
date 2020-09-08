@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   app:
     build: .
@@ -6,25 +6,26 @@ services:
       - python
       - manage.py
       - runserver
-      - '0.0.0.0:8080'
+      - "0.0.0.0:8080"
     ports:
       - 20966:8080
     environment:
-      DATABASE_URL: 'postgres://postgres:postgres@postgres/postgres'
+      DATABASE_URL: "postgres://postgres:postgres@postgres/postgres"
       GCP_SERVICE_KEY:
       SECRET_KEY:
       SENTRY_DSN:
       SENTRY_PUBLIC_DSN:
       ZOO_AUDITING_CHECKS: dummy_standards
-      ZOO_DEBUG: '1'
-      ZOO_SLACK_URL:
-      ZOO_GITLAB_URL:
-      ZOO_GITLAB_TOKEN:
-      ZOO_SENTRY_URL:
-      ZOO_SENTRY_ORGANIZATION:
+      ZOO_DEBUG: "1"
       ZOO_GITHUB_TOKEN:
-      ZOO_SONARQUBE_URL:
+      ZOO_GITLAB_TOKEN:
+      ZOO_GITLAB_URL:
+      ZOO_PAGERDUTY_URL:
+      ZOO_SENTRY_ORGANIZATION:
+      ZOO_SENTRY_URL:
+      ZOO_SLACK_URL:
       ZOO_SONARQUBE_TOKEN:
+      ZOO_SONARQUBE_URL:
       WEB_CONCURRENCY:
     tty: true
     volumes:
@@ -40,15 +41,14 @@ services:
     volumes:
       - ./zoo/:/app/source
       - ./webpack/config:/app/config
-    command:
-      ["yarn", "development"]
+    command: ["yarn", "development"]
 
   postgres:
     image: postgres:12-alpine
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_HOST_AUTH_METHOD: 'trust'
+      POSTGRES_HOST_AUTH_METHOD: "trust"
     ports:
       - 25966:5432
 
@@ -59,9 +59,10 @@ services:
 
   scheduler:
     build: .
-    command: [celery, beat, -A, zoo, -S, redbeat.RedBeatScheduler, --pidfile, '']
+    command:
+      [celery, beat, -A, zoo, -S, redbeat.RedBeatScheduler, --pidfile, ""]
     environment:
-      ZOO_DEBUG: '1'
+      ZOO_DEBUG: "1"
       SECRET_KEY:
     volumes:
       - ./zoo:/app/zoo
@@ -74,24 +75,25 @@ services:
     build: .
     command: [celery, worker, -A, zoo]
     environment:
-      DATABASE_URL: 'postgres://postgres:postgres@postgres/postgres'
+      DATABASE_URL: "postgres://postgres:postgres@postgres/postgres"
       GCP_SERVICE_KEY:
       ZOO_AUDITING_CHECKS: dummy_standards
-      ZOO_DEBUG: '1'
       ZOO_DATADOG_API_KEY:
       ZOO_DATADOG_APP_KEY:
+      ZOO_DEBUG: "1"
       ZOO_GITHUB_TOKEN:
-      ZOO_GITLAB_URL:
       ZOO_GITLAB_DB_URL:
       ZOO_GITLAB_TOKEN:
+      ZOO_GITLAB_URL:
+      ZOO_PAGERDUTY_URL:
+      ZOO_PINGDOM_APP_KEY:
       ZOO_PINGDOM_EMAIL:
       ZOO_PINGDOM_PASS:
-      ZOO_PINGDOM_APP_KEY:
-      ZOO_SENTRY_URL:
-      ZOO_SENTRY_ORGANIZATION:
       ZOO_SENTRY_API_KEY:
-      ZOO_SONARQUBE_URL:
+      ZOO_SENTRY_ORGANIZATION:
+      ZOO_SENTRY_URL:
       ZOO_SONARQUBE_TOKEN:
+      ZOO_SONARQUBE_URL:
       SENTRY_PUBLIC_DSN:
       SENTRY_DSN:
       SECRET_KEY:

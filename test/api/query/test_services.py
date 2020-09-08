@@ -14,7 +14,7 @@ def generate_services(service_factory):
         owner="michaelbennett",
         impact="profit",
         docs_url="https://docsurl",
-        pagerduty_url="https://pagerduty",
+        pagerduty_service="/services",
         slack_channel="https://slackchannel",
         status="fixed",
         repository__id=78,
@@ -29,7 +29,7 @@ def generate_services(service_factory):
         owner="amstrong",
         impact="profit",
         docs_url="https://docsurl",
-        pagerduty_url="https://pagerduty",
+        pagerduty_service="/services",
         slack_channel="https://slackchannel",
         status="fixed",
         repository__id=48,
@@ -44,7 +44,7 @@ def generate_services(service_factory):
         owner="bennett",
         impact="profit",
         docs_url="https://docsurl",
-        pagerduty_url="https://pagerduty",
+        pagerduty_service="/services",
         slack_channel="https://slackchannel",
         status="fixed",
         repository__id=234,
@@ -59,7 +59,7 @@ def generate_services(service_factory):
         owner="benneto",
         impact="profit",
         docs_url="https://docsurl",
-        pagerduty_url="https://pagerduty",
+        pagerduty_service="/services",
         slack_channel="https://slackchannel",
         status="fixed",
         repository__id=3434,
@@ -75,7 +75,7 @@ def generate_services(service_factory):
         owner="dedward",
         impact="profit",
         docs_url="https://docsurl",
-        pagerduty_url="https://pagerduty",
+        pagerduty_service="/services",
         slack_channel="https://slackchannel",
         status="fixed",
         repository__id=4543,
@@ -94,7 +94,7 @@ def generate_services_with_environments(service_factory, environment_factory):
         owner="michaelbennett",
         impact="profit",
         docs_url="https://docsurl",
-        pagerduty_url="https://pagerduty",
+        pagerduty_service="/services",
         slack_channel="https://slackchannel",
         status="fixed",
         repository__id=78,
@@ -151,7 +151,7 @@ def test_all(snapshot, call_api, generate_services):
             status
             impact
             slackChannel
-            pagerdutyUrl
+            pagerdutyService
             docsUrl
           }
         }
@@ -181,7 +181,7 @@ def test_with_repository(snapshot, call_api, generate_services):
             status
             impact
             slackChannel
-            pagerdutyUrl
+            pagerdutyService
             docsUrl
             repository {
               remoteId
@@ -217,7 +217,7 @@ def test_with_environment(snapshot, call_api, generate_services_with_environment
             status
             impact
             slackChannel
-            pagerdutyUrl
+            pagerdutyService
             docsUrl
             allEnvironments {
               totalCount
@@ -263,7 +263,7 @@ def test_first(snapshot, call_api, generate_services):
             status
             impact
             slackChannel
-            pagerdutyUrl
+            pagerdutyService
             docsUrl
           }
         }
@@ -292,7 +292,7 @@ def test_first_after(snapshot, call_api, generate_services):
             status
             impact
             slackChannel
-            pagerdutyUrl
+            pagerdutyService
             docsUrl
           }
         }
@@ -321,7 +321,7 @@ def test_last(snapshot, call_api, generate_services):
             status
             impact
             slackChannel
-            pagerdutyUrl
+            pagerdutyService
             docsUrl
           }
         }
@@ -350,7 +350,7 @@ def test_last_before(snapshot, call_api, generate_services):
             status
             impact
             slackChannel
-            pagerdutyUrl
+            pagerdutyService
             docsUrl
           }
         }

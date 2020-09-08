@@ -2,7 +2,12 @@ from django import forms
 from django.contrib.postgres import forms as pg_forms
 from django.core.exceptions import ValidationError
 
-from ..base.forms import SentryProjectInput, SlackChannelInput, WidgetAttrsMixin
+from ..base.forms import (
+    PagerdutyServiceInput,
+    SentryProjectInput,
+    SlackChannelInput,
+    WidgetAttrsMixin,
+)
 from ..checklists.forms import TagInput
 from ..repos.forms import RepoInput
 from . import models
@@ -63,12 +68,11 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
             "sentry_project",
             "sonarqube_project",
             "repository",
-            "pagerduty_url",
+            "pagerduty_service",
             "docs_url",
             "tags",
         ]
         labels = {
-            "pagerduty_url": "PagerDuty URL",
             "docs_url": "Documentation URL",
             "sonarqube_project": "Sonarqube project key",
         }
@@ -77,6 +81,7 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
         }
         widgets = {
             "repository": RepoInput(),
+            "pagerduty_service": PagerdutyServiceInput(),
             "sentry_project": SentryProjectInput(),
             "slack_channel": SlackChannelInput(),
             "tags": TagInput(),

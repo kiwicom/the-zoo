@@ -37,7 +37,7 @@ service_form_data = {
     "tier": "",
     "slack_channel": "dev-null",
     "repository": "",
-    "pagerduty_url": fake.url(),
+    "pagerduty_service": fake.word(),
     "docs_url": fake.url(),
     "service_url": fake.url(),
 }
@@ -58,15 +58,6 @@ def test_service_form__complete__incorrect_status(repository):
     assert form.errors == {
         "status": ["Select a valid choice. live is not one of the available choices."]
     }
-
-
-def test_service_form__complete__incorrect_pagerduty_url(repository):
-    form = ServiceForm(
-        data={**service_form_data, "pagerduty_url": "-", "repository": repository.pk}
-    )
-
-    assert not form.is_valid()
-    assert form.errors == {"pagerduty_url": ["Enter a valid URL."]}
 
 
 service_environments_form__set_data = {

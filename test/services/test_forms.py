@@ -31,6 +31,7 @@ fake = Faker()
 service_form_data = {
     "owner": fake.user_name(),
     "name": fake.word(),
+    "description": fake.sentence(),
     "status": "production",
     "impact": "profit",
     "tier": "",

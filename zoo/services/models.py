@@ -32,6 +32,12 @@ class Service(models.Model):
 
     owner = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
+    description = models.CharField(
+        max_length=200,
+        default="",
+        blank=True,
+        help_text="Short description of this service",
+    )
     status = models.CharField(
         choices=((item.value, item.value) for item in Status),
         null=True,

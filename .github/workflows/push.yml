@@ -1,16 +1,152 @@
-name: Docker build
+name: Commit
 on: push
 
 jobs:
-  docker:
+  container:
+    name: Container image
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@master
-      - name: Kaniko build
-        uses: outillage/kaniko-action@master
+      - uses: actions/checkout@v2
+
+      - name: Container build
+        uses: aevea/action-kaniko@master
         with:
           registry: docker.pkg.github.com
           password: ${{ secrets.GITHUB_TOKEN }}
           image: server
           cache: true
           cache_registry: cache
+          tag: ${{ github.sha }}
+
+  black:
+    name: Code style
+    runs-on: ubuntu-latest
+    container:
+      image: kiwicom/black:19.10b0
+      options: -u root
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run black
+        run: black --check . --diff
+
+  commitsar:
+    name: Commit message style
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Run commitsar
+        uses: docker://commitsar/commitsar
+
+  pre-commit:
+    name: Static checks
+    runs-on: ubuntu-latest
+    container: kiwicom/pre-commit:2.6.0-full
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: apk add --no-cache tar
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: .pre-commit-cache
+          key: static-checks-${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - run: mkdir -p .pre-commit-cache
+      - run: pre-commit install --install-hooks
+      - run: pre-commit run -a
+
+  pylint:
+    name: Pylint
+    runs-on: ubuntu-latest
+    container:
+      image: kiwicom/tox:3.19
+      options: -u root
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: apk add --no-cache tar
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: .tox
+          key: pylint-${{ hashFiles('requirements/*.txt', 'tox.ini') }}
+
+      - run: tox -e pylint
+
+  pytest:
+    name: Pytest
+    runs-on: ubuntu-latest
+    container:
+      image: kiwicom/tox:3.19
+      options: -u root
+
+    env:
+      TEST_DATABASE_URL: postgres://postgres:postgres@postgres/postgres
+      TOX_TESTENV_PASSENV: TEST_DATABASE_URL
+
+    services:
+      postgres:
+        image: postgres:12-alpine
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: apk add --no-cache tar
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: .tox
+          key: pytest-${{ hashFiles('requirements/*.txt', 'tox.ini') }}
+
+      - run: adduser -D postgres
+      - run: su -l postgres
+      - run: tox -e tests
+
+  migrations:
+    name: Migrations
+    runs-on: ubuntu-latest
+    needs: container
+
+    services:
+      postgres:
+        image: postgres:12-alpine
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --hostname postgres
+
+    steps:
+      - uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: >
+          docker run
+          --network ${{ job.services.postgres.network }}
+          docker.pkg.github.com/kiwicom/the-zoo/server:$GITHUB_SHA
+          django-admin makemigrations --check

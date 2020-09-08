@@ -5,12 +5,28 @@ on:
       - "v*"
 
 jobs:
+  container:
+    name: Container image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Container build
+        uses: aevea/action-kaniko@master
+        with:
+          registry: docker.pkg.github.com
+          password: ${{ secrets.GITHUB_TOKEN }}
+          image: server
+          cache: true
+          cache_registry: cache
+          tag: ${{ github.ref }}
+
   release-notes:
     name: Release Notes
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Release Notary Action
         uses: docker://outillage/release-notary

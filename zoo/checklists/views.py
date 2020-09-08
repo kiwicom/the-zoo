@@ -10,7 +10,11 @@ from .steps import STEPS
 
 
 def get_service_steps(service):
-    checklist = [(tag, steps) for tag, steps in STEPS.items() if tag in service.tags]
+    checklist = [
+        (tag, steps)
+        for tag, steps in STEPS.items()
+        if tag in ["general", *service.tags]
+    ]
     return sorted(checklist, key=lambda x: x[0])
 
 

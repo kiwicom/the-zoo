@@ -4,6 +4,13 @@ import django.contrib.postgres.fields
 from django.db import migrations, models
 
 
+def add_default_general_tag(apps, schema_editor):
+    Service = apps.get_model("services", "Service")
+    for service in Service.objects.all():
+        service.tags = ["general"]
+        service.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [("services", "0010_service_ci_unique_fields")]
@@ -19,4 +26,5 @@ class Migration(migrations.Migration):
                 size=None,
             ),
         ),
+        migrations.RunPython(add_default_general_tag),
     ]

@@ -4,7 +4,11 @@ import requests
 import structlog
 from django.conf import settings
 from github import Github, InputGitTreeElement
-from github.GithubException import GithubException, UnknownObjectException
+from github.GithubException import (
+    BadCredentialsException,
+    GithubException,
+    UnknownObjectException,
+)
 from github.GithubObject import NotSet
 
 from ..base import http
@@ -29,9 +33,12 @@ def get_repositories():
                 "is_fork": repo.fork,
                 "is_personal": repo.owner.type == "User",
             }
+    except BadCredentialsException:
+        log.info("github.get_repositories.skip")
     except GithubException:
         log.exception("github.get_repositories.error")
-        return []
+
+    return []
 
 
 def get_project(github_id):

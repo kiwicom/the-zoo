@@ -42,9 +42,12 @@ def get_repositories():
                 "is_fork": hasattr(project, "forked_from_project"),
                 "is_personal": project.namespace["kind"] == "user",
             }
-    except (MissingSchema, GitlabGetError):
+    except MissingSchema:
+        log.info("gitlab.get_repositories.skip")
+    except GitlabGetError:
         log.exception("gitlab.get_repositories.error")
-        return []
+
+    return []
 
 
 def get_project_details(remote_id):

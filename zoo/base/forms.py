@@ -17,3 +17,7 @@ class WidgetAttrsMixin:
 
 class SentryProjectInput(widgets.TextInput):
     template_name = "shared/fields/sentry_input.html"
+
+
+class SlackChannelInput(widgets.TextInput):
+    template_name = "shared/fields/slack_input.html"

@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.postgres import forms as pg_forms
 from django.core.exceptions import ValidationError
 
-from ..base.forms import SentryProjectInput, WidgetAttrsMixin
+from ..base.forms import SentryProjectInput, SlackChannelInput, WidgetAttrsMixin
 from ..checklists.forms import TagInput
 from ..repos.forms import RepoInput
 from . import models
@@ -77,6 +77,7 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
         widgets = {
             "repository": RepoInput(),
             "sentry_project": SentryProjectInput(),
+            "slack_channel": SlackChannelInput(),
             "tags": TagInput(),
         }
 

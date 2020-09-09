@@ -1,17 +1,17 @@
 -r base.in
 
-coverage~=4.3.4  # sonarqube has problems parsing 4.4's output https://github.com/nedbat/coveragepy/issues/578
+coverage
 httpretty
 fakeredis
 pylint
 pytest
-pytest-cov~=2.5.1  # otherwise there's a conflict with coverage~=4.3.4
+pytest-cov
 pytest-django
 pytest-env
 pytest-factoryboy
 pytest-mock
 pytest-xdist
 pytest-freezegun
-python-dateutil==2.8.1
+python-dateutil
 snapshottest
 testing-postgresql

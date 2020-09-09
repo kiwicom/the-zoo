@@ -23,6 +23,12 @@ class Repository(models.Model):
     owner = models.CharField(max_length=100, db_index=True)
     name = models.CharField(max_length=100, db_index=True)
     url = models.URLField(max_length=500)
+    exclusions = models.CharField(
+        max_length=500,
+        blank=True,
+        default="",
+        help_text="Comma separated paths to exclude from checks",
+    )
 
     def __str__(self):
         return f"{self.owner}/{self.name}"

@@ -55,6 +55,14 @@ class EnvironmentForm(forms.ModelForm):
 
 
 class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
+
+    exclusions = forms.CharField(
+        max_length=500,
+        label="Repository check exclusions",
+        help_text="Comma separated paths to exclude",
+        required=False,
+    )
+
     class Meta:
         model = models.Service
         fields = [
@@ -86,6 +94,23 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
             "slack_channel": SlackChannelInput(),
             "tags": TagInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        kwargs["initial"] = {
+            "exclusions": kwargs["instance"].repository.exclusions or ""
+        }
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        try:
+            exclusions = self.data["exclusions"]
+            repository = self.instance.repository
+            if repository:
+                repository.exclusions = exclusions
+                repository.save()
+        except (KeyError, AttributeError):
+            pass
+        return super().save()
 
 
 ServiceEnvironmentsFormSet = forms.inlineformset_factory(

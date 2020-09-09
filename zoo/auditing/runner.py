@@ -40,6 +40,7 @@ class CheckContext:  # pylint: disable=too-many-instance-attributes
         self.path = fake_path
         self.languages = repository.languages_from_analytics
         self.project_type = repository.project_type
+        self.exclude_files = repository.exclusions
 
 
 def determine_issue_status(is_found, old_status):

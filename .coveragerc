@@ -1,2 +1,6 @@
 [run]
 branch = True
+omit =
+    test/*
+    zoo/*/migrations/*.py
+    zoo/auditing/standards/*

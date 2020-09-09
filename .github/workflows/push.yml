@@ -121,7 +121,18 @@ jobs:
 
       - run: adduser -D postgres
       - run: su -l postgres
-      - run: tox -e tests
+      - run: mkdir -p reports
+      - run: >
+          tox -e tests
+          --
+          --cov-branch
+          --junitxml=reports/xunit.xml
+          --cov-report xml:reports/coverage.xml
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: reports
 
   migrations:
     name: Migrations
@@ -156,11 +167,16 @@ jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
+    needs: pytest
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: reports
 
       - name: Scan
         uses: SonarSource/sonarcloud-github-action@master

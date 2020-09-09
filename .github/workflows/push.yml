@@ -179,6 +179,11 @@ jobs:
           name: reports
           path: reports
 
+      - name: Fix code coverage paths
+        run: sed -i "s|/__w/the-zoo/the-zoo|/github/workspace|g" reports/coverage.xml
+
+      - run: cat reports/coverage.xml
+
       - name: Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

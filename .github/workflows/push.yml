@@ -63,6 +63,8 @@ jobs:
       - run: mkdir -p .pre-commit-cache
       - run: pre-commit install --install-hooks
       - run: pre-commit run -a
+        env:
+          SKIP: no-commit-to-branch
 
   pylint:
     name: Pylint

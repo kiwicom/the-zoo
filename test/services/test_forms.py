@@ -10,7 +10,9 @@ pytestmark = pytest.mark.django_db
 
 def test_service_form__basic__correct():
     fake = Faker()
-    form = ServiceForm(data={"owner": fake.user_name(), "name": fake.word()})
+    form = ServiceForm(
+        data={"owner": fake.user_name(), "name": fake.word(), "exclusions": fake.word()}
+    )
 
     assert form.is_valid()
     new_service = form.save()
@@ -40,6 +42,7 @@ service_form_data = {
     "pagerduty_service": fake.word(),
     "docs_url": fake.url(),
     "service_url": fake.url(),
+    "exclusions": fake.word(),
 }
 
 
@@ -47,6 +50,16 @@ def test_service_form__complete__correct(repository):
     form = ServiceForm(data={**service_form_data, "repository": repository.pk})
 
     assert form.is_valid()
+
+
+def test_service_form__exclusions__correct():
+    repository = Repository.objects.create(remote_id=1)
+    service = Service.objects.create(repository=repository)
+    form = ServiceForm(
+        instance=service, data={**service_form_data, "repository": repository.pk}
+    )
+    form.save()
+    assert repository.exclusions == service_form_data["exclusions"]
 
 
 def test_service_form__complete__incorrect_status(repository):

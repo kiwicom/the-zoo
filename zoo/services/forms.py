@@ -103,9 +103,9 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
 
     def save(self, commit=True):
         try:
-            exclusions = self.data["exclusions"]
             repository = self.instance.repository
             if repository:
+                exclusions = self.data["exclusions"]
                 repository.exclusions = exclusions
                 repository.save()
         except (KeyError, AttributeError):

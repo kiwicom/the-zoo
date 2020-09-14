@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Container build
+      - name: GitHub Package Registry
         uses: aevea/action-kaniko@master
         with:
           registry: docker.pkg.github.com
@@ -21,6 +21,15 @@ jobs:
           cache: true
           cache_registry: cache
           tag: ${{ github.ref }}
+
+      - name: Dockerhub
+        uses: aevea/action-kaniko@master
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          image: kiwicom/the-zoo
+          cache: true
+          cache_registry: kiwicom/cache
 
   release-notes:
     name: Release Notes

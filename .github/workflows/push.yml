@@ -27,6 +27,7 @@ jobs:
           image: kiwicom/the-zoo
           cache: true
           cache_registry: kiwicom/cache
+          tag: ${{ github.sha }}
 
   black:
     name: Code style

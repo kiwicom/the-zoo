@@ -55,7 +55,7 @@ class Helpers(Singleton):
 
     service_description = models.CharField(max_length=250, null=True, blank=True)
     service_docs_url = models.CharField(max_length=250, null=True, blank=True)
-
+    service_exclusions = models.CharField(max_length=250, null=True, blank=True)
     service_impact = models.CharField(max_length=250, null=True, blank=True)
     service_name = models.CharField(max_length=250, null=True, blank=True)
     service_owner = models.CharField(max_length=250, null=True, blank=True)

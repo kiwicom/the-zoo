@@ -1,18 +1,34 @@
 from django.forms import widgets
 
+from ..instance.models import Helpers, Placeholders
+
 
 class WidgetAttrsMixin:
     """ModelForm mixin to overwrite Widget attrs like placeholder."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._placeholder_hook()
+        self._metadata_hook()
 
-    def _placeholder_hook(self):
-        placeholders = getattr(self.Meta, "_placeholders", {})
-        for field, placeholder in placeholders.items():
+    def _metadata_hook(self):
+        helpers = Helpers.resolve()
+        placeholders = Placeholders.resolve()
+
+        for field in self.fields:
+            self.fields[field].help_text = (
+                getattr(helpers, f"{self.namespace}{field}", "")
+                or self.fields[field].help_text
+            )
+
             widget = self.fields[field].widget
-            widget.attrs = {**widget.attrs, **{"placeholder": placeholder}}
+            widget.attrs.update(
+                {
+                    "placeholder": (
+                        getattr(placeholders, f"{self.namespace}{field}", "")
+                        or widget.attrs.get("placeholder", "")
+                    )
+                }
+            )
 
 
 class PagerdutyServiceInput(widgets.TextInput):

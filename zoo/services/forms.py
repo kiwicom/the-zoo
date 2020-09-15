@@ -1,4 +1,7 @@
+import itertools
+
 from django import forms
+from django.conf import settings
 from django.contrib.postgres import forms as pg_forms
 from django.core.exceptions import ValidationError
 from django.forms import widgets
@@ -87,9 +90,6 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
             "docs_url": "Documentation URL",
             "sonarqube_project": "Sonarqube project key",
         }
-        _placeholders = {
-            "name": "New cool service",
-        }
         widgets = {
             "owner": widgets.Select(
                 attrs={"class": "ui fluid search selection dropdown"},
@@ -116,6 +116,8 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.namespace = "service_"
+
         instance = kwargs.get("instance")
         exclusions = (
             instance.repository.exclusions if instance and instance.repository else ""

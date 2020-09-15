@@ -1,10 +1,18 @@
 {% extends 'shared/project_form.html' %}
 {% load static %}
+{% load utils %}
 
 {% block menu %}
   {% with selected='libraries' %}
     {{ block.super }}
   {% endwith %}
+{% endblock %}
+
+{% block disclaimer %}
+{% singleton 'instance.Hints' as hints %}
+{% if hints.library_form_explanation %}
+<p class="ui secondary yellow segment">{{ hints.library_form_explanation|safe }}</p>
+{% endif %}
 {% endblock %}
 
 {% block content %}

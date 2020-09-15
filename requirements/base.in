@@ -29,10 +29,10 @@ pygerduty
 python-gitlab
 PyGithub
 pyyaml
-raven
 redis
 requests
 requirements-parser
+sentry-sdk
 slacker
 structlog
 whitenoise[brotli]

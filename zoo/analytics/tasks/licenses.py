@@ -1,6 +1,6 @@
 import requests
+import sentry_sdk
 from celery import shared_task
-from raven.contrib.django.raven_compat.models import client
 
 from ...base.http import session
 from ..models import Dependency, DependencyType
@@ -32,4 +32,4 @@ def check_python_lib_licenses():
             if ex.response.status_code == 404:
                 continue
 
-            client.captureException()
+            sentry_sdk.capture_exception()

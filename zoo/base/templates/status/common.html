@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load raven %}
 {% load static %}
 
 {% block menu %}
@@ -78,7 +77,7 @@
 {% block scripts %}
 {% if request.sentry.id %}
 <script>
-  Raven.showReportDialog({
+  Sentry.showReportDialog({
     eventId: '{{ request.sentry.id }}',
     dsn: '{% sentry_public_dsn %}'
   });

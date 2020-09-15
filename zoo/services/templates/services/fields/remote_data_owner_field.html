@@ -1,0 +1,17 @@
+<div id="owner-input" class="owner-input-container">
+  <owner-input></owner-input>
+</div>
+
+<script>
+  const ownerList = [
+    {% for owner in owners %}
+    {id: {{ owner.pk }}, reference: '{{ owner.provider }} - {{ owner }}'},
+    {% endfor %}
+  ];
+  const ownerInputInfo = {
+    id: '{{ widget.attrs.id }}',
+    required: '{{ widget.required }}' == 'True',
+    name: '{{ widget.name }}',
+    initialValue: '{{ widget.value|default:"" }}'
+  };
+</script>

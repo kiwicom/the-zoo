@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.postgres import forms as pg_forms
 from django.core.exceptions import ValidationError
+from django.forms import widgets
 
 from ..base.forms import (
     PagerdutyServiceInput,
@@ -10,6 +11,8 @@ from ..base.forms import (
 )
 from ..checklists.forms import TagInput
 from ..repos.forms import RepoInput
+from ..repos.github import get_namespaces as get_github_namespaces
+from ..repos.gitlab import get_namespaces as get_gitlab_namespaces
 from . import models
 
 
@@ -88,6 +91,21 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
             "name": "New cool service",
         }
         widgets = {
+            "owner": widgets.Select(
+                choices=(
+                    sorted(
+                        [
+                            (namespace["name"], namespace["name"])
+                            for namespace in itertools.chain(
+                                get_github_namespaces(), get_gitlab_namespaces()
+                            )
+                        ],
+                        key=lambda k: k[1].lower(),
+                    )
+                )
+            )
+            if settings.REMOTE_DATA_OWNERS
+            else widgets.TextInput(),
             "repository": RepoInput(),
             "pagerduty_service": PagerdutyServiceInput(),
             "sentry_project": SentryProjectInput(),

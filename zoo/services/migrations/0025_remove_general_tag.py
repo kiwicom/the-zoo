@@ -7,7 +7,11 @@ def remove_default_general_tag(apps, schema_editor):
     Service = apps.get_model("services", "Service")
 
     for service in Service.objects.all():
-        service.tags.remove("general")
+        try:
+            service.tags.remove("general")
+        except ValueError:
+            pass
+
         service.save()
 
 

@@ -25,19 +25,22 @@ pytest:
 	.tox/tests/bin/py.test
 
 fake:
-	docker-compose run app python manage.py fake
+	docker-compose run app django-admin fake
 
 migrate:
-	docker-compose run app python manage.py migrate
+	docker-compose run app django-admin migrate
 
 migrations:
-	docker-compose run app python manage.py makemigrations
+	docker-compose run app django-admin makemigrations
 
 superuser:
-	docker-compose run app python manage.py createsuperuser
+	docker-compose run app django-admin createsuperuser
 
 shell:
-	docker-compose run app python manage.py shell_plus
+	docker-compose run app bash
+
+django-shell:
+	docker-compose run -u macaque app django-admin shell
 
 build-docs:
 	(cd docs && make html)

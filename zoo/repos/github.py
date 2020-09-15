@@ -41,6 +41,20 @@ def get_repositories():
     return []
 
 
+def get_namespaces():
+    try:
+        for organization in github.get_organizations():
+            yield {
+                "name": organization.name,
+            }
+    except BadCredentialsException:
+        log.info("github.get_repositories.skip")
+    except GithubException:
+        log.exception("github.get_repositories.error")
+
+    return []
+
+
 def get_project(github_id):
     try:
         project = github.get_repo(github_id)

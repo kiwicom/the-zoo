@@ -39,6 +39,7 @@ env = environ.Env(
     ZOO_PINGDOM_EMAIL=(str, None),
     ZOO_PINGDOM_PASS=(str, None),
     ZOO_PINGDOM_APP_KEY=(str, None),
+    ZOO_REMOTE_DATA_OWNERS=(bool, False),
     ZOO_SENTRY_URL=(str, None),
     ZOO_SENTRY_ORGANIZATION=(str, None),
     ZOO_SENTRY_API_KEY=(str, None),
@@ -261,4 +262,5 @@ GCP_SERVICE_KEY = env("GCP_SERVICE_KEY")
 SYNC_REPOS_SKIP_FORKS = env("ZOO_SYNC_REPOS_SKIP_FORKS")
 SYNC_REPOS_SKIP_PERSONAL = env("ZOO_SYNC_REPOS_SKIP_PERSONAL")
 
+REMOTE_DATA_OWNERS = env("ZOO_REMOTE_DATA_OWNERS")
 logs.configure_structlog(DEBUG)

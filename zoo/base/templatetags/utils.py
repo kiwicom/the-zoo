@@ -3,6 +3,7 @@ import json
 import re
 
 from django import template
+from django.apps import apps
 from django.conf import settings
 
 from ...analytics.models import DependencyType, DependencyUsage
@@ -175,3 +176,26 @@ def objective_label_color(objective: Objective) -> str:
 @register.filter
 def dependency_versions(queryset, limit=None):
     return DependencyUsage.versions(queryset, limit=limit)
+
+
+@register.simple_tag
+def singleton(identifier):
+    try:
+        app, model = identifier.rsplit(".", 1)
+    except ValueError:
+        raise template.TemplateSyntaxError(
+            (
+                "Templatetag requires the model dotted path: 'app.ModelName'. "
+                "Received '%s'." % identifier
+            )
+        )
+
+    instance = apps.get_model(app, model)
+    if not instance:
+        raise template.TemplateSyntaxError(
+            (
+                "Could not get the model name '%(model)s' from the application "
+                "named '%(app)s'" % {"app": app, "model": model}
+            )
+        )
+    return instance.resolve()

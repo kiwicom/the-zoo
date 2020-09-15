@@ -1,4 +1,7 @@
+import itertools
+
 from django import forms
+from django.conf import settings
 from django.contrib.postgres import forms as pg_forms
 from django.core.exceptions import ValidationError
 from django.forms import widgets
@@ -10,6 +13,7 @@ from ..base.forms import (
     WidgetAttrsMixin,
 )
 from ..checklists.forms import TagInput
+from ..instance.models import Helpers, Placeholders
 from ..repos.forms import RepoInput
 from ..repos.github import get_namespaces as get_github_namespaces
 from ..repos.gitlab import get_namespaces as get_gitlab_namespaces
@@ -87,9 +91,6 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
             "docs_url": "Documentation URL",
             "sonarqube_project": "Sonarqube project key",
         }
-        _placeholders = {
-            "name": "New cool service",
-        }
         widgets = {
             "owner": widgets.Select(
                 choices=(
@@ -114,6 +115,8 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.namespace = "service_"
+
         instance = kwargs.get("instance")
         exclusions = (
             instance.repository.exclusions if instance and instance.repository else ""

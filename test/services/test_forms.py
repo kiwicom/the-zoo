@@ -1,11 +1,40 @@
 import pytest
 from faker import Faker
 
+from zoo.instance.models import Helpers, Placeholders
 from zoo.repos.models import Repository
 from zoo.services.forms import ServiceEnvironmentsFormSet, ServiceForm
 from zoo.services.models import Service
 
 pytestmark = pytest.mark.django_db
+
+
+def test_service_form__metadata__basic():
+    fake = Faker()
+    form = ServiceForm(
+        data={"owner": fake.user_name(), "name": fake.word(), "exclusions": fake.word()}
+    )
+
+    assert form.is_valid()
+    assert form.fields["owner"].help_text == getattr(Service.owner, "help_text", "")
+    assert form.fields["owner"].widget.attrs["placeholder"] == ""
+
+
+def test_service_form__metadata__overridden():
+    fake = Faker()
+    Helpers(service_owner="customhelper").save()
+    Placeholders(service_owner="customplaceholder").save()
+
+    form = ServiceForm(
+        data={"owner": fake.user_name(), "name": fake.word(), "exclusions": fake.word()}
+    )
+
+    assert form.is_valid()
+    assert form.fields["owner"].help_text == Helpers.resolve().service_owner
+    assert (
+        form.fields["owner"].widget.attrs["placeholder"]
+        == Placeholders.resolve().service_owner
+    )
 
 
 def test_service_form__basic__correct():

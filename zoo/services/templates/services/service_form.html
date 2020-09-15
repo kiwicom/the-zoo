@@ -1,5 +1,6 @@
 {% extends 'shared/project_form.html' %}
 {% load static %}
+{% load utils %}
 
 {% block stylesheets %}
   {{ block.super }}
@@ -10,6 +11,13 @@
   {% with selected='services' %}
     {{ block.super }}
   {% endwith %}
+{% endblock %}
+
+{% block disclaimer %}
+{% singleton 'instance.Hints' as hints %}
+{% if hints.service_form_explanation %}
+<p class="ui secondary yellow segment">{{ hints.service_form_explanation|safe }}</p>
+{% endif %}
 {% endblock %}
 
 {% block content %}

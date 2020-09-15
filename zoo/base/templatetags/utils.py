@@ -4,6 +4,7 @@ import os
 import re
 
 from django import template
+from django.apps import apps
 from django.conf import settings
 
 from ...analytics.models import DependencyType, DependencyUsage
@@ -181,3 +182,42 @@ def dependency_versions(queryset, limit=None):
 @register.simple_tag
 def sentry_public_dsn():
     return os.getenv("SENTRY_PUBLIC_DSN") or ""
+
+
+@register.simple_tag
+def singleton(identifier):
+    try:
+        app, model = identifier.rsplit(".", 1)
+    except ValueError:
+        raise template.TemplateSyntaxError(
+            (
+                "Templatetag requires the model dotted path: 'app.ModelName'. "
+                f"Received '{identifier}'"
+            )
+        )
+
+    try:
+        instance = apps.get_model(app, model)
+        return instance.resolve()
+
+    except LookupError:
+        raise template.TemplateSyntaxError(
+            (
+                f"Could not get the model name '{model}'"
+                f"from the application named '{app}'"
+            )
+        )
+
+
+@register.filter(name="lookup")
+def lookup(source: object, key: str) -> object:
+    if isinstance(source, Mapping):
+        return source.get(key)
+
+    if isinstance(source, BaseForm):
+        try:
+            return source[key]
+        except KeyError:
+            return None
+
+    return getattr(source, key, None)

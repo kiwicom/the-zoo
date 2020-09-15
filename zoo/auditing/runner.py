@@ -1,11 +1,11 @@
 from collections import namedtuple
 
 import arrow
+import sentry_sdk
 import structlog
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.urls import reverse
-from raven.contrib.django.raven_compat.models import client
 from slacker import Error as SlackError
 from slacker import Slacker
 
@@ -139,7 +139,9 @@ def check_repository(checks, repository, fake_path):
                 check=check.__name__,
                 check_module=check.__module__,
             )
-            client.captureException(fingerprint=[check.__module__, check.__name__])
+            with sentry_sdk.push_scope() as scope:
+                scope.fingerprint = [check.__module__, check.__name__]
+                sentry_sdk.capture_exception()
 
 
 def run_checks_and_save_results(checks, repository, fake_path):

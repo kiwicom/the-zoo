@@ -1,5 +1,6 @@
 import difflib
 import json
+import os
 import re
 
 from django import template
@@ -175,3 +176,8 @@ def objective_label_color(objective: Objective) -> str:
 @register.filter
 def dependency_versions(queryset, limit=None):
     return DependencyUsage.versions(queryset, limit=limit)
+
+
+@register.simple_tag
+def sentry_public_dsn():
+    return os.getenv("SENTRY_PUBLIC_DSN") or ""

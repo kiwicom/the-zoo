@@ -251,7 +251,8 @@ zoo/auditing/standards/*/
 .direnv
 
 postgres-data
-venv
+venv/
+.venv/
 .postgres
 .pip.conf
 webpack/source

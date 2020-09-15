@@ -10,6 +10,8 @@ import os
 from pathlib import Path
 
 import environ
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 from ..utils import _get_app_version
 from . import logs
@@ -117,7 +119,6 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "django_extensions",
     "debug_toolbar",
-    "raven.contrib.django.raven_compat",
     "stronghold",
     "silk",
     "djangoql",
@@ -132,7 +133,6 @@ SILKY_AUTHORISATION = True
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware",
     "silk.middleware.SilkyMiddleware",
     "stronghold.middleware.LoginRequiredMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
@@ -209,8 +209,6 @@ STRONGHOLD_PUBLIC_URLS = (
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-RAVEN_CONFIG = {"release": version}
-
 CELERY_BROKER_URL = env("ZOO_CELERY_BROKER_URL")
 CELERY_REDBEAT_REDIS_URL = env("ZOO_REDBEAT_REDIS_URL")
 REDIS_CACHE_URL = env("ZOO_REDIS_CACHE_URL")
@@ -225,9 +223,16 @@ PINGDOM_PASS = env("ZOO_PINGDOM_PASS")
 PINGDOM_APP_KEY = env("ZOO_PINGDOM_APP_KEY")
 SLACK_URL = env("ZOO_SLACK_URL")
 SLACK_TOKEN = env("ZOO_SLACK_TOKEN")
+
 SENTRY_URL = env("ZOO_SENTRY_URL")
 SENTRY_ORGANIZATION = env("ZOO_SENTRY_ORGANIZATION")
 SENTRY_API_KEY = env("ZOO_SENTRY_API_KEY")
+
+sentry_sdk.init(
+    integrations=[DjangoIntegration()], release=version,
+)
+
+
 GITHUB_TOKEN = env("ZOO_GITHUB_TOKEN")
 SONARQUBE_URL = env("ZOO_SONARQUBE_URL")
 SONARQUBE_TOKEN = env("ZOO_SONARQUBE_TOKEN")

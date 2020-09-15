@@ -33,6 +33,8 @@ stdenv.mkDerivation rec {
   '';
 
   shellHook = ''
+    unset PYTHONPATH
+
     export LANG=en_US.UTF8
     export PACKAGE_VERSION=${version}
     export PIP_CONFIG_FILE=$PWD/.pip.conf

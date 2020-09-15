@@ -1,5 +1,4 @@
 {% load static %}
-{% load raven %}
 {% load utils %}
 
 <!doctype html>
@@ -40,9 +39,11 @@
   {% block body %}{% endblock %}
   <script src="{% static 'vendor.js' %}"></script>
   <script src="{% static 'bundle.js' %}"></script>
-  <script src="https://cdn.ravenjs.com/3.19.1/raven.min.js" crossorigin="anonymous"></script>
+  <script src="https://browser.sentry-cdn.com/5.23.0/bundle.min.js" crossorigin="anonymous"></script>
   <script>
-    Raven.config('{% sentry_public_dsn %}').install()
+      Sentry.init({
+          dsn:'{% sentry_public_dsn %}'
+      })
   </script>
   {% block scripts %}{% endblock %}
 </body>

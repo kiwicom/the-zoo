@@ -50,6 +50,20 @@ def get_repositories():
     return []
 
 
+def get_namespaces():
+    try:
+        for group in gitlab.groups.list(as_list=False):
+            yield {
+                "name": group.full_name,
+            }
+    except MissingSchema:
+        log.info("gitlab.get_repositories.skip")
+    except GitlabGetError:
+        log.exception("gitlab.get_repositories.error")
+
+    return []
+
+
 def get_project_details(remote_id):
     project = get_project(remote_id)
     return {

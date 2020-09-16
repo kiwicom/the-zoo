@@ -6,6 +6,21 @@ from . import models
 
 
 class LibraryForm(forms.ModelForm):
+    namespace = "library_"
+    sections = [
+        {
+            "title": "General",
+            "subtitle": "Basic service information",
+            "icon": "paperclip",
+            "fields": ["owner", "name", "impact", "status", "docs_url", "tags"],
+        },
+        {
+            "subtitle": "Third party solutions",
+            "icon": "bolt",
+            "fields": ["repository", "slack_channel", "sonarqube_project"],
+        },
+    ]
+
     class Meta:
         model = models.Library
         fields = [

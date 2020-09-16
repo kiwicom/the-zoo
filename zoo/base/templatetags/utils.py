@@ -2,10 +2,12 @@ import difflib
 import json
 import os
 import re
+from collections.abc import Mapping
 
 from django import template
 from django.apps import apps
 from django.conf import settings
+from django.forms import BaseForm
 
 from ...analytics.models import DependencyType, DependencyUsage
 from ...auditing.check_discovery import Effort, Severity

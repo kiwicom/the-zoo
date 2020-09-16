@@ -149,6 +149,7 @@ export default {
       }
     },
     onBlur () {
+      this.changeUndid = false
       this.$refs.suggestions.selectSuggestion();
       this.isOnEditMode = false
       this.$store.commit("refreshEnteredText")
@@ -164,10 +165,14 @@ export default {
     $('input[name="owner"]').on('keyup', function () {
       context.owner = $('input[name="owner"]').val()
     })
+    $('select[name="owner"]').on('change', function () {
+      context.owner = $('select[name="owner"]').val()
+      context.$store.commit("setSelectedNamespace", context.owner)
+    })
     $('input[name="name"]').on('keyup', function () {
       context.name = $('input[name="name"]').val()
     })
-    context.owner = $('input[name="owner"]').val()
+    context.owner = $('[name="owner"]').val()
     context.name = $('input[name="name"]').val()
     createPopup()
   }

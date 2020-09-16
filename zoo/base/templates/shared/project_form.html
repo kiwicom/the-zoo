@@ -14,7 +14,7 @@
         {% if project %}Update {{ project }}{% else %}New {{ project_type_singular }}{% endif %}
       </h2>
       {% block disclaimer %}{% endblock %}
-      <form class="ui form" method="post">
+      <form class="ui form" method="post" noValidate>
         {% csrf_token %}
         {% for section in form.sections %}
           <div class="ui segment">
@@ -31,9 +31,12 @@
             {% for name in section.fields %}
               {% with form|lookup:name as field %}
                 {% with field.widget.input_type as type %}
-                <div class="field">
+                <div class="field {% if field.errors %}error{% endif %}">
                   <label>{{ field.label }}</label>
                   {{ field }}
+                  {% if field.errors %}
+                  <div class="ui pointing red basic label">{{ field.errors.0 }}</div>
+                  {% endif %}
                   {% if field.help_text %}
                     <p><span class="ui small grey text">{{ field.help_text }}</span></p>
                   {% endif %}

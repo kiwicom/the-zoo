@@ -10,7 +10,7 @@
       v-for="(suggestion, i) in visibleSuggestions"
       :class="{'selected': i === cursor, 'item': true}"
     >
-      <span>{{ suggestion.reference }} </span>
+      <span v-html="suggestion.label"></span>
     </div>
     <div class="item" style="text-align: center;" v-if="count === 0">
     <span>
@@ -64,7 +64,7 @@ export default {
           "selectSuggestion",
           this.suggestions[this.cursor].id,
         );
-      } else {
+      } else if (this.$store.state.enteredText === "") {
         console.log(this.cursor);
         this.$store.commit(
           "selectSuggestion",

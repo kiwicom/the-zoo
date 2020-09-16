@@ -5,7 +5,13 @@
 <script>
   const repoList = [
     {% for repo in repos %}
-    {id: {{ repo.pk }}, reference: '{{ repo.provider }} - {{ repo }}'},
+    {
+      id: {{ repo.pk }},
+      provider: '{{ repo.provider }}',
+      owner: '{{ repo.owner }}',
+      reference: '{{ repo }}',
+      label: '<i class="brown {{ repo.provider }} icon"></i>  {{ repo }}'
+    },
     {% endfor %}
   ];
   const repoInputInfo = {

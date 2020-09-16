@@ -17,19 +17,26 @@ const store = new Vuex.Store({
   state: {
     repoList: repoList,
     inputValue: '',
-    enteredText: ''
+    enteredText: '',
+    selectedNamespace: '',
   },
   getters: {
     getFilteredSuggestions (state) {
-      return filter(where({
-        reference: contains(state.enteredText)
-      }), state.repoList)
+      return filter(
+        where(
+          {
+            reference: contains(state.enteredText),
+            owner: contains(state.selectedNamespace),
+          }
+        ),
+        state.repoList
+      )
     },
     getRepoId (state) {
       return (repoName) => {
         return filter(
           propSatisfies(
-            ref => ref.split(' - ')[1] === repoName,
+            ref => ref === repoName,
             'reference'
           ), state.repoList
         )
@@ -42,6 +49,9 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    setSelectedNamespace (state, term) {
+      state.selectedNamespace = term
+    },
     setEnteredText (state, term) {
       state.enteredText = term
     },

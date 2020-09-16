@@ -14,7 +14,7 @@
         {% if project %}Update {{ project }}{% else %}New {{ project_type_singular }}{% endif %}
       </h2>
       {% block disclaimer %}{% endblock %}
-      <form class="ui form" method="post" noValidate>
+      <form class="ui form" method="post">
         {% csrf_token %}
         {% for section in form.sections %}
           <div class="ui segment">

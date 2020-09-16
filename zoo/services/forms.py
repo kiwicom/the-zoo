@@ -63,6 +63,37 @@ class EnvironmentForm(forms.ModelForm):
 
 class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
 
+    namespace = "service_"
+    sections = [
+        {
+            "title": "General",
+            "subtitle": "Basic service information",
+            "icon": "paperclip",
+            "fields": [
+                "owner",
+                "name",
+                "description",
+                "impact",
+                "status",
+                "tier",
+                "docs_url",
+                "tags",
+                "exclusions",
+            ],
+        },
+        {
+            "title": "Integrations",
+            "subtitle": "Third party solutions",
+            "icon": "bolt",
+            "fields": [
+                "repository",
+                "slack_channel",
+                "sentry_project",
+                "sonarqube_project",
+                "pagerduty_service",
+            ],
+        },
+    ]
     exclusions = forms.CharField(
         max_length=500,
         label="Repository check exclusions",
@@ -115,8 +146,6 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        self.namespace = "service_"
-
         instance = kwargs.get("instance")
         exclusions = (
             instance.repository.exclusions if instance and instance.repository else ""

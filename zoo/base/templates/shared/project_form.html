@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load utils %}
 
 {% block stylesheets %}
 <link rel="stylesheet" href="{% static 'project_form.css' %}">
@@ -8,21 +9,39 @@
 {% block content %}
 <div class="ui centered stackable grid">
   <div class="ui ten wide column column">
-    <div class="ui piled segment">
+    <div class="ui basic segment">
       <h2 class="ui header">
         {% if project %}Update {{ project }}{% else %}New {{ project_type_singular }}{% endif %}
       </h2>
       {% block disclaimer %}{% endblock %}
       <form class="ui form" method="post">
         {% csrf_token %}
-        {% for field in form %}
-          {% with field.field.widget.input_type as type %}
-          <div class="field">
-            <label>{{ field.label }}</label>
-            {{ field }}
-            {% if field.field.help_text %}<p><span class="ui small grey text">{{ field.field.help_text }}</span></p>{% endif %}
+        {% for section in form.sections %}
+          <div class="ui segment">
+            <div class="ui header">
+              {% if section.icon %}<i class="{{ section.icon }} icon"></i>{% endif %}
+              <div class="content">
+                {{ section.title }}
+                {% if section.subtitle %}
+                  <div class="sub header">{{ section.subtitle }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            {% for name in section.fields %}
+              {% with form|lookup:name as field %}
+                {% with field.widget.input_type as type %}
+                <div class="field">
+                  <label>{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.help_text %}
+                    <p><span class="ui small grey text">{{ field.help_text }}</span></p>
+                  {% endif %}
+                </div>
+                {% endwith %}
+              {% endwith %}
+            {% endfor %}
           </div>
-          {% endwith %}
         {% endfor %}
         {% block extrafields %}
         {% endblock %}

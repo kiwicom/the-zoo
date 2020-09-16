@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 import pytest
 from django import template
 
@@ -20,6 +22,10 @@ if os.path.exists("test/file"):
 
 pytestmark = pytest.mark.django_db
 
+
+@dataclass
+class RandomObject:
+    name: str
 
 
 def test_templatetags_utils__diff():
@@ -45,3 +51,17 @@ def test_templatestags_utils__singleton__correct():
 def test_templatestags_utils__singleton__wrong_identifier(identifier):
     with pytest.raises(template.TemplateSyntaxError):
         uut.singleton(identifier)
+
+
+@pytest.mark.parametrize(
+    "source, key, value",
+    (
+        ({"a": 1}, "a", 1),
+        ({"a": 1}, "b", None),
+        (RandomObject(name="something"), "name", "something"),
+        (RandomObject(name="something"), "surname", None),
+    ),
+)
+def test_templatestags_utils__lookup(source, key, value):
+    result = uut.lookup(source, key)
+    assert result == value

@@ -8,7 +8,7 @@
             </a>
             <input type="hidden" :name="inputName" :value="value">
         </div>
-        <div class="flex-horizontal tag-container">
+        <div class="flex-horizontal tag-container" v-if="availableTags.length > 0">
             <a class="ui tag label" :data-value="tag" v-for="tag in availableTags" :key="tag" @click="selectedTags.push(tag)">
                 {{ tag }}
             </a>

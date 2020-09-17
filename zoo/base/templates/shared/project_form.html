@@ -38,7 +38,7 @@
                   <div class="ui pointing red basic label">{{ field.errors.0 }}</div>
                   {% endif %}
                   {% if field.help_text %}
-                    <p><span class="ui small grey text">{{ field.help_text }}</span></p>
+                    <p><span class="ui small grey text">{{ field.help_text|safe }}</span></p>
                   {% endif %}
                 </div>
                 {% endwith %}

@@ -7,12 +7,8 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     glibcLocales
-
-    pip
     python
-    setuptools
     virtualenv
-    tox
   ];
 
   __helperFuncs = ''

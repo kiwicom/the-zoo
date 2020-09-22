@@ -15,3 +15,4 @@ pytest-freezegun
 python-dateutil
 snapshottest
 testing-postgresql
+tox

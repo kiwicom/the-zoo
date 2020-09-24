@@ -141,7 +141,10 @@ class OncallPerson(graphene.ObjectType):
     @classmethod
     def from_object(cls, user):
         return cls(
-            id=user.id, type=user.type, summary=user.summary, html_url=user.html_url,
+            id=user.id,
+            type=user.type,
+            summary=user.summary,
+            html_url=user.html_url,
         )
 
 

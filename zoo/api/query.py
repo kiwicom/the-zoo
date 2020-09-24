@@ -1,5 +1,6 @@
 import graphene
 from graphene import relay
+from graphene_django.types import DjangoObjectType
 
 from ..analytics.models import Dependency, DependencyType, DependencyUsage
 from ..auditing.models import Issue
@@ -11,7 +12,64 @@ from .paginator import Paginator
 DependencyTypeEnum = graphene.Enum.from_enum(DependencyType)
 
 
+class ServiceType(DjangoObjectType):
+    class Meta:
+        model = Service
+
+
+class RepositoryType(DjangoObjectType):
+    class Meta:
+        model = Repository
+
+
+class IssueType(DjangoObjectType):
+    class Meta:
+        model = Issue
+
+
 class Query(graphene.ObjectType):
+    services = graphene.List(ServiceType)
+    service = graphene.Field(ServiceType, id=graphene.ID(), name=graphene.String())
+    repositories = graphene.List(RepositoryType)
+    repository = graphene.Field(
+        RepositoryType, id=graphene.ID(), name=graphene.String()
+    )
+    issues = graphene.List(
+        IssueType,
+        repository_name=graphene.String(),
+        service_name=graphene.String(),
+        service_id=graphene.ID(),
+    )
+    issue = graphene.Field(IssueType, id=graphene.ID())
+
+    def resolve_services(self, info, **kwargs):
+        return Service.objects.order_by("name")[:10]
+
+    def resolve_service(self, info, id=None, name=None):
+        if id is not None:
+            return Service.objects.get(pk=id)
+        if name is not None:
+            return Service.objects.get(name=name)
+
+    def resolve_repositories(self, info, **kwargs):
+        return Repository.objects.all()
+
+    def resolve_repository(self, info, id=None, name=None):
+        return Repository.objects.get(pk=id)
+
+    def resolve_issues(
+        self, info, repository_name=None, service_id=None, service_name=None
+    ):
+        if repository_name is not None:
+            return Issue.objects.filter(repository__name=repository_name)
+
+        # if repository_name is not None:
+
+    def resolve_issue(
+        self, info, id=None,
+    ):
+        return Issue.objects.get(pk=id)
+
     node = relay.Node.Field()
     all_issues = relay.ConnectionField(
         types.IssueConnection,

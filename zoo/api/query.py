@@ -2,12 +2,8 @@ import graphene
 from graphene.relay import Node
 from graphene_django.filter import DjangoFilterConnectionField
 
-from ..analytics.models import Dependency, DependencyType, DependencyUsage
-from ..auditing.models import Issue
-from ..repos.models import Repository
-from ..services.models import Service
+from ..analytics.models import DependencyType
 from . import types
-from .paginator import Paginator
 
 DependencyTypeEnum = graphene.Enum.from_enum(DependencyType)
 

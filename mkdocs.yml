@@ -16,13 +16,11 @@ theme:
     tabs: true
 
 nav:
-  - Home:
-    - index.md
+  - Home: 'index.md'
   - Configuration:
-    - config/full.md
-    - config/pd-only.md
-  - FAQ:
-    - faq.md
+      - config/full.md
+      - config/pd-only.md
+  - FAQ: 'faq.md'
 
 markdown_extensions:
   - admonition

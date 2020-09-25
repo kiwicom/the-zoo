@@ -130,6 +130,7 @@ class Service(DjangoObjectType):
             repository=service.repository_id,
             all_environments=service.environments,
         )
+
     environments = DjangoFilterConnectionField(Environment)
 
     class Meta:

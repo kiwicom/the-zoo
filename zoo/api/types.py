@@ -95,9 +95,6 @@ class PagerdutyService(graphene.ObjectType):
     past_week_total = graphene.Int()
     all_active_incidents = ConnectionField(ActiveIncidentConnection)
 
-    def resolve_oncall_person(self, info):
-        return OncallPerson.from_object(self.oncall_person)
-
     def resolve_all_active_incidents(self, info, **kwargs):
         paginator = Paginator(**kwargs)
         edges = []
@@ -106,7 +103,7 @@ class PagerdutyService(graphene.ObjectType):
         page_info = paginator.get_page_info(total)
 
         for i, issue in enumerate(
-            self.all_active_incidents[
+            self.all_active_incidents[  # pylint: disable=E1136
                 paginator.slice_from : paginator.slice_to  # Ignore PEP8Bear
             ]
         ):
@@ -192,9 +189,9 @@ class Dependency(DjangoObjectType, interfaces=[Node]):
         )
 
     @classmethod
-    def get_node(cls, info, dependency_id):
+    def get_node(cls, info, id):
         try:
-            dependency = analytics_models.Dependency.objects.get(id=dependency_id)
+            dependency = analytics_models.Dependency.objects.get(id=id)
             return cls.from_db(dependency)
         except ObjectDoesNotExist:
             return None
@@ -222,11 +219,9 @@ class DependencyUsage(DjangoObjectType, interfaces=[Node]):
         )
 
     @classmethod
-    def get_node(cls, info, dependency_usage_id):
+    def get_node(cls, info, id):
         try:
-            dependency_usage = analytics_models.DependencyUsage.objects.get(
-                id=dependency_usage_id
-            )
+            dependency_usage = analytics_models.DependencyUsage.objects.get(id=id)
             return cls.from_db(dependency_usage)
         except ObjectDoesNotExist:
             return None

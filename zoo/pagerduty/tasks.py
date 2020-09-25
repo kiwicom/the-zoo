@@ -35,5 +35,5 @@ def get_oncall_info(service_id):
         "html_url": service.html_url,
         "oncall_person": oncall_people[0] if oncall_people else None,
         "past_week_total": len(incidents),
-        "all_active_incidents": list(active_incidents),
+        "all_active_incidents": active_incidents,
     }

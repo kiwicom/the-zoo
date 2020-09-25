@@ -74,7 +74,10 @@ class OncallPerson(graphene.ObjectType):
     @classmethod
     def from_object(cls, user):
         return cls(
-            id=user.id, type=user.type, summary=user.summary, html_url=user.html_url,
+            id=user.id,
+            type=user.type,
+            summary=user.summary,
+            html_url=user.html_url,
         )
 
 
@@ -114,7 +117,6 @@ class Service(DjangoObjectType):
     repository = graphene.Field(lambda: Repository)
     pagerduty_service = graphene.Field(lambda: PagerdutyService)
     docs_url = graphene.String()
-    all_environments = relay.ConnectionField(EnvironmentConnection)
 
     @classmethod
     def from_db(cls, service):
@@ -137,28 +139,6 @@ class Service(DjangoObjectType):
         model = services_models.Service
         interfaces = [Node]
         filter_fields = ["name", "owner"]
-
-    def resolve_all_environments(self, info, **kwargs):
-        paginator = Paginator(**kwargs)
-        edges = []
-        filtered_environments = services_models.Environment.objects.filter(
-            service_id=self.id
-        )
-        total = filtered_environments.count()
-        page_info = paginator.get_page_info(total)
-
-        for i, issue in enumerate(
-            filtered_environments[
-                paginator.slice_from : paginator.slice_to  # Ignore PEP8Bear
-            ]
-        ):
-            cursor = paginator.get_edge_cursor(i + 1)
-            node = Environment.from_db(issue)
-            edges.append(EnvironmentConnection.Edge(node=node, cursor=cursor))
-
-        return EnvironmentConnection(
-            page_info=page_info, edges=edges, total_count=total
-        )
 
 
 class Repository(DjangoObjectType, interfaces=[Node]):

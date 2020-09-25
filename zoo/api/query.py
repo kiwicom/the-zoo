@@ -1,7 +1,6 @@
 import graphene
 from graphene.relay import Node
 from graphene_django.filter import DjangoFilterConnectionField
-from graphene_django.types import DjangoObjectType
 
 from ..analytics.models import DependencyType
 from . import types

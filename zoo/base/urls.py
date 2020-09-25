@@ -52,10 +52,6 @@ handler500 = "zoo.base.views.server_error"
 if settings.DEBUG:
     import debug_toolbar
 
-    from . import views
-
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls)),
-        path("http404", views.not_found),
-        path("http500", views.server_error),
     ] + urlpatterns

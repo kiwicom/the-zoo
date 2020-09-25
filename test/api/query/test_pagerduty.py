@@ -12,7 +12,7 @@ def test_pagerduty_service(snapshot, mocker, call_api, service_factory):
         status="fixed",
         impact="sales",
         slack_channel="https://gitlab.slack",
-        pagerduty_url="https://pagerduty.com/services/1A2B3",
+        pagerduty_service="services/1A2B3",
         docs_url="https://docs/skypicker/docs/",
     )
     id = to_global_id("Service", 10)

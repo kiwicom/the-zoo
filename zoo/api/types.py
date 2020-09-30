@@ -1,5 +1,6 @@
 import graphene
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseBase
 from graphene.relay import Connection, ConnectionField, Node
 from graphene.types.json import JSONString
 from graphene_django.filter import DjangoFilterConnectionField
@@ -8,6 +9,7 @@ from graphene_django.types import DjangoObjectType
 from ..analytics import models as analytics_models
 from ..auditing import check_discovery
 from ..auditing import models as auditing_models
+from ..pagerduty.tasks import get_oncall_info, path_to_service_id
 from ..repos import models as repos_models
 from ..services import models as services_models
 from .paginator import Paginator
@@ -87,7 +89,7 @@ class OncallPerson(graphene.ObjectType):
         )
 
 
-class PagerdutyService(graphene.ObjectType):
+class PagerdutyInfo(graphene.ObjectType):
     id = graphene.String()
     summary = graphene.String()
     html_url = graphene.String()
@@ -118,8 +120,20 @@ class PagerdutyService(graphene.ObjectType):
 
 class Service(DjangoObjectType):
     repository = graphene.Field(lambda: Repository)
-    pagerduty_service = graphene.Field(lambda: PagerdutyService)
+    pagerduty_info = graphene.Field(lambda: PagerdutyInfo)
     docs_url = graphene.String()
+
+    def resolve_pagerduty_info(self, info):
+        service_id = path_to_service_id(self.pagerduty_service)
+        if service_id is None:
+            return
+
+        try:
+            data = get_oncall_info(service_id)  # Might return django.http.Http404
+        except Exception as error:
+            # Log error
+            return
+        return PagerdutyInfo(**data)
 
     @classmethod
     def from_db(cls, service):

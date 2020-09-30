@@ -9,7 +9,8 @@ export const getServices = `
         status
         impact
         slackChannel
-        pagerdutyService {
+        pagerdutyService
+        pagerdutyInfo {
           id
           summary
           htmlUrl
@@ -55,17 +56,7 @@ query ($id: ID!)
       status
       impact
       slackChannel
-      pagerdutyService {
-        id
-        summary
-        htmlUrl
-        oncallPerson { 
-          type
-          summary
-          htmlUrl
-        }
-        pastWeekTotal
-      }
+      pagerdutyService
       docsUrl
       repository {
         id
@@ -83,6 +74,49 @@ query ($id: ID!)
               lastCheck
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+export const getPagerdutyService = `
+query ($id: ID!)
+  {
+    service (id: $id) {
+      id
+      name
+      pagerdutyService
+      pagerdutyInfo {
+        id
+        summary
+        htmlUrl
+        pastWeekTotal
+        allActiveIncidents {
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            endCursor
+            startCursor
+          }
+          totalCount
+          edges {
+            node {
+              id
+              createdAt
+              status
+              summary
+              description
+              htmlUrl
+              color
+            }
+          }
+        }
+        oncallPerson {
+          id
+          type
+          summary
+          htmlUrl
         }
       }
     }
@@ -164,15 +198,28 @@ export type CheckResult = {
   description: string;
 }
 
-export type PagerdutyService = {
+export type PagerdutyInfo = {
+  id: string;
   summary: string;
-  html_url: string;
-  oncall_person: OncallPerson;
-  past_week_total: number;
+  htmlUrl: string;
+  oncallPerson: OncallPerson;
+  pastWeekTotal: number;
+  allActiveIncidents: ActiveIncident[];
 }
 
 export type OncallPerson = {
+  id: string;
   type: string;
   summary: string;
-  html_url: string;
+  htmlUrl: string;
+}
+
+export type ActiveIncident = {
+    id: string
+    summary: string
+    description: string
+    status: string
+    htmlUrl: string
+    createdAt: string
+    color: string
 }

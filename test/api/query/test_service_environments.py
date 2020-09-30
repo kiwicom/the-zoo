@@ -59,7 +59,7 @@ def test_empty(snapshot, call_api):
         totalCount
         edges {
           node {
-            allEnvironments {
+            environments {
               totalCount
               edges {
                 node {
@@ -83,7 +83,7 @@ def test_all(snapshot, call_api, generate_environments):
         totalCount
         edges {
           node {
-            allEnvironments {
+            environments {
               totalCount
               edges {
                 node {
@@ -117,7 +117,7 @@ def test_first(snapshot, call_api, generate_environments):
         totalCount
         edges {
           node {
-            allEnvironments(first: 2) {
+            environments(first: 2) {
               totalCount
               edges {
                 node {
@@ -151,7 +151,7 @@ def test_last(snapshot, call_api, generate_environments):
         totalCount
         edges {
           node {
-            allEnvironments(last: 2, before: "Mg==") {
+            environments(last: 2, before: "Mg==") {
               totalCount
               edges {
                 node {

@@ -219,7 +219,7 @@ def test_with_environment(snapshot, call_api, generate_services_with_environment
             slackChannel
             pagerdutyService
             docsUrl
-            allEnvironments {
+            environments {
               totalCount
               edges {
                 node {

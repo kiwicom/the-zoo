@@ -1,4 +1,4 @@
-FROM node:12-alpine as fe-builder
+FROM node:12 as fe-builder
 
 ENV NODE_OPTIONS="--max-old-space-size=2048"
 
@@ -9,6 +9,21 @@ RUN yarn install --frozen-lockfile && \
 
 COPY zoo/ source/
 RUN yarn production
+
+FROM node:12 as bs-builder
+
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+
+WORKDIR /app/frontend
+COPY frontend ./
+RUN yarn install && \
+    yarn cache clean && \
+    yarn tsc || true && \
+    yarn build
+
+FROM golang as static-server
+
+RUN go get -u github.com/m3ng9i/ran
 
 FROM python:3.8-slim
 
@@ -27,23 +42,21 @@ RUN apt update && \
     apt remove -y build-essential && \
     apt autoremove -y && \
     apt clean autoclean && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm *.txt
+    rm -rf /var/lib/apt/lists/*
 
-COPY zoo ./zoo
-COPY requirements ./requirements
-COPY scripts ./scripts
-COPY .misc ./.misc
-COPY manage.py ./
-COPY setup.py ./
-COPY MANIFEST.in ./
+COPY --from=fe-builder /app/zoo ./zoo
+COPY . ./
 
 RUN pip install --no-cache-dir -e . && \
     django-admin check && \
     mkdir -p /app/zoo/public/static && \
     django-admin collectstatic --noinput && \
-    chown -R macaque:macaque /app && \
-    rm -rf requirements
+    chown -R macaque:macaque /app
+
+COPY --from=bs-builder /app/frontend/packages/app/dist ./public
+COPY --from=static-server /go/bin/ran /usr/local/bin
+
+RUN chmod +x /usr/local/bin/ran
 
 ARG package_version
 ENV PACKAGE_VERSION=$package_version

@@ -1,5 +1,18 @@
 version: "2"
 services:
+  frontend:
+    build: .
+    command:
+      - ran
+      - -r
+      - /app/public
+    ports:
+      - 21966:8080
+    depends_on:
+      - app
+    tty: true
+    restart: on-failure
+
   app:
     build: .
     command:

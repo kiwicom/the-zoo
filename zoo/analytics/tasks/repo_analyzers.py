@@ -2,11 +2,11 @@ import structlog
 from django.utils import timezone
 
 from ..models import Dependency, DependencyUsage
-from . import docker, git_api, package_json, requirements_py
+from . import docker, git_api, gitlab_ci, package_json, requirements_py
 
 log = structlog.get_logger()
 
-ANALYZERS = [docker, git_api, package_json, requirements_py]
+ANALYZERS = [docker, git_api, gitlab_ci, package_json, requirements_py]
 
 
 def unpack_version(version: str) -> dict:

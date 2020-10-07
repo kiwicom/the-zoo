@@ -14,6 +14,7 @@ class DependencyType(Enum):
     RS_LIB = "Rust Library"
     ER_LIB = "Erlang Library"
     DOCKER_IMG = "Docker Image"
+    GITLAB_CI = "Gitlab-ci.yml"
 
 
 class NameField(models.CharField):

@@ -27,3 +27,4 @@ pip-log.txt
 postgres-data
 venv
 webpack/node_modules/
+Dockerfile

@@ -56,7 +56,7 @@ def download_repository(repository, fake_dir, sha=None):
 
 def _parse_file(path, base=None):
     try:
-        parser = ResolvingParser(str(path))
+        parser = ResolvingParser(str(path), strict=False)
         return parser.specification
     except (
         AssertionError,

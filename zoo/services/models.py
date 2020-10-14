@@ -11,6 +11,7 @@ from django.urls import reverse
 from djangoql.schema import DjangoQLSchema
 
 from . import ratings
+from .managers import SentryIssueManager
 
 
 class Status(Enum):
@@ -247,6 +248,8 @@ class SentryIssue(models.Model):
         blank=True,
         max_length=100,
     )
+
+    objects = SentryIssueManager()
 
 
 class SentryIssueStats(models.Model):

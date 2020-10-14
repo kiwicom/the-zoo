@@ -22,3 +22,8 @@ class EnvironmentAdmin(admin.ModelAdmin):
 @admin.register(models.Tier)
 class TierAdmin(admin.ModelAdmin):
     list_display = ("__str__", "description")
+
+
+@admin.register(models.SentryIssue)
+class SentryIssueAdmin(admin.ModelAdmin):
+    pass

@@ -8,18 +8,16 @@ class SingletonAdmin(admin.ModelAdmin):
         return not self.model.objects.exists()  # Allow only one entry on the database
 
 
+@admin.register(models.Helpers)
 class HelpersAdmin(SingletonAdmin):
     pass
 
 
+@admin.register(models.Hints)
 class HintsAdmin(SingletonAdmin):
     pass
 
 
+@admin.register(models.Placeholders)
 class PlaceholdersAdmin(SingletonAdmin):
     pass
-
-
-admin.site.register(models.Helpers, HelpersAdmin)
-admin.site.register(models.Hints, HintsAdmin)
-admin.site.register(models.Placeholders, PlaceholdersAdmin)

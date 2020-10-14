@@ -3,6 +3,7 @@ from django.contrib import admin
 from . import models
 
 
+@admin.register(models.Library)
 class LibraryAdmin(admin.ModelAdmin):
     search_fields = (
         "owner",
@@ -11,6 +12,3 @@ class LibraryAdmin(admin.ModelAdmin):
         "repository__name",
         "repository__remote_id",
     )
-
-
-admin.site.register(models.Library, LibraryAdmin)

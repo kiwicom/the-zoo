@@ -6,6 +6,8 @@ from django.db import models
 from django.db.models import Q, Sum
 from django.utils import timezone
 
+from .models import SentryIssueCategory
+
 
 class SentryIssueQuerySet(models.QuerySet):
     def calculate_weekly_sentry_stats(self) -> Dict[str, int]:
@@ -21,9 +23,9 @@ class SentryIssueQuerySet(models.QuerySet):
     def problematic(self) -> list:
         """Problematic issues sorted by category and last time seen."""
         ISSUE_ORDER = {
-            models.SentryIssueCategory.STALE.value: 0,
-            models.SentryIssueCategory.DECAYING.value: 1,
-            models.SentryIssueCategory.SPOILED.value: 2,
+            SentryIssueCategory.STALE.value: 0,
+            SentryIssueCategory.DECAYING.value: 1,
+            SentryIssueCategory.SPOILED.value: 2,
         }
 
         return sorted(

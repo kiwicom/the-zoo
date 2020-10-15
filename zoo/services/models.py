@@ -1,6 +1,5 @@
 import re
 from collections import OrderedDict, namedtuple
-from enum import Enum
 
 import arrow
 from django.conf import settings
@@ -11,20 +10,8 @@ from django.urls import reverse
 from djangoql.schema import DjangoQLSchema
 
 from . import ratings
+from .constants import Impact, SentryIssueCategory, Status
 from .managers import SentryIssueManager
-
-
-class Status(Enum):
-    BETA = "beta"
-    PRODUCTION = "production"
-    DEPRECATED = "deprecated"
-    DISCONTINUED = "discontinued"
-
-
-class Impact(Enum):
-    PROFIT = "profit"
-    CUSTOMERS = "customers"
-    EMPLOYEES = "employees"
 
 
 class Service(models.Model):
@@ -214,13 +201,6 @@ def slugify_attribute(attribute):
 def generate_slugs(sender, instance, *args, **kwargs):
     instance.owner_slug = slugify_attribute(instance.owner)
     instance.name_slug = slugify_attribute(instance.name)
-
-
-class SentryIssueCategory(Enum):
-    STALE = "stale"
-    DECAYING = "decaying"
-    SPOILED = "spoiled"
-    FRESH = "fresh"
 
 
 SentryIssueCounts = namedtuple(

@@ -213,10 +213,12 @@ class ServiceOpenApiDefinition(ServiceMixin, generic_views.View):
         specs = []
         if service:
             environments = service.environments_dict
-            for _, environment in environments.items():
-                spec = requests.get(environment.open_api_url)
+            urls = [
+                env.open_api_url for env in environments.values() if env.open_api_url
+            ]
+            for url in urls:
+                spec = requests.get(url)
                 specs.append(json.loads(spec.text))
-        specs = list(filter(None, specs))
         if specs:
             return JsonResponse(specs, safe=False)
         openapi_definition(request, service.repository)

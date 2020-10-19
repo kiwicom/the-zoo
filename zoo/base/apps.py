@@ -15,6 +15,7 @@ class BaseConfig(AppConfig):
         from ..analytics import tasks as analytics_tasks
         from ..auditing import tasks as auditing_tasks
         from ..datacenters import tasks as datacenters_tasks
+        from ..meilisearch import tasks as meilisearch_tasks
         from ..objectives import tasks as objective_tasks
         from ..repos import tasks as repos_tasks
         from ..services import tasks as service_tasks
@@ -45,4 +46,10 @@ class BaseConfig(AppConfig):
         )
         celery_app.add_periodic_task(
             timedelta(days=1), datacenters_tasks.schedule_infra_mapping
+        )
+        celery_app.add_periodic_task(
+            timedelta(hours=1), meilisearch_tasks.index_db_model_instances
+        )
+        celery_app.add_periodic_task(
+            timedelta(minutes=30), meilisearch_tasks.index_openapi_definitions
         )

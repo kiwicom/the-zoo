@@ -19,7 +19,7 @@ destroy:
 	docker-compose down -v
 
 test:
-	TOX_TESTENV_PASSENV=TEST_DATABASE_URL tox
+	tox -e tests
 
 pytest:
 	.tox/tests/bin/py.test
@@ -36,7 +36,7 @@ migrations:
 superuser:
 	docker-compose run app django-admin createsuperuser
 
-shell:
+bash:
 	docker-compose run app bash
 
 django-shell:

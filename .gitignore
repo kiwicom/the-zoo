@@ -256,3 +256,4 @@ venv/
 .postgres
 .pip.conf
 webpack/source
+meilidata

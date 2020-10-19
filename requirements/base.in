@@ -22,6 +22,7 @@ hiredis
 ipython
 kubernetes
 markdown
+meilisearch
 openapi-spec-validator
 prance
 psycopg2-binary

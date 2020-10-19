@@ -7,8 +7,8 @@ from pathlib import Path
 import structlog
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
-from pkg_resources import ResolutionError
 from prance import ResolvingParser, ValidationError
+from prance.util.url import ResolutionError
 from yaml.composer import ComposerError
 from yaml.scanner import ScannerError
 

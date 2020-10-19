@@ -4,7 +4,6 @@ import tarfile
 import tempfile
 from pathlib import Path
 
-import redis
 import structlog
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
@@ -13,6 +12,7 @@ from prance import ResolvingParser, ValidationError
 from yaml.composer import ComposerError
 from yaml.scanner import ScannerError
 
+from ..base import redis
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 
 OPENAPI_SCAN_EXCLUDE = ["k8s", "test", ".gitlab", ".github"]

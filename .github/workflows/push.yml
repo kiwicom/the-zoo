@@ -106,8 +106,15 @@ jobs:
     env:
       TEST_DATABASE_URL: postgres://postgres:postgres@postgres/postgres
       TOX_TESTENV_PASSENV: TEST_DATABASE_URL
+      MEILI_HOST: http://meilisearch:7700
+      MEILI_MASTER_KEY: meili
 
     services:
+      meilisearch:
+        image: getmeili/meilisearch
+        env:
+          MEILI_MASTER_KEY: meili
+          MEILI_NO_ANALYTICS: true
       postgres:
         image: postgres:12-alpine
         env:

@@ -30,6 +30,7 @@ urlpatterns = [
     path("pagerduty/", include("zoo.pagerduty.urls")),
     path("", include("zoo.auditing.urls")),
     path("", include("zoo.checklists.urls")),
+    path("", include("zoo.meilisearch.urls")),
     path("objectives/", include("zoo.objectives.urls")),
     path("analytics/", include("zoo.analytics.urls")),
     path("resources/", include("zoo.resources.urls")),

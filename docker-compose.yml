@@ -109,3 +109,18 @@ services:
     volumes:
       - ./zoo:/app/zoo
     restart: on-failure
+
+  meilisearch:
+    image: getmeili/meilisearch
+    container_name: meilisearch
+    restart: on-failure
+    volumes:
+      - meilidata:/data.ms
+    environment:
+      MEILI_MASTER_KEY: "meili"
+    ports:
+      - 7700:7700
+
+volumes:
+  meilidata:
+    driver: local

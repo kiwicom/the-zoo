@@ -3,8 +3,10 @@ import os
 import tarfile
 from pathlib import Path
 
+import meilisearch
 import pytest
 import testing.postgresql
+from django.conf import settings
 from django.db import connections
 from environ import Env
 from faker import Faker

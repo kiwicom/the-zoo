@@ -16,3 +16,4 @@ python-dateutil
 snapshottest
 testing-postgresql
 tox
+tox-docker

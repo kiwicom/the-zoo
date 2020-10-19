@@ -59,6 +59,8 @@ env = environ.Env(
     RANCHER_ACCESS_KEY=(str, None),
     RANCHER_SECRET_KEY=(str, None),
     GCP_SERVICE_KEY=(dict, {}),
+    MEILI_HOST=(str, "http://meilisearch:7700"),
+    MEILI_MASTER_KEY=(str, "meili"),
 )
 
 SITE_ROOT = str(root)
@@ -105,6 +107,7 @@ INSTALLED_APPS = [
     "zoo.datacenters.apps.DatacentersConfig",
     "zoo.instance.apps.InstanceConfig",
     "zoo.libraries.apps.LibrariesConfig",
+    "zoo.meilisearch.apps.MeiliSearchConfig",
     "zoo.objectives.apps.ObjectivesConfig",
     "zoo.pagerduty.apps.PagerdutyConfig",
     "zoo.repos.apps.ReposConfig",
@@ -265,4 +268,7 @@ SYNC_REPOS_SKIP_FORKS = env("ZOO_SYNC_REPOS_SKIP_FORKS")
 SYNC_REPOS_SKIP_PERSONAL = env("ZOO_SYNC_REPOS_SKIP_PERSONAL")
 
 REMOTE_DATA_OWNERS = env("ZOO_REMOTE_DATA_OWNERS")
+
+MEILI_MASTER_KEY = env("MEILI_MASTER_KEY")
+MEILI_HOST = env("MEILI_HOST")
 logs.configure_structlog(DEBUG)

@@ -117,10 +117,23 @@ class PagerdutyInfo(graphene.ObjectType):
         )
 
 
+class SentryIssue(DjangoObjectType, interfaces=[Node]):
+    class Meta:
+        model = services_models.SentryIssue
+        filter_fields = ["title"]
+
+
+class SentryStats(graphene.ObjectType):
+    weekly_events = graphene.Int()
+    weekly_users = graphene.Int()
+    issues = DjangoFilterConnectionField(SentryIssue)
+
+
 class Service(DjangoObjectType):
     repository = graphene.Field(lambda: Repository)
-    pagerduty_info = graphene.Field(lambda: PagerdutyInfo)
     docs_url = graphene.String()
+    pagerduty_info = graphene.Field(lambda: PagerdutyInfo)
+    sentry_stats = graphene.Field(lambda: SentryStats)
 
     environments = DjangoFilterConnectionField(Environment)
 
@@ -135,6 +148,21 @@ class Service(DjangoObjectType):
             # Log error
             return
         return PagerdutyInfo(**data)
+
+    def resolve_sentry_stats(self, info):
+        sentry_issues = self.sentry_issues.prefetch_related("stats").all()
+
+        # if not sentry_issues.exists():
+        #     return None
+
+        all_sentry_issues = sentry_issues.order_by("-last_seen")
+        weekly_stats = all_sentry_issues.calculate_weekly_sentry_stats()
+
+        return SentryStats(
+            weekly_events=weekly_stats["events"],
+            weekly_users=weekly_stats["users"],
+            issues=sentry_issues.problematic(),
+        )
 
     @classmethod
     def from_db(cls, service):

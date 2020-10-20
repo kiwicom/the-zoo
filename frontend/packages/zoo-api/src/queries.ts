@@ -57,6 +57,23 @@ query ($id: ID!)
       impact
       slackChannel
       pagerdutyService
+      sentryStats {
+        weeklyEvents
+        weeklyUsers
+        issues {
+          edges {
+            node {
+              category
+              culprit
+              events
+              permalink
+              shortId
+              title
+              users
+            }
+          }
+        }
+      }
       docsUrl
       repository {
         id
@@ -162,9 +179,12 @@ export type Service = {
   name: string;
   status: string;
   impact: string;
+  ratingGrade: string;
+  ratingReason: string;
   slackChannel: string;
   pagerdutyService: string;
   pagerdutyInfo: PagerdutyInfo;
+  sentryStats: SentryStats;
   docsUrl: string;
   repository: Repository;
 };
@@ -206,6 +226,23 @@ export type PagerdutyInfo = {
   oncallPerson: OncallPerson;
   pastWeekTotal: number;
   allActiveIncidents: ActiveIncident[];
+}
+
+export type SentryStats = {
+  weeklyEvents: number
+  weeklyUsers: number;
+  issues: Connection;
+}
+
+export type SentryIssue = {
+  id: string;
+  category: string;
+  culprit: string;
+  events: number;
+  permalink: string;
+  shortId: string;
+  title: string;
+  users: number;
 }
 
 export type OncallPerson = {

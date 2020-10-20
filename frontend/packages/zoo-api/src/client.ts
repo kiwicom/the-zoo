@@ -26,7 +26,7 @@ export const theZooClient = new Client({
     return {
       headers: { Authorization: token ? `Bearer ${token}` : '' },
     };
-  }
+  } 
 });
 
 

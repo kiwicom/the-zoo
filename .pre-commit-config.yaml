@@ -60,7 +60,7 @@ repos:
       - id: black
         exclude: ^frontend/
         pass_filenames: false
-        args: ["."]
+        args: ["zoo"]
 
   - repo: https://github.com/PyCQA/pydocstyle
     rev: 4.0.1

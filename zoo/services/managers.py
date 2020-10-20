@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models import Q, Sum
 from django.utils import timezone
 
-from .constants import SentryIssueCategory
+from .constants import SentryIssueCategory as SICat
 
 
 class SentryIssueQuerySet(models.QuerySet):
@@ -22,14 +22,11 @@ class SentryIssueQuerySet(models.QuerySet):
 
     def problematic(self) -> list:
         """Problematic issues sorted by category and last time seen."""
-        ISSUE_ORDER = {
-            SentryIssueCategory.STALE.value: 0,
-            SentryIssueCategory.DECAYING.value: 1,
-            SentryIssueCategory.SPOILED.value: 2,
-        }
+        CATEGORIES = [SICat.STALE.value, SICat.DECAYING.value, SICat.SPOILED.value]
 
+        return self.filter(category__in=CATEGORIES).order_by("category", "-last_seen")
         return sorted(
-            self.filter(category__in=ISSUE_ORDER.keys()).all(),
+            self.filter(category__in=ISSUE_ORDER.keys()),
             key=lambda k: (ISSUE_ORDER[k.category], k.last_seen),
         )
 

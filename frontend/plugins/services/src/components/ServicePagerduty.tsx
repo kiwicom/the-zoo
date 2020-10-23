@@ -17,7 +17,7 @@ type Props = {
 
 const ServicePagerduty: FC<Props> = ({ service }) => {
   if (!service.pagerdutyService) return null;
-  
+
   const [response] = useQuery({ query: getPagerdutyService, variables: { id: service.id } });
 
   if (response.fetching) {

@@ -14,7 +14,7 @@ export const getServices = `
           id
           summary
           htmlUrl
-          oncallPerson { 
+          oncallPerson {
             type
             summary
             htmlUrl

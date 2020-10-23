@@ -1,5 +1,6 @@
 import React, { FC, useContext } from 'react';
 import HomeIcon from '@material-ui/icons/Home';
+import StorageIcon from '@material-ui/icons/Storage';
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
 import BuildIcon from '@material-ui/icons/BuildRounded';
@@ -26,6 +27,7 @@ export const AppSidebar = () => (
     <SidebarDivider />
     {/* Global nav, not org-specific */}
     <SidebarItem icon={HomeIcon} to="./" text="Home" />
+    <SidebarItem icon={StorageIcon} to="/services" text="Services" />
     <SidebarItem icon={LibraryBooks} to="/docs" text="Docs" />
     <SidebarItem icon={CreateComponentIcon} to="create" text="Create..." />
     <SidebarDivider />

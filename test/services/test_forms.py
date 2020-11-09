@@ -116,11 +116,13 @@ service_environments_form__set_data = {
     "environments-0-service_urls_0": fake.url(),
     "environments-0-service_urls_1": fake.url(),
     "environments-0-DELETE": False,
+    "environments-0-type": "zoo",
     "environments-1-name": fake.word(),
     "environments-1-dashboard_url": fake.url(),
     "environments-1-service_urls_0": fake.url(),
     "environments-1-service_urls_1": fake.url(),
     "environments-1-DELETE": False,
+    "environments-1-type": "zoo",
 }
 
 

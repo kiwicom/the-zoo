@@ -52,7 +52,14 @@ class EnvironmentForm(forms.ModelForm):
 
     class Meta:
         model = models.Environment
-        fields = ["name", "dashboard_url", "logs_url", "service_urls", "open_api_url"]
+        fields = [
+            "name",
+            "dashboard_url",
+            "logs_url",
+            "service_urls",
+            "open_api_url",
+            "type",
+        ]
         labels = {
             "dashboard_url": "Dashboard URL",
             "logs_url": "Logs URL",

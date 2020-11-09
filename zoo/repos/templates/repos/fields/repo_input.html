@@ -1,3 +1,5 @@
+{% load static %}
+
 <div id="repo-input" class="repo-input-container">
   <repo-input></repo-input>
 </div>
@@ -20,4 +22,9 @@
     name: '{{ widget.name }}',
     initialValue: '{{ widget.value|default:"" }}'
   };
+  const gitlabEnvsInfo = {
+    envTypeGitlab: '{{ env_type_gitlab }}',
+    imageUrl: '{% static 'img/gitlab-icon-rgb.svg' %}',
+    envsUrl: '{% url "get_gitlab_envs" %}'
+  }
 </script>

@@ -12,11 +12,13 @@ from ..analytics.tasks import repo_analyzers
 from ..auditing import runner
 from ..auditing.check_discovery import CHECKS as AUDITING_CHECKS
 from ..repos.models import Endpoint
+from ..services.constants import EnviromentType
 from ..services.models import Environment, Service
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 from .github import get_repositories as get_github_repositories
+from .gitlab import get_project_enviroments
 from .gitlab import get_repositories as get_gitlab_repositories
-from .models import Repository
+from .models import Repository, RepositoryEnvironment
 from .utils import download_repository, get_scm_module, openapi_definition
 from .zoo_yml import parse, validate
 
@@ -67,6 +69,9 @@ def sync_repos():
         repo.url = project["url"]
         repo.full_clean()
         repo.save()
+
+        if project["provider"] == "gitlab":
+            sync_enviroments_from_gitlab(repo)
 
 
 @shared_task
@@ -208,3 +213,33 @@ def get_zoo_file_content(proj: Dict) -> str:
     return provider.get_file_content(
         proj["id"], settings.ZOO_YAML_FILE, settings.ZOO_YAML_DEFAULT_REF
     )
+
+
+def sync_enviroments_from_gitlab(repo: Repository):
+    gl_envs = get_project_enviroments(repo.remote_id)
+    envs = []
+    for gl_env in gl_envs:
+        env, _ = RepositoryEnvironment.objects.get_or_create(
+            repository_id=repo.id,
+            name=gl_env.name,
+            external_url=gl_env.external_url,
+        )
+        envs.append(env)
+
+    RepositoryEnvironment.objects.filter(repository_id=repo.id).exclude(
+        id__in=[env.id for env in envs]
+    ).delete()
+
+    # update gitlab envs on every service
+    services = Service.objects.filter(repository_id=repo.id)
+    for service in services:
+        Environment.objects.filter(
+            service_id=service.id, type=EnviromentType.GITLAB.value
+        ).exclude(name__in=[env.name for env in envs]).delete()
+        for env in envs:
+            Environment.objects.update_or_create(
+                service_id=service.id,
+                name=env.name,
+                external_url=env.external_url,
+                type=EnviromentType.GITLAB.value,
+            )

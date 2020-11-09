@@ -13,6 +13,14 @@ gitlab = Gitlab(
 log = structlog.get_logger()
 
 
+def get_project_enviroments(remote_id):
+    try:
+        project = gitlab.projects.get(remote_id)
+        return project.environments.list(as_list=False)
+    except GitlabGetError:
+        return []
+
+
 def get_project(remote_id):
     try:
         project = gitlab.projects.get(remote_id)

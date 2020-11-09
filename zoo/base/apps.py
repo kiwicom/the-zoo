@@ -46,3 +46,6 @@ class BaseConfig(AppConfig):
         celery_app.add_periodic_task(
             timedelta(days=1), datacenters_tasks.schedule_infra_mapping
         )
+        celery_app.add_periodic_task(
+            timedelta(days=1), service_tasks.sync_gitlab_enviroments
+        )

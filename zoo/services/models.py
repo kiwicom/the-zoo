@@ -10,7 +10,7 @@ from django.urls import reverse
 from djangoql.schema import DjangoQLSchema
 
 from . import ratings
-from .constants import Impact, SentryIssueCategory, Status
+from .constants import EnviromentType, Impact, SentryIssueCategory, Status
 from .managers import SentryIssueManager
 
 
@@ -191,6 +191,12 @@ class Environment(models.Model):
     dashboard_url = models.URLField(max_length=500, null=True, blank=True)
     logs_url = models.URLField(max_length=500, null=True, blank=True)
     open_api_url = models.URLField(max_length=500, null=True, blank=True)
+    type = models.CharField(
+        choices=((item.value, item.value) for item in EnviromentType),
+        null=True,
+        default=EnviromentType.ZOO,
+        max_length=100,
+    )
 
 
 def slugify_attribute(attribute):

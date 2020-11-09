@@ -56,3 +56,30 @@ $("button.add-environment").click(function () {
         firstSegment.show();
     }
 });
+
+
+$("#repo-input").select(function () {
+  const project_id = $(this).find("#id_repository").val();
+
+  $.get(envsUrl + "?project_id=" + project_id, function (response) {
+    const arrayLength = response.length;
+    for (let i = 0; i < arrayLength; i++) {
+      const hidden = $(".ui.segment.environment:hidden");
+
+      if (hidden.length > 0) {
+          if (hidden.length == 1) {
+            $(this).prop("disabled", true);
+          }
+          var firstSegment = hidden.eq(0);
+          firstSegment.find(":not(.no-reset) input").val("");
+          firstSegment.find(".field.name input").val(response["name"]);
+          firstSegment.find(".field.type input").val("EnviromentType.GITLAB");
+          //fill data
+          firstSegment.show();
+      }
+    }
+
+  }).fail(function() {
+    console.log( "Error fetching envs" );
+  })
+});

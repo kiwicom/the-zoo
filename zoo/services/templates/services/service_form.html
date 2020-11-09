@@ -87,6 +87,7 @@
       <label>{{ form.open_api_url.label }}</label>
       {{ form.open_api_url }}
     </div>
+    {{ form.type.as_hidden}}
   </div>
   {% endfor %}
 </div>
@@ -94,5 +95,9 @@
 
 {% block scripts %}
   {{ block.super }}
+  <script>
+    const envsUrl = '{% url "get_gitlab_envs" %}'
+    console.log(envsUrl)
+  </script>
   <script  src="{% static 'service_form.js' %}"></script>
 {% endblock %}

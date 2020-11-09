@@ -10,6 +10,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from ..base import http
+from ..repos.gitlab import get_project
 from . import models
 
 log = structlog.get_logger()
@@ -196,3 +197,26 @@ def sync_sonarqube_projects():
             service.sonarqube_project = key
             service.save()
             break
+
+
+@shared_task
+def sync_gitlab_enviroments():
+    for service in models.Service.objects.exclude(repository=None).exclude(
+        status__in=[models.Status.DEPRECATED, models.Status.DISCONTINUED]
+    ):
+        gl_envs = get_project(service.repository.remote_id).environments.list()
+
+        z_envs = [
+            z_env.name
+            for z_env in service.environments
+            if z_env.type == models.EnviromentType.GITLAB
+        ]
+
+        for gl_env in gl_envs:
+            if gl_env.name not in z_envs:
+                models.Environment.objects.create(
+                    service_id=service.id,
+                    name=gl_env.name,
+                    type=models.EnviromentType.GITLAB,
+                )
+        # add update of envs

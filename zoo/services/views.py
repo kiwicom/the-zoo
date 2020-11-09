@@ -9,11 +9,13 @@ from django.db.models import Q
 from django.http import Http404, JsonResponse
 from django.urls import reverse_lazy
 from django.views import generic as generic_views
+from django.views.decorators.http import require_GET
 from djangoql.exceptions import DjangoQLError
 from djangoql.queryset import apply_search
 
 from ..auditing.models import Issue
 from ..checklists.steps import STEPS
+from ..repos.gitlab import get_project
 from ..repos.utils import openapi_definition
 from . import forms, models
 from .models import Service
@@ -223,3 +225,32 @@ class ServiceOpenApiDefinition(ServiceMixin, generic_views.View):
             return JsonResponse(specs, safe=False)
 
         return openapi_definition(request, service.repository)
+
+
+@require_GET
+def get_gitlab_envs(request):
+    data = json.loads(request.body)
+    gl_envs = get_project(data["project_id"]).environments.list()
+
+    parsed_envs = []
+    for gl_env in gl_envs:
+        parsed_envs.append(
+            {
+                "name": gl_env.name,
+                "dashboardUrl": "",
+                "logsUrl": "",
+                "serviceUrl": "",
+                "openapiUrl": "",
+            }
+        )
+
+    # test data
+    # parsed_envs.append({
+    #     "name": "TEST",
+    #     "dashboardUrl": "",
+    #     "logsUrl": "",
+    #     "serviceUrl": "",
+    #     "openapiUrl": ""
+    # })
+
+    return JsonResponse(parsed_envs, safe=False)

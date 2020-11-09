@@ -53,3 +53,6 @@ class BaseConfig(AppConfig):
         celery_app.add_periodic_task(
             timedelta(minutes=30), meilisearch_tasks.index_openapi_definitions
         )
+        celery_app.add_periodic_task(
+            timedelta(days=1), service_tasks.sync_gitlab_enviroments
+        )

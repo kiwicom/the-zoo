@@ -49,6 +49,7 @@ class EnvironmentForm(forms.ModelForm):
         label="Service URLs",
         required=False,
     )
+    type = forms.CharField()
 
     class Meta:
         model = models.Environment

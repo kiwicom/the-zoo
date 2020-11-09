@@ -19,3 +19,8 @@ class SentryIssueCategory(Enum):
     DECAYING = "decaying"
     SPOILED = "spoiled"
     FRESH = "fresh"
+
+
+class EnviromentType(Enum):
+    GITLAB = "gitlab"
+    ZOO = "zoo"

@@ -5,7 +5,7 @@ import { App } from './components/App';
 
 export const rootRouteRef = createRouteRef({
   icon: StorageIcon,
-  path: '/services/*',
+  path: 'services/*',
   title: 'services',
 });
 

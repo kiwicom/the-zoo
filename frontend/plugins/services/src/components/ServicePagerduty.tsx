@@ -28,6 +28,7 @@ const ServicePagerduty: FC<Props> = ({ service }) => {
 
   const s: Service = response.data.service;
   const pd = s.pagerdutyInfo;
+  if (!pd) return (null);
   const incidents: ActiveIncident[] = unwrap(pd.allActiveIncidents);
   return (
     <Card>

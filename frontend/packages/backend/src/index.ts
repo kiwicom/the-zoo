@@ -17,7 +17,8 @@ import {
   SingleHostDiscovery,
   UrlReaders,
 } from '@backstage/backend-common';
-import { ConfigReader } from '@backstage/config';
+import { Config } from '@backstage/config';
+import app from './plugins/app';
 import auth from './plugins/auth';
 import catalog from './plugins/catalog';
 import scaffolder from './plugins/scaffolder';
@@ -25,7 +26,7 @@ import proxy from './plugins/proxy';
 import techdocs from './plugins/techdocs';
 import { PluginEnvironment } from './types';
 
-function makeCreateEnv(config: ConfigReader) {
+function makeCreateEnv(config: Config) {
   const root = getRootLogger();
   const reader = UrlReaders.default({ logger: root, config });
   const discovery = SingleHostDiscovery.fromConfig(config);
@@ -42,27 +43,31 @@ function makeCreateEnv(config: ConfigReader) {
 }
 
 async function main() {
-  const configs = await loadBackendConfig();
-  const configReader = ConfigReader.fromConfigs(configs);
-  const createEnv = makeCreateEnv(configReader);
+  const config = await loadBackendConfig({
+    argv: process.argv,
+    logger: getRootLogger(),
+  });
+  const createEnv = makeCreateEnv(config);
 
   const catalogEnv = useHotMemoize(module, () => createEnv('catalog'));
   const scaffolderEnv = useHotMemoize(module, () => createEnv('scaffolder'));
   const authEnv = useHotMemoize(module, () => createEnv('auth'));
   const proxyEnv = useHotMemoize(module, () => createEnv('proxy'));
   const techdocsEnv = useHotMemoize(module, () => createEnv('techdocs'));
+  const appEnv = useHotMemoize(module, () => createEnv('app'));
 
   const apiRouter = Router();
-  apiRouter.use('/catalog', await catalog(catalogEnv))
-  apiRouter.use('/scaffolder', await scaffolder(scaffolderEnv))
-  apiRouter.use('/auth', await auth(authEnv))
-  apiRouter.use('/techdocs', await techdocs(techdocsEnv))
-  apiRouter.use('/proxy', await proxy(proxyEnv))
+  apiRouter.use('/catalog', await catalog(catalogEnv));
+  apiRouter.use('/scaffolder', await scaffolder(scaffolderEnv));
+  apiRouter.use('/auth', await auth(authEnv));
+  apiRouter.use('/techdocs', await techdocs(techdocsEnv));
+  apiRouter.use('/proxy', await proxy(proxyEnv));
   apiRouter.use(notFoundHandler());
 
   const service = createServiceBuilder(module)
-    .loadConfig(configReader)
+    .loadConfig(config)
     .addRouter('/api', apiRouter)
+    .addRouter('', await app(appEnv));
 
   await service.start().catch(err => {
     console.log(err);

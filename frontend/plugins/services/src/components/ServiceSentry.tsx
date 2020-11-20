@@ -65,8 +65,8 @@ const ServiceSentry: FC<Props> = ({ service }) => {
         <TableContainer component={Paper}>
           <Table aria-label="simple table">
             <TableBody>
-              {issues.map((issue) => (
-                <StyledTableRow key={issue.shortId}>
+              {issues.map((issue, idx) => (
+                <StyledTableRow key={`${issue.shortId}-${idx}`}>
                   <TableCell align="left" scope="row"> {issue.shortId} </TableCell>
                   <TableCell> <Link href={issue.permalink}>
                     {issue.title}

@@ -69,3 +69,24 @@ class Repository(models.Model):
             Provider.GITLAB.value: f"Merge Request #{mr_id}",
             Provider.GITHUB.value: f"Pull Request #{mr_id}",
         }[self.provider]
+
+
+class RepositoryEnvironment(models.Model):
+    class Meta:
+        unique_together = ("repository", "name")
+        ordering = ["name"]
+
+    repository = models.ForeignKey(
+        Repository,
+        on_delete=models.CASCADE,
+        related_name="repository_environments",
+        related_query_name="repository_environment",
+    )
+
+    name = models.CharField(max_length=100)
+    external_url = models.CharField(max_length=100)
+    type = models.CharField(
+        choices=((item.value, item.value) for item in Provider),
+        null=True,
+        max_length=100,
+    )

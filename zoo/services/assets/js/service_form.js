@@ -1,6 +1,14 @@
 import '../style/service_form.less'
+import { gitlabEnvs } from "./gitlab_envs.js"
 
 $(document).ready(function () {
+    //set default env type to zoo
+    $(".ui.segment.environment:visible").find('input[name$="type"]').each(function () {
+      if (!$(this).val()) {
+        $(this).val(envTypeZoo)
+      }
+    });
+
     $(".field.service-urls").each(function () {
         var previous = null;
         var previousEmpty = false;
@@ -35,6 +43,7 @@ $("button.remove-environment").click(function () {
     var uiSegment = checkbox.closest(".ui.segment");
     uiSegment.hide();
     uiSegment.find(".field.name input").prop("required", false);
+    uiSegment.find(".field.type input").val("");
 
     var hidden = $(".ui.segment.environment:hidden");
     if (hidden.length > 0) {
@@ -44,42 +53,25 @@ $("button.remove-environment").click(function () {
 
 $("button.add-environment").click(function () {
     $(this).blur();
-    var hidden = $(".ui.segment.environment:hidden");
+    let hidden = $(".ui.segment.environment:hidden");
     if (hidden.length > 0) {
         if (hidden.length == 1) {
             $(this).prop("disabled", true);
         }
 
-        var firstSegment = hidden.eq(0);
+        let firstSegment = hidden.eq(0);
         firstSegment.find(":not(.no-reset) input").val("");
         firstSegment.find(".field.name input").prop("required", true);
+        firstSegment.find('input[name$="type"]').val(envTypeZoo);
         firstSegment.show();
     }
 });
 
-
-$("#repo-input").select(function () {
-  const project_id = $(this).find("#id_repository").val();
-
-  $.get(envsUrl + "?project_id=" + project_id, function (response) {
-    const arrayLength = response.length;
-    for (let i = 0; i < arrayLength; i++) {
-      const hidden = $(".ui.segment.environment:hidden");
-
-      if (hidden.length > 0) {
-          if (hidden.length == 1) {
-            $(this).prop("disabled", true);
-          }
-          var firstSegment = hidden.eq(0);
-          firstSegment.find(":not(.no-reset) input").val("");
-          firstSegment.find(".field.name input").val(response["name"]);
-          firstSegment.find(".field.type input").val("EnviromentType.GITLAB");
-          //fill data
-          firstSegment.show();
-      }
-    }
-
-  }).fail(function() {
-    console.log( "Error fetching envs" );
+$(".load-gitlab-environment").on("click", function () {
+  gitlabEnvs.load({
+    envTypeZoo: envTypeZoo,
+    envTypeGitlab: envTypeGitlab,
+    envsUrl: envsUrl,
+    repoId: $("#id_repository").val()
   })
 });

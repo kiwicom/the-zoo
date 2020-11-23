@@ -26,6 +26,4 @@ urlpatterns = [
         name="service_delete",
     ),
     path("new", views.ServiceCreate.as_view(), name="service_create"),
-    path("new", views.ServiceCreate.as_view(), name="get_gitlab_envs"),
-    path("api/get-gitlab-envs/", views.get_gitlab_envs, name="get_gitlab_envs"),
 ]

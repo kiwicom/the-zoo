@@ -20,4 +20,9 @@
     name: '{{ widget.name }}',
     initialValue: '{{ widget.value|default:"" }}'
   };
+  const gitlabEnvsInfo = {
+    envTypeZoo: '{{ env_type_zoo }}',
+    envTypeGitlab: '{{ env_type_gitlab }}',
+    envsUrl: '{% url "get_gitlab_envs" %}'
+  }
 </script>

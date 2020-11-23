@@ -1,5 +1,6 @@
 from django.forms import widgets
 
+from ..services.constants import EnviromentType
 from .models import Repository
 
 
@@ -19,4 +20,6 @@ class RepoInput(widgets.TextInput):
         )
 
         context["widget"]["value"] = value
+        context["env_type_gitlab"] = EnviromentType.GITLAB.value
+        context["env_type_zoo"] = EnviromentType.ZOO.value
         return context

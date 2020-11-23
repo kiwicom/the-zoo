@@ -13,8 +13,9 @@ from ..auditing.check_discovery import CHECKS as AUDITING_CHECKS
 from ..services.models import Environment, Service
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 from .github import get_repositories as get_github_repositories
+from .gitlab import get_project
 from .gitlab import get_repositories as get_gitlab_repositories
-from .models import Repository
+from .models import Provider, Repository, RepositoryEnvironment
 from .utils import download_repository, get_scm_module
 from .zoo_yml import parse, validate
 
@@ -43,6 +44,7 @@ def sync_repos():
                     provider=project["provider"],
                 )
                 repo.remote_id = project["id"]
+                sync_enviroments_from_gitlab(repo)
             except Repository.DoesNotExist:
                 repo = Repository(remote_id=project["id"], provider=project["provider"])
 
@@ -51,6 +53,8 @@ def sync_repos():
         repo.url = project["url"]
         repo.full_clean()
         repo.save()
+
+        sync_enviroments_from_gitlab(repo)
 
 
 @shared_task
@@ -154,3 +158,24 @@ def get_zoo_file_content(proj: Dict) -> str:
     return provider.get_file_content(
         proj["id"], settings.ZOO_YAML_FILE, settings.ZOO_YAML_DEFAULT_REF
     )
+
+
+def sync_enviroments_from_gitlab(repo: Repository):
+    RepositoryEnvironment.objects.filter(repository_id=repo.id).delete()
+
+    try:
+        gl_envs = get_project(repo.remote_id).environments.list()
+    except RepositoryNotFoundError:
+        log.info(
+            "sync_repos.sync_enviroments_from_gitlab.gitlab_repo_not_found",
+            repo_id=repo.id,
+        )
+        return
+
+    for gl_env in gl_envs:
+        RepositoryEnvironment.objects.create(
+            repository_id=repo.id,
+            name=gl_env.name,
+            external_url=gl_env.external_url,
+            type=Provider.GITLAB,
+        )

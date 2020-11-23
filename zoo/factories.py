@@ -18,7 +18,7 @@ from zoo.api.models import ApiToken
 from zoo.auditing.check_discovery import Kind
 from zoo.auditing.models import Issue
 from zoo.datacenters.models import InfraNode
-from zoo.repos.models import Repository
+from zoo.repos.models import Repository, RepositoryEnvironment
 from zoo.services.models import Environment, Impact, Service, Status, Tier
 
 
@@ -31,6 +31,15 @@ class RepositoryFactory(DjangoModelFactory):
     name = Faker("domain_word")
     provider = "gitlab"
     url = LazyAttribute(lambda o: f"https://gitlab.com/{o.owner}/{o.name}")
+
+
+class RepositoryEnvironmentFactory(DjangoModelFactory):
+    class Meta:
+        model = RepositoryEnvironment
+
+    name = Faker("domain_word")
+    repository = SubFactory(RepositoryFactory)
+    external_url = LazyAttribute(lambda o: f"https://gitlab.com/{o.name}/{o.name}")
 
 
 class IssueFactory(DjangoModelFactory):

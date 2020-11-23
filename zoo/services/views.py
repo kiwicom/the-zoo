@@ -9,16 +9,14 @@ from django.db.models import Q
 from django.http import Http404, JsonResponse
 from django.urls import reverse_lazy
 from django.views import generic as generic_views
-from django.views.decorators.http import require_GET
 from djangoql.exceptions import DjangoQLError
 from djangoql.queryset import apply_search
 
 from ..auditing.models import Issue
 from ..checklists.steps import STEPS
-from ..repos.gitlab import get_project
 from ..repos.utils import openapi_definition
 from . import forms, models
-from .models import Service
+from .models import EnviromentType, Service
 
 log = structlog.get_logger()
 
@@ -45,7 +43,6 @@ class ServiceEnvironmentMixin:
         with transaction.atomic():
             self.object = form.save()
             log.info(form.data)
-
             if envs_formset.is_valid():
                 envs_formset.instance = self.object
                 envs_formset.save()
@@ -64,6 +61,8 @@ class ServiceCreate(ServiceEnvironmentMixin, generic_views.CreateView):
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet(self.request.POST)
         else:
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet()
+            data["env_type_gitlab"] = EnviromentType.GITLAB.value
+            data["env_type_zoo"] = EnviromentType.ZOO.value
         return data
 
 
@@ -202,6 +201,8 @@ class ServiceUpdate(ServiceEnvironmentMixin, ServiceMixin, generic_views.UpdateV
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet(
                 instance=self.object
             )
+            data["env_type_gitlab"] = EnviromentType.GITLAB.value
+            data["env_type_zoo"] = EnviromentType.ZOO.value
         return data
 
 
@@ -225,32 +226,3 @@ class ServiceOpenApiDefinition(ServiceMixin, generic_views.View):
             return JsonResponse(specs, safe=False)
 
         return openapi_definition(request, service.repository)
-
-
-@require_GET
-def get_gitlab_envs(request):
-    data = json.loads(request.body)
-    gl_envs = get_project(data["project_id"]).environments.list()
-
-    parsed_envs = []
-    for gl_env in gl_envs:
-        parsed_envs.append(
-            {
-                "name": gl_env.name,
-                "dashboardUrl": "",
-                "logsUrl": "",
-                "serviceUrl": "",
-                "openapiUrl": "",
-            }
-        )
-
-    # test data
-    # parsed_envs.append({
-    #     "name": "TEST",
-    #     "dashboardUrl": "",
-    #     "logsUrl": "",
-    #     "serviceUrl": "",
-    #     "openapiUrl": ""
-    # })
-
-    return JsonResponse(parsed_envs, safe=False)

@@ -17,6 +17,7 @@ from ..repos.forms import RepoInput
 from ..repos.github import get_namespaces as get_github_namespaces
 from ..repos.gitlab import get_namespaces as get_gitlab_namespaces
 from . import models
+from .constants import EnviromentType
 
 
 class SplitArrayField(pg_forms.SplitArrayField):
@@ -49,11 +50,17 @@ class EnvironmentForm(forms.ModelForm):
         label="Service URLs",
         required=False,
     )
-    type = forms.CharField()
 
     class Meta:
         model = models.Environment
-        fields = ["name", "dashboard_url", "logs_url", "service_urls", "open_api_url"]
+        fields = [
+            "name",
+            "dashboard_url",
+            "logs_url",
+            "service_urls",
+            "open_api_url",
+            "type",
+        ]
         labels = {
             "dashboard_url": "Dashboard URL",
             "logs_url": "Logs URL",

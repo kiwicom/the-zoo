@@ -30,13 +30,23 @@
 <div class="environments">
   <div class="flex-horizontal--space-between">
       <h3 class="ui marginless header">Environments</h3>
+      <div>
+        {% if project %}
+      <button class="ui load-gitlab-environment button" type="button">
+        <label>Load Gitlab Enviroments</label>
+      </button>
+        {% endif %}
       <button class="ui icon add-environment button" type="button">
         <i class="ui plus icon"></i>
       </button>
+      </div>
   </div>
   {{ envs_formset.management_form }}
   {% for form in envs_formset %}
   <div class="ui secondary segment environment" {% if not form.has_changed and forloop.counter > 1 %}style="display: none"{% endif %}>
+    <div class="ui top left attached label paddingless gitlab-img" {% if form.type.value != env_type_gitlab  %}style="display: none"{% endif %}>
+      <img src="{% static 'img/gitlab-icon-rgb.svg' %}">
+    </div>
     {% if forloop.counter > 1 %}
     <div class="ui top right attached label paddingless">
       <button class="ui remove-environment icon button marginless" type="button"
@@ -96,8 +106,9 @@
 {% block scripts %}
   {{ block.super }}
   <script>
-    const envsUrl = '{% url "get_gitlab_envs" %}'
-    console.log(envsUrl)
+    const envsUrl = '{% url "get_gitlab_envs" %}';
+    const envTypeGitlab = '{{ env_type_gitlab }}';
+    const envTypeZoo = '{{ env_type_zoo }}';
   </script>
   <script  src="{% static 'service_form.js' %}"></script>
 {% endblock %}

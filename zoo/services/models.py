@@ -194,7 +194,6 @@ class Environment(models.Model):
     type = models.CharField(
         choices=((item.value, item.value) for item in EnviromentType),
         null=True,
-        default=EnviromentType.ZOO,
         max_length=100,
     )
 

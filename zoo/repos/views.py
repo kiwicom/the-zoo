@@ -33,21 +33,16 @@ def get_gitlab_envs(request):
     if not project_id:
         return JsonResponse({"message": "Missing project_id"}, safe=False)
     project_id = 1
-    parsed_envs = []
     try:
         repo = Repository.objects.get(id=project_id, provider=Provider.GITLAB.value)
     except RepositoryNotFoundError:
         return JsonResponse({"message": "Wrong project_id"}, safe=False)
 
-    for gl_env in repo.repository_environments.all():
-        parsed_envs.append(
-            {
+    parsed_envs = [{
                 "name": gl_env.name,
                 "dashboardUrl": gl_env.external_url,
                 "logsUrl": "",
                 "serviceUrl": [],
                 "openapiUrl": "",
-            }
-        )
-
+            } for gl_env in repo.repository_environments.all()]
     return JsonResponse(parsed_envs, safe=False)

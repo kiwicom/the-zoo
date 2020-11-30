@@ -1,7 +1,7 @@
 import { Client, dedupExchange, fetchExchange } from 'urql';
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
-import { Edge, Connection } from './queries';
+import { Connection, Edge } from './queries';
 
 const cache = cacheExchange({
   resolvers: {
@@ -29,5 +29,12 @@ export const theZooClient = new Client({
   }
 });
 
-
-export const unwrap = (connection: Connection) => connection.edges.map((edge: Edge) => edge.node);
+/**
+ * Unwraps objects of type T from a connection edges.
+ *
+ * @param {Connection} connection - A GraphQL Relay connection field
+ * @returns {T[]} Where T is the defined type (Service, Issue...)
+ */
+export function unwrap<T>(connection: Connection<T>): T[] {
+  return connection.edges.map((edge: Edge<T>) => edge.node);
+}

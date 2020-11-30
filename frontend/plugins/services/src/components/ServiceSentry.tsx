@@ -16,8 +16,7 @@ import {
 } from '@material-ui/core';
 import ContactlessIcon from '@material-ui/icons/Contactless';
 import InfoIcon from '@material-ui/icons/Info';
-import { SentryIssue, Service } from 'zoo-api';
-import { unwrap } from 'zoo-api/src/client';
+import { SentryIssue, Service, unwrap } from 'zoo-api';
 
 type Props = {
   service: Service;
@@ -36,7 +35,7 @@ const StyledTableRow = withStyles((theme: Theme) =>
 
 
 const ServiceSentry: FC<Props> = ({ service }) => {
-  const issues: SentryIssue[] = unwrap(service.sentryStats.issues);
+  const issues = unwrap<SentryIssue>(service.sentryStats.issues);
   return (
     <Card>
       <CardContent>

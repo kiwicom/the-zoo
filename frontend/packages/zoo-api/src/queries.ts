@@ -165,13 +165,13 @@ export const getCheckResults = `
 `
 
 
-export type Connection = {
-  edges: Edge[]
+export type Connection<T> = {
+  edges: Edge<T>[]
 }
 
-export type Edge = {
+export type Edge<T> = {
   __typename: string;
-  node: object;
+  node: T;
 }
 
 export type Service = {
@@ -196,7 +196,7 @@ export type Repository = {
   name: string;
   owner: string;
   url: string;
-  issues: Issue[];
+  issues: Connection<Issue>;
 
 }
 
@@ -226,13 +226,13 @@ export type PagerdutyInfo = {
   htmlUrl: string;
   oncallPerson: OncallPerson;
   pastWeekTotal: number;
-  allActiveIncidents: ActiveIncident[];
+  allActiveIncidents: Connection<ActiveIncident>;
 }
 
 export type SentryStats = {
   weeklyEvents: number
   weeklyUsers: number;
-  issues: Connection;
+  issues: Connection<SentryIssue>;
 }
 
 export type SentryIssue = {

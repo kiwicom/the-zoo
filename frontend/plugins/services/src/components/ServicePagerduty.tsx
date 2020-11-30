@@ -3,13 +3,12 @@ import { useQuery } from 'urql';
 import Alert from '@material-ui/lab/Alert';
 import { Progress } from '@backstage/core';
 import { Button, Card, CardContent, Chip, IconButton, Grid, Link, Tooltip, Typography } from '@material-ui/core';
-import { getPagerdutyService, Service, ActiveIncident } from 'zoo-api';
+import { getPagerdutyService, Service, ActiveIncident, unwrap } from 'zoo-api';
 import VibrationIcon from '@material-ui/icons/Vibration';
 import AlarmOnIcon from '@material-ui/icons/AlarmOn';
 import EventBusyIcon from '@material-ui/icons/EventBusy';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import Count from './Count';
-import { unwrap } from 'zoo-api/src/client';
 
 type Props = {
   service: Service;
@@ -29,7 +28,8 @@ const ServicePagerduty: FC<Props> = ({ service }) => {
   const s: Service = response.data.service;
   const pd = s.pagerdutyInfo;
   if (!pd) return (null);
-  const incidents: ActiveIncident[] = unwrap(pd.allActiveIncidents);
+  const incidents = unwrap<ActiveIncident>(pd.allActiveIncidents);
+
   return (
     <Card>
       <CardContent>

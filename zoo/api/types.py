@@ -1,4 +1,5 @@
 import graphene
+import structlog
 from django.core.exceptions import ObjectDoesNotExist
 from graphene.relay import Connection, ConnectionField, Node
 from graphene.types.json import JSONString
@@ -13,6 +14,8 @@ from ..repos import models as repos_models
 from ..services import models as services_models
 from .paginator import Paginator
 from .utils import CheckResultStatus
+
+log = structlog.get_logger()
 
 IssueStatusEnum = graphene.Enum.from_enum(auditing_models.Issue.Status)
 IssueSeverityEnum = graphene.Enum.from_enum(check_discovery.Severity)
@@ -145,7 +148,7 @@ class Service(DjangoObjectType):
         try:
             data = get_oncall_info(service_id)  # Might return django.http.Http404
         except Exception as error:
-            # Log error
+            log.exception("services.get_oncall_info", error=repr(error))
             return
         return PagerdutyInfo(**data)
 

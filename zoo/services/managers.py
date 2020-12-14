@@ -25,10 +25,6 @@ class SentryIssueQuerySet(models.QuerySet):
         CATEGORIES = [SICat.STALE.value, SICat.DECAYING.value, SICat.SPOILED.value]
 
         return self.filter(category__in=CATEGORIES).order_by("category", "-last_seen")
-        return sorted(
-            self.filter(category__in=ISSUE_ORDER.keys()),
-            key=lambda k: (ISSUE_ORDER[k.category], k.last_seen),
-        )
 
     def generate_sentry_histogram(self) -> Dict[int, List[int]]:
         result = defaultdict(list)

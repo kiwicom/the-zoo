@@ -12,18 +12,6 @@ export const getServices = `
         ratingReason
         slackChannel
         pagerdutyService
-        pagerdutyInfo {
-          id
-          summary
-          htmlUrl
-          oncallPerson {
-            id
-            type
-            summary
-            htmlUrl
-          }
-          pastWeekTotal
-        }
         docsUrl
         repository {
           id
@@ -31,17 +19,6 @@ export const getServices = `
           name
           owner
           url
-          issues {
-            edges {
-              node {
-                kindKey
-                status
-                remoteIssueId
-                comment
-                lastCheck
-              }
-            }
-          }
         }
       }
     }
@@ -99,11 +76,24 @@ query ($id: ID!)
         issues {
           edges {
             node {
+              id
               kindKey
               status
               remoteIssueId
+              remoteIssueUrl
               comment
               lastCheck
+              kind {
+                id
+                key
+                category
+                description
+                effort
+                namespace
+                patch
+                severity
+                title
+              }
             }
           }
         }
@@ -164,6 +154,7 @@ export const getIssues = `
       remoteIssueId
       comment
       lastCheck
+      patchPreview
     }
   }
 `;
@@ -178,6 +169,60 @@ export const getCheckResults = `
   }
 `
 
+export const setWontfix = `mutation ($input: SetWontfixInput!) {
+  setWontfix(input: $input) {
+    issue {
+      id
+      status
+      comment
+      kind {
+        id
+        key
+        title
+      }
+    }
+  }
+}`
+
+export const openIssue = `mutation ($input: OpenIssueInput!) {
+  openIssue(input: $input) {
+    issue {
+      id
+      status
+      comment
+      remoteIssueId
+      remoteIssueUrl
+      kind {
+        id
+        key
+        title
+      }
+    }
+  }
+}`
+
+export const applyPatches = `mutation ($input: ApplyPatchesInput!) {
+  applyPatches(input: $input) {
+    issue {
+      id
+      status
+      comment
+      remoteIssueId
+      remoteIssueUrl
+      kind {
+        id
+        key
+        title
+      }
+    }
+  }
+}`
+
+
+interface Node {
+  __typename: string,
+  id: string,
+}
 
 export type Connection<T> = {
   edges: Edge<T>[]
@@ -189,7 +234,7 @@ export type Edge<T> = {
   node: T;
 }
 
-export type Service = {
+export interface Service {
   id: string,
   owner: string;
   name: string;
@@ -205,37 +250,48 @@ export type Service = {
   repository: Repository;
 };
 
-export type Repository = {
+export interface Repository {
   id: string;
   remoteId: number;
   name: string;
   owner: string;
   url: string;
   issues: Connection<Issue>;
-
 }
 
-export type Issue = {
+export interface Kind {
+  id: string;
+  key: string;
+  category: string;
+  description: string;
+  effort: string;
+  namespace: string;
+  patch: string;
+  severity: string;
+  title: string;
+}
+
+export enum IssueStatus {
+  NEW = "NEW",
+  FIXED = "FIXED",
+  WONTFIX = "WONTFIX",
+  NOT_FOUND = "NOT_FOUND",
+  REOPENED = "REOPENED",
+}
+
+export interface Issue extends Node {
   id: string;
   kindKey: string;
-  status: string;
+  kind: Kind;
+  status: IssueStatus;
   remoteIssueId: string;
+  remoteIssueUrl: string;
   comment: string;
   lastCheck: string;
+  patchPreview: string;
 }
 
-export type CheckResult = {
-  kindKey: string;
-  // isFound: boolean;
-  // status: Field
-  // severity: Field
-  // effort: Field
-  // details:
-  title: string;
-  description: string;
-}
-
-export type PagerdutyInfo = {
+export interface PagerdutyInfo {
   id: string;
   summary: string;
   htmlUrl: string;
@@ -244,20 +300,19 @@ export type PagerdutyInfo = {
   allActiveIncidents: Connection<ActiveIncident>;
 }
 
-export type SentryStats = {
+export interface SentryStats extends Node {
+  keys: string;
   weeklyEvents: number
   weeklyUsers: number;
   issues: Connection<SentryIssue>;
 }
 
-export type HistogramItem = {
-  id: string;
+export interface HistogramItem extends Node {
   value: number;
   name: string;
 }
 
-export type SentryIssue = {
-  id: string;
+export interface SentryIssue extends Node {
   category: string;
   culprit: string;
   events: number;
@@ -268,19 +323,19 @@ export type SentryIssue = {
   histogram: Connection<HistogramItem>;
 }
 
-export type OncallPerson = {
+export interface OncallPerson {
   id: string;
   type: string;
   summary: string;
   htmlUrl: string;
 }
 
-export type ActiveIncident = {
-    id: string
-    summary: string
-    description: string
-    status: string
-    htmlUrl: string
-    createdAt: string
-    color: string
+export interface ActiveIncident {
+  id: string
+  summary: string
+  description: string
+  status: string
+  htmlUrl: string
+  createdAt: string
+  color: string
 }

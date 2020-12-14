@@ -1,6 +1,20 @@
 from enum import Enum
+from textwrap import dedent
+
+from graphql_relay import from_global_id
 
 from ..auditing.models import Issue
+
+
+def grab(model, global_id: str):
+    """Return a Django model from a base64 encoded ID."""
+    _type, pk = from_global_id(global_id)
+
+    if _type == Issue.__name__:
+        return model.objects.get(pk=pk)
+    raise TypeError(
+        f"The given ID is of type '{_type}' but we're updating '{model.__name__}' model"
+    )
 
 
 class CheckResultStatus(Enum):
@@ -34,3 +48,10 @@ def determine_check_result_status(is_found, issue_status):
     if is_found:
         return found_result_status_mapping[issue_status]
     return not_found_result_status_mapping[issue_status]
+
+
+def doc(cls) -> str:
+    if not cls.__doc__:
+        return ""
+
+    return "\n".join(dedent(line) for line in cls.__doc__.splitlines() if line)

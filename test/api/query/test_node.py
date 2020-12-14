@@ -36,12 +36,16 @@ def test_service(snapshot, call_api, service_factory):
     snapshot.assert_match(response)
 
 
-def test_issue(snapshot, call_api, issue_factory):
+def test_issue(mocker, snapshot, call_api, issue_factory):
+    mocker.patch(
+        "zoo.auditing.models.Issue.get_patches", mocker.Mock(return_value=([], None))
+    )
     issue_factory(
         id=10,
         comment="Mars",
         kind_key="harris:reyes",
         remote_issue_id=234,
+        repository__url="https://gitlab.com/bakerkristine/hickman",
         last_check="2018-08-22T11:36:48Z",
         details={"lunch": "good", "money": True, "balance": 0},
     )
@@ -55,8 +59,21 @@ def test_issue(snapshot, call_api, issue_factory):
             status
             details
             remoteIssueId
+            remoteIssueUrl
+            patchPreview
             comment
             lastCheck
+            kind {{
+                id
+                key
+                category
+                description
+                effort
+                namespace
+                patch
+                severity
+                title
+            }}
             }}
         }}
     }}

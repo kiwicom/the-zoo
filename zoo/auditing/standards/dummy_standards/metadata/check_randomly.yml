@@ -3,9 +3,33 @@ category: Random Dummy Checks
 ---
 - id: rarely_found
   title: This issue is found 10% of the time
+  severity: undefined
+  effort: high
+  description: |
+    This _issue_ is [found](http://perdu.com) **rarely**.
+
+    ```
+    $ fortune humorists | cowsay -f stegosaurus
+    ```
 
 - id: sometimes_found
   title: This issue is found 50% of the time
+  severity: advice
+  effort: medium
+  description: |
+    This _issue_ is [found](http://perdu.com) **sometimes**.
+
+    ```
+    $ fortune humorists | cowsay -f stegosaurus
+    ```
 
 - id: often_found
   title: This issue is found 90% of the time
+  severity: warning
+  effort: high
+  description: |
+    This _issue_ is [found](http://perdu.com) **often**.
+
+    ```
+    $ fortune humorists | cowsay -f stegosaurus
+    ```

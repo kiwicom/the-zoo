@@ -5,7 +5,6 @@ import string
 import tempfile
 
 import requests
-from django.urls import reverse
 
 from ..base import redis
 from ..repos.utils import download_repository
@@ -60,9 +59,10 @@ class ContextObjectSerializer:
         )
         repo_path_offset = len(self.context.path.as_posix()) + 1
 
-        data = {}
-        data["action"] = patch.action
-        data["file_path"] = file_path.as_posix()[repo_path_offset:]
+        data = {
+            "action": patch.action,
+            "file_path": file_path.as_posix()[repo_path_offset:],
+        }
 
         if patch.action in ["update", "delete"]:
             data["previous_content"] = file_path.read_text()
@@ -118,9 +118,7 @@ class PatchHandler:
         self._patches = self._storage.load(key)
         return self._patches
 
-    def handle_patches(self, request=None, key=None):
-        if request and key is None:
-            key = request.POST.get("patches_key")
+    def handle_patches(self, key=None, reverse_url=None):
         if not self._patches and not (key and self.load_patches(key)):
             return False
 
@@ -132,12 +130,12 @@ class PatchHandler:
             else:
                 actions.append(patch)
 
-        self._resolve_actions(actions, request=request)
-        self._resolve_requests(requests, request=request)
+        self._resolve_actions(actions, reverse_url=reverse_url)
+        self._resolve_requests(requests)
 
         return True
 
-    def _resolve_actions(self, actions_data, request=None):
+    def _resolve_actions(self, actions_data, reverse_url=None):
         if not actions_data:
             return
 
@@ -155,15 +153,11 @@ class PatchHandler:
             title=self.issue.kind.title,
             description=self.issue.description_md,
             source_branch=branch_name,
-            reverse_url=(
-                request.build_absolute_uri(reverse("audit_overview"))
-                if request is not None
-                else None
-            ),
+            reverse_url=reverse_url,
         )
         self.issue.save()
 
-    def _resolve_requests(self, requests_data, request=None):
+    def _resolve_requests(self, requests_data):
         if not requests_data:
             return
 

@@ -21,7 +21,7 @@ const Settings = () => {
     { saveSettings, hideSettings },
   ] = useSettings();
 
-  let [token, setToken] = useState(() => tokenFromStore);
+  const [token, setToken] = useState(() => tokenFromStore);
 
   useEffect(() => {
     if (tokenFromStore !== token) {

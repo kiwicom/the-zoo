@@ -5,6 +5,7 @@ from graphene.relay import Connection, ConnectionField, Node
 from graphene.types.json import JSONString
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType
+from graphql_relay.utils import base64
 
 from ..analytics import models as analytics_models
 from ..auditing import check_discovery
@@ -22,12 +23,65 @@ IssueSeverityEnum = graphene.Enum.from_enum(check_discovery.Severity)
 IssueEffortEnum = graphene.Enum.from_enum(check_discovery.Effort)
 
 
+class Kind(graphene.ObjectType):
+    id = graphene.ID(required=True)
+    key = graphene.String()
+    category = graphene.String()
+    description = graphene.String()
+    effort = graphene.String()
+    namespace = graphene.String()
+    patch = graphene.String()
+    severity = graphene.String()
+    title = graphene.String()
+
+    class Meta:
+        interfaces = [Node]
+
+    @classmethod
+    def from_object(cls, kind):
+        return cls(
+            id=base64(kind.key),
+            key=kind.key,
+            category=kind.category,
+            description=kind.description,
+            effort=kind.effort.value,
+            namespace=kind.namespace,
+            patch=kind.patch,
+            severity=kind.severity.value,
+            title=kind.title,
+        )
+
+
 class Issue(DjangoObjectType, interfaces=[Node]):
     repository = graphene.Field(lambda: Repository)
+    kind = graphene.Field(lambda: Kind)
+    remote_issue_url = graphene.String()
+    patch_preview = graphene.String()
 
     class Meta:
         model = auditing_models.Issue
         filter_fields = ["kind_key"]
+        fields = [
+            "id",
+            "repository",
+            "kind_key",
+            "status",
+            "details",
+            "remote_issue_id",
+            "merge_request_id",
+            "comment",
+            "last_check",
+            "deleted",
+        ]
+
+    def resolve_kind(self, info):
+        return Kind.from_object(kind=check_discovery.KINDS[self.kind_key])
+
+    def resolve_remote_issue_url(self, info):
+        return self.remote_issue_url if self.remote_issue_id else None
+
+    def resolve_patch_preview(self, info):
+        return self.patch_preview
 
 
 class Environment(DjangoObjectType, interfaces=[Node]):
@@ -139,6 +193,21 @@ class SentryIssue(DjangoObjectType, interfaces=[Node]):
     class Meta:
         model = services_models.SentryIssue
         filter_fields = ["title"]
+        fields = [
+            "id",
+            "title",
+            "culprit",
+            "short_id",
+            "issue_id",
+            "assignee",
+            "permalink",
+            "events",
+            "users",
+            "first_seen",
+            "last_seen",
+            "service",
+            "category",
+        ]
 
     histogram = ConnectionField(HistogramItemConnection)
 
@@ -167,6 +236,7 @@ class SentryIssue(DjangoObjectType, interfaces=[Node]):
 
 
 class SentryStats(graphene.ObjectType):
+    keys = graphene.String(None)
     weekly_events = graphene.Int()
     weekly_users = graphene.Int()
     issues = DjangoFilterConnectionField(SentryIssue)

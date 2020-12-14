@@ -9,6 +9,7 @@ in base.overrideAttrs (self: rec {
 
   exportVarsHook=''
     export DJANGO_SETTINGS_MODULE=zoo.base.settings
+    export ZOO_AUDITING_CHECKS=dummy_standards
     export ZOO_DEBUG=true
   '';
 

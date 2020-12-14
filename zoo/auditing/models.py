@@ -1,11 +1,14 @@
+import tempfile
 from enum import Enum
 
 import markdown
 from django.contrib.postgres import fields as pg_fields
 from django.db import models
+from django.template.loader import get_template
 from django.utils import timezone
 
 from ..repos.models import Repository
+from ..repos.utils import download_repository
 from .check_discovery import KINDS
 
 
@@ -65,6 +68,40 @@ class Issue(models.Model):
 
     def __str__(self):
         return f"{self.kind} issue on {self.repository}"
+
+    def set_wontfix(self, *, comment=None):
+        self.status = self.Status.WONTFIX.value
+        if comment:
+            self.comment = comment
+        self.full_clean()
+        self.save()
+
+    @property
+    def patch_preview(self) -> str:
+        patches, patches_key = self.get_patches()
+        return get_template("issue_patch.html").render(
+            {"patches": patches, "patches_key": patches_key}
+        )
+
+    def get_patches(self) -> tuple:
+        from .runner import CheckContext  # pylint: disable=C0415
+        from .utils import PatchHandler  # pylint: disable=C0415
+
+        with tempfile.TemporaryDirectory() as repo_dir:
+
+            repo_path = download_repository(self.repository, repo_dir)
+            context = CheckContext(self.repository, repo_path)
+
+            handler = PatchHandler(self)
+            patches = handler.run_patches(context)
+
+        patches_key = handler.save_patches()
+        return patches, patches_key
+
+    def handle_patches(self, key=None, reverse_url=None) -> bool:
+        from .utils import PatchHandler  # pylint: disable=C0415
+
+        return PatchHandler(self).handle_patches(key, reverse_url)
 
 
 class IssueCountByRepositorySnapshot(models.Model):

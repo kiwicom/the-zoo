@@ -1,18 +1,65 @@
 import tempfile
 
 import graphene
-from graphene import relay
+from django.core.exceptions import PermissionDenied
 
 from ..auditing.check_discovery import CHECKS
 from ..auditing.models import Issue
 from ..auditing.runner import check_repository
+from ..auditing.utils import create_git_issue
 from ..repos.models import Repository
 from ..repos.utils import download_repository
 from . import types
-from .utils import CheckResultStatus, determine_check_result_status
+from .utils import CheckResultStatus, determine_check_result_status, doc, grab
 
 
-class CheckRepositoryByCommit(relay.ClientIDMutation):
+class SetWontfix(graphene.relay.ClientIDMutation):
+    class Input:
+        issue_id = graphene.String(required=True)
+        comment = graphene.String()
+
+    issue = graphene.Field(types.Issue)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, *, issue_id, comment=None):
+        issue = grab(Issue, issue_id)
+        issue.set_wontfix(comment=comment)
+        return SetWontfix(issue=issue)
+
+
+class OpenIssue(graphene.relay.ClientIDMutation):
+    class Input:
+        issue_id = graphene.String(required=True)
+        page_url = graphene.String(required=True)
+
+    issue = graphene.Field(types.Issue)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, *, issue_id, page_url):
+        issue = grab(Issue, issue_id)
+        create_git_issue(
+            issue, user_name=info.context.user.username, reverse_url=page_url
+        )
+        issue.refresh_from_db()
+        return OpenIssue(issue=issue)
+
+
+class ApplyPatches(graphene.relay.ClientIDMutation):
+    class Input:
+        issue_id = graphene.String(required=True)
+
+    issue = graphene.Field(types.Issue)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, *, issue_id):
+        issue = grab(Issue, issue_id)
+        success = issue.handle_patches()
+        if not success:
+            raise PermissionDenied("Could not apply patches: Forbidden.")
+        return ApplyPatches(issue=issue)
+
+
+class CheckRepositoryByCommit(graphene.relay.ClientIDMutation):
     """Runs checks on repository on the fly and returns found issues.
 
     Statuses of results are determined from comparison with Repository's known
@@ -77,5 +124,8 @@ class CheckRepositoryByCommit(relay.ClientIDMutation):
 
 class Mutation:
     check_repository_by_commit = CheckRepositoryByCommit.Field(
-        description=CheckRepositoryByCommit.__doc__
+        description=doc(CheckRepositoryByCommit)
     )
+    set_wontfix = SetWontfix.Field(description=doc(SetWontfix))
+    open_issue = OpenIssue.Field(description=doc(OpenIssue))
+    apply_patches = ApplyPatches.Field(description=doc(ApplyPatches))

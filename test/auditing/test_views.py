@@ -102,3 +102,42 @@ def test_apply_bulk_patches__has_issues(mocker, client, user, issue_factory):
 
     assert response.status_code == 200
     m_task.delay.assert_called_once_with([issue_1.id, issue_2.id])
+
+
+def test_get_issue_patch(mocker, client, user, issue_factory):
+    mocker.patch(
+        "zoo.auditing.models.Issue.get_patches", mocker.Mock(return_value=([], None))
+    )
+    issue = issue_factory()
+    params = {
+        "project_type": issue.repository.project_type,
+        "owner_slug": issue.repository.owner,
+        "name_slug": issue.repository.name,
+        "issue_pk": issue.pk,
+    }
+    client.force_login(user)
+    response = client.get(reverse("patch_issue", kwargs=params))
+    assert response.status_code == 200
+    assert "No auto-generated patches can be applied." in str(response.content)
+
+
+def test_post_issue_patch(mocker, client, user, issue_factory):
+    mocker.patch(
+        "zoo.auditing.models.Issue.get_patches", mocker.Mock(return_value=([], None))
+    )
+    mocker.patch(
+        "zoo.auditing.models.Issue.handle_patches", mocker.Mock(return_value=True)
+    )
+    issue = issue_factory()
+    params = {
+        "project_type": issue.repository.project_type,
+        "owner_slug": issue.repository.owner,
+        "name_slug": issue.repository.name,
+    }
+    client.force_login(user)
+    response = client.post(
+        reverse("patch_issue", kwargs={"issue_pk": issue.pk, **params}),
+        content_type="application/json",
+        follow=True,
+    )
+    assert response.redirect_chain == [(reverse("audit_report", kwargs=params), 302)]

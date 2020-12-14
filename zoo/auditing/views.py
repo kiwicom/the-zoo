@@ -1,6 +1,5 @@
 import itertools
 import json
-import tempfile
 from collections import OrderedDict, defaultdict
 
 from django.http import Http404, HttpResponseForbidden, JsonResponse
@@ -11,11 +10,10 @@ from django.views.generic import TemplateView
 
 from ..libraries.models import Library
 from ..repos.tasks import pull
-from ..repos.utils import download_repository
 from ..services.models import Service
-from . import models, runner, tasks
+from . import models, tasks
 from .check_discovery import KINDS
-from .utils import PatchHandler, create_git_issue
+from .utils import create_git_issue
 
 
 class AuditOverview(TemplateView):
@@ -251,24 +249,17 @@ class IssuePatch(TemplateView):
 
     def get(self, request, *args, **kwargs):
         issue = models.Issue.objects.get(pk=self.kwargs["issue_pk"])
-        repository = issue.repository
-
-        with tempfile.TemporaryDirectory() as repo_dir:
-            repo_path = download_repository(repository, repo_dir)
-            context = runner.CheckContext(repository, repo_path)
-
-            handler = PatchHandler(issue)
-            patches = handler.run_patches(context)
-
-        patches_key = handler.save_patches()
-        context = {"patches": patches, "patches_key": patches_key}
-        return self.render_to_response(context)
+        patches, patches_key = issue.get_patches()
+        return self.render_to_response({"patches": patches, "patches_key": patches_key})
 
     def post(self, request, *args, **kwargs):
         issue = models.Issue.objects.get(pk=self.kwargs["issue_pk"])
-        handler = PatchHandler(issue)
+        key = request.POST.get("patches_key")
+        reverse_url = request.build_absolute_uri(reverse("audit_overview"))
 
-        if not handler.handle_patches(request):
+        success = issue.handle_patches(key, reverse_url)
+
+        if not success:
             return HttpResponseForbidden()
 
         return redirect(
@@ -347,10 +338,5 @@ def open_git_issue(request, project_type, owner_slug, name_slug, issue_pk):
 @require_POST
 def wontfix_issue(request, project_type, owner_slug, name_slug, issue_pk):
     issue = models.Issue.objects.get(pk=issue_pk)
-
-    issue.status = issue.Status.WONTFIX.value
-    issue.comment = request.POST["comment"]
-    issue.full_clean()
-    issue.save()
-
+    issue.set_wontfix(comment=request.POST["comment"])
     return redirect("audit_report", project_type, owner_slug, name_slug)

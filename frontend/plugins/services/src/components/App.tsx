@@ -5,8 +5,7 @@ import { Settings } from './Settings';
 import ServicePage from './ServicePage';
 import ServiceDetail from './ServiceDetail';
 import ServiceList from './ServiceList';
-import ServiceIssueDetail from './ServiceIssueDetail';
-import ServiceIssueList from './ServiceIssueList';
+import ServiceIssueList from './ServiceIssue/ServiceIssueList';
 import { theZooClient, UrqlProvider } from 'zoo-api';
 
 export const App = () => (
@@ -18,7 +17,6 @@ export const App = () => (
             <Route path="/" element={<ServiceList />} />
             <Route path="/:id/:name/" element={<ServiceDetail />} />
             <Route path="/:id/:name/issues/" element={<ServiceIssueList />} />
-            <Route path="/:id/:name/issuse/:id/" element={<ServiceIssueDetail />} />
           </Route>
         </Routes>
         <Settings />

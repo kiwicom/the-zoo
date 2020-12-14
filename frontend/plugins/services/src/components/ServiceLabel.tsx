@@ -23,7 +23,7 @@ interface Props {
 }
 
 const ServiceLabel = ({ name, value }: Props) => {
-  if (!value) return null;
+  if (!value || value === "undefined") return null;
   const choice = value.toLowerCase(); // Should be fixed in backend instead
 
   const color = choiceColors[choice] || "Gray";

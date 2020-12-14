@@ -4,6 +4,22 @@ category: Constant Dummy Checks
 - id: always_found
   title: This issue is always found
   patch: patch_constantly.patch_constantly
+  severity: critical
+  effort: high
+  description: |
+    This _issue_ is [found](http://perdu.com) **always**.
+
+    ```
+    $ fortune humorists | cowsay -f stegosaurus
+    ```
 
 - id: never_found
   title: This issue is never found
+  severity: advice
+  effort: low
+  description: |
+    This _issue_ is [found](http://perdu.com) **never**.
+
+    ```
+    $ fortune humorists | cowsay -f stegosaurus
+    ```

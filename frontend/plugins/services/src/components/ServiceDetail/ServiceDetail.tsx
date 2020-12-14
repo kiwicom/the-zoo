@@ -1,6 +1,6 @@
 import React from 'react';
 import { Toolbar, Breadcrumbs, Button, Card, CardHeader, Divider, Grid, Link, Typography } from '@material-ui/core';
-import { useParams } from 'react-router-dom';
+import { useParams, Link as RouterLink } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import { Progress } from '@backstage/core';
 import { useQuery } from 'urql';
@@ -19,7 +19,6 @@ import ServiceRepository from '../ServiceRepository'
 import ServiceSentry from '../ServiceSentry'
 import ServicePagerduty from '../ServicePagerduty'
 import { getService, Service } from 'zoo-api';
-import { Link as RouterLink } from 'react-router-dom';
 
 import ContentHeader from '../ContentHeader'
 
@@ -40,7 +39,7 @@ const ServiceDetail = () => {
 
   const ViewReport: FC = () => (
     <Button component={RouterLink}
-      to={`/services/${service.name}/issues/`}
+      to={`/services/${service.id}/${service.name}/issues/`}
       state={{service: service}}
       startIcon={<SubjectIcon />}
       variant="contained"
@@ -94,7 +93,7 @@ const ServiceDetail = () => {
             <CardHeader
               avatar={<HealingIcon />}
               title={<Typography variant="h6">Auditing report</Typography>}
-              subheader={`${pluralize("issue", service.repository.issues.length, true)} found during the last analysis`}
+              subheader={`${pluralize("issue", service.repository.issues.edges.length, true)} found during the last analysis`}
               action={<ViewReport />}
               style={{ paddingBottom: '16px' }} />
           </Card>

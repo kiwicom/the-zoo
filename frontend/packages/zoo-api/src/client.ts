@@ -33,8 +33,8 @@ export const theZooClient = new Client({
  * Unwraps objects of type T from a connection edges.
  *
  * @param {Connection} connection - A GraphQL Relay connection field
- * @returns {T[]} Where T is the defined type (Service, Issue...)
+ * @returns {Array<T>} Where T is the defined type (Service, Issue...)
  */
-export function unwrap<T>(connection: Connection<T>): T[] {
+export function unwrap<T>(connection: Connection<T>): Array<T> {
   return connection.edges.map((edge: Edge<T>) => edge.node);
 }

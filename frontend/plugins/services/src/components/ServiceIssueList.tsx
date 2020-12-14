@@ -4,7 +4,7 @@ import { Typography, Grid, Breadcrumbs, Link, } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert';
 import { Progress } from '@backstage/core';
 import { useQuery } from 'urql';
-import { getService, Service, Issue, unwrap } from 'zoo-api';
+import { getService, Service } from 'zoo-api';
 
 
 const ServiceIssueCategory: FC<{ service: Service }> = ({ service }) => {

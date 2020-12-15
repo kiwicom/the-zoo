@@ -1,6 +1,15 @@
-import React, { FC } from 'react';
-import { Breadcrumbs, Button, IconButton, Card, CardContent, Grid, Link, Tooltip, Typography } from '@material-ui/core';
-
+import React from 'react';
+import {
+  Breadcrumbs,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  IconButton,
+  Link,
+  Tooltip,
+  Typography
+} from '@material-ui/core';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import CallSplitIcon from '@material-ui/icons/CallSplit';
 import CodeIcon from '@material-ui/icons/Code';
@@ -8,23 +17,18 @@ import FilterNoneIcon from '@material-ui/icons/FilterNone';
 import PagesIcon from '@material-ui/icons/Pages';
 import PersonIcon from '@material-ui/icons/Person';
 import StarIcon from '@material-ui/icons/Star';
-
-import Count from './Count'
 import { Repository } from 'zoo-api';
+import Count from './Count';
 
 
-type Props = {
-  repository: Repository;
-}
-
-const ServiceRepository: FC<Props> = ({ repository }) => (
+const ServiceRepository = ({ repository }: { repository: Repository }) => (
   <Card>
     <CardContent>
       <Grid container direction="row" justify="space-between">
 
         <Grid item>
           <Grid container direction="row" >
-            <Grid item style={{paddingTop: '12px'}}><PagesIcon /></Grid>
+            <Grid item style={{ paddingTop: '12px' }}><PagesIcon /></Grid>
             <Grid item>
               <Breadcrumbs>
                 <Link href={repository.url.slice(0, repository.url.lastIndexOf('/'))} target="_blank" rel="noopener">

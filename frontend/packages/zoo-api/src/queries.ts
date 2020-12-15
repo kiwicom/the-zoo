@@ -185,7 +185,7 @@ export type Service = {
   slackChannel: string;
   pagerdutyService: string;
   pagerdutyInfo: PagerdutyInfo;
-  sentryStats: SentryStats;
+  sentryStats: SentryStats;
   docsUrl: string;
   repository: Repository;
 };

@@ -7,8 +7,8 @@
   "author": "baptiste.darthenay@kiwi.com",
   "license": "MIT",
   "dependencies": {
-    "@urql/exchange-graphcache": "^3.1.11",
+    "@urql/exchange-graphcache": "^3.3.4",
     "graphql": "^15.4.0",
-    "urql": "^1.11.3"
+    "urql": "^1.11.5"
   }
 }

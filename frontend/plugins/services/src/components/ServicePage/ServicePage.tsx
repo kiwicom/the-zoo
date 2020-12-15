@@ -1,23 +1,19 @@
-
-import React, { FC } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Header, Page, Content, HeaderLabel } from '@backstage/core';
+import { Content, Header, HeaderLabel, Page } from '@backstage/core';
 
-const ServicePage: FC<{}> = () => {
+const ServicePage = () => (
+  <Page themeId="home">
+    <Header title="Kiwi.com services" subtitle="Most of them aren’t microservices to be honest">
+      <HeaderLabel label="Owner" value="Platform Software Squad" />
+      <HeaderLabel label="Lifecycle" value="Alpha" />
+    </Header>
+    <Content>
 
-  return (
-    <Page themeId="home">
-      <Header title="Kiwi.com services" subtitle="Most of them aren’t microservices to be honest">
-        <HeaderLabel label="Owner" value="Platform Software Squad" />
-        <HeaderLabel label="Lifecycle" value="Alpha" />
-      </Header>
-      <Content>
+      <Outlet />
 
-        <Outlet/>
-
-      </Content>
-    </Page>
-  )
-};
+    </Content>
+  </Page>
+);
 
 export default ServicePage;

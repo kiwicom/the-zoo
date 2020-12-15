@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React from 'react';
 
-import ContentHeader from './ContentHeader'
+import ContentHeader from './ContentHeader';
 
 
-const ServiceIssueDetail: FC<{}> = () => (
+const ServiceIssueDetail = () =>  (
   <>
     <ContentHeader title="{issue}" />
   </>

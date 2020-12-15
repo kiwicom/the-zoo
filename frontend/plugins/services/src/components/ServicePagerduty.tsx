@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { useQuery } from 'urql';
 import Alert from '@material-ui/lab/Alert';
 import { Progress } from '@backstage/core';
@@ -10,14 +10,15 @@ import EventBusyIcon from '@material-ui/icons/EventBusy';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import Count from './Count';
 
-type Props = {
-  service: Service;
-}
 
-const ServicePagerduty: FC<Props> = ({ service }) => {
+const ServicePagerduty = ({ service }: { service: Service }) => {
+  const [response] = useQuery({
+    query: getPagerdutyService,
+    variables: { id: service.id },
+    pause: !service.pagerdutyService
+  });
+
   if (!service.pagerdutyService) return null;
-
-  const [response] = useQuery({ query: getPagerdutyService, variables: { id: service.id } });
 
   if (response.fetching) {
     return <Progress />;
@@ -27,7 +28,7 @@ const ServicePagerduty: FC<Props> = ({ service }) => {
 
   const s: Service = response.data.service;
   const pd = s.pagerdutyInfo;
-  if (!pd) return (null);
+  if (!pd) return null;
   const incidents = unwrap<ActiveIncident>(pd.allActiveIncidents);
 
   return (

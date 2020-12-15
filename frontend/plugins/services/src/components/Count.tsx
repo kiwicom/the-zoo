@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Badge, BadgeOrigin } from '@material-ui/core'
 
 const anchorOrigin: BadgeOrigin = {
@@ -6,11 +6,12 @@ const anchorOrigin: BadgeOrigin = {
   horizontal: 'right',
 }
 
-type Props = {
-  value: number;
+interface Props {
+  value: number
+  children: React.ReactNode
 }
 
-const Count: FC<Props> = ({ value, children }) => (
+const Count = ({ value, children }: Props) => (
   <Badge anchorOrigin={anchorOrigin} badgeContent={value} color="primary">{children}</Badge>
 )
 

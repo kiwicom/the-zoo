@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import {
   Chip,
   Card,
@@ -18,10 +18,6 @@ import ContactlessIcon from '@material-ui/icons/Contactless';
 import InfoIcon from '@material-ui/icons/Info';
 import { SentryIssue, Service, unwrap } from 'zoo-api';
 
-type Props = {
-  service: Service;
-}
-
 const StyledTableRow = withStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -34,7 +30,7 @@ const StyledTableRow = withStyles((theme: Theme) =>
 
 
 
-const ServiceSentry: FC<Props> = ({ service }) => {
+const ServiceSentry = ({ service }: { service: Service }) => {
   const issues = unwrap<SentryIssue>(service.sentryStats.issues);
   return (
     <Card>

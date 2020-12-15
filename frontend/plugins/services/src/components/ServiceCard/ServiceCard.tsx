@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Link, IconButton, Tooltip, Grid, Card, CardContent, Typography } from '@material-ui/core';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 import BarChartIcon from '@material-ui/icons/BarChart';
@@ -10,15 +10,15 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Service } from 'zoo-api';
 import ServiceLabel from '../ServiceLabel'
 
-type ActionProps = {
-  title: string,
-  label: string,
-  url: (string | null),
-  icon: FC
+interface ActionProps {
+  title: string
+  label: string
+  url: (string | null)
+  icon: React.FC
 }
 
-const ServiceAction: FC<ActionProps> = ({ title, label, url, icon: Icon }) => {
-  const ActiveAction: FC<{ href: string }> = ({ href }) => (
+const ServiceAction = ({ title, label, url, icon: Icon }: ActionProps) => {
+  const ActiveAction = ({ href }: { href: string }) => (
     <Link href={href} target="_blank" rel="noopener">
       <IconButton aria-label={label}>
         <Icon />
@@ -39,7 +39,7 @@ const ServiceAction: FC<ActionProps> = ({ title, label, url, icon: Icon }) => {
 }
 
 
-const ServiceCard: FC<{ service: Service }> = ({ service }) => (
+const ServiceCard = ({ service }: { service: Service }) => (
   <Card>
     <CardContent>
       <Grid container direction="row" justify="space-between" alignItems="center">

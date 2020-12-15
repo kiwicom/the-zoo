@@ -1,4 +1,4 @@
-import React, { FC, useReducer, Dispatch, Reducer } from 'react';
+import React, { useReducer, Dispatch, Reducer } from 'react';
 import type { Action, SettingsState, State } from './types';
 
 export type { SettingsState };
@@ -29,7 +29,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
   }
 };
 
-export const AppStateProvider: FC = ({ children }) => {
+export const AppStateProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <AppContext.Provider value={[state, dispatch]}>

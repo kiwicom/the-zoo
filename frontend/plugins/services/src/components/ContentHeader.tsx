@@ -1,15 +1,15 @@
-import React, { FC } from 'react';
-import { Button } from '@material-ui/core'
+import React from 'react';
+import { Button } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { ContentHeader as BackstageContentHeader, SupportButton } from '@backstage/core';
-import { useSettings } from '../state'
+import { useSettings } from '../state';
 
-type Props = {
-  title: string;
-  description?: string;
+interface Props {
+  title: string
+  description?: string
 }
 
-const ContentHeader: FC<Props> = ({ title, description}) => {
+const ContentHeader = ({ title, description }: Props) => {
   const [, { showSettings }] = useSettings();
 
   return (

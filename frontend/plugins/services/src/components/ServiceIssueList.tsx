@@ -1,13 +1,14 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Typography, Grid, Breadcrumbs, Link, } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert';
 import { Progress } from '@backstage/core';
 import { useQuery } from 'urql';
 import { getService, Service } from 'zoo-api';
+import ContentHeader from './ContentHeader'
 
 
-const ServiceIssueCategory: FC<{ service: Service }> = ({ service }) => {
+const ServiceIssueCategory = ({ service }: {service: Service}) => {
   return (
     <>
     {service.repository.issues.map(issue => (
@@ -27,8 +28,7 @@ const ServiceIssueCategory: FC<{ service: Service }> = ({ service }) => {
     </>
   )
 }
-const ServiceIssueList: FC<{}> = (props) => {
-  console.info(props);
+const ServiceIssueList = () => {
   const { name } = useParams();
   const [response] = useQuery({ query: getService, variables: { name } });
 

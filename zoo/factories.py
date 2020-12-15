@@ -69,6 +69,7 @@ class ServiceFactory(DjangoModelFactory):
     )
     slack_channel = LazyAttribute(lambda o: f"#{o.name}")
     docs_url = LazyAttribute(lambda o: f"https://example.com/#{o.name}")
+    pagerduty_service = LazyAttribute(lambda o: f"services/P{o.name}")
 
 
 class EnvironmentFactory(DjangoModelFactory):

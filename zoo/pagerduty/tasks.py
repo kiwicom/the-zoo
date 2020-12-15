@@ -1,24 +1,13 @@
-import re
 from datetime import datetime, timedelta
-from typing import Optional
 
 from django.conf import settings
 from django.http import Http404
 from pygerduty import exceptions
 from pygerduty.v2 import PagerDuty
 
-SERVICE_PATH_REGEX = re.compile(r"services/(?P<sid>P[A-Z0-9]*)/?")
-
 
 def _isoformat(dtime):
     return "%sZ" % dtime.isoformat()
-
-
-def path_to_service_id(path: str) -> Optional[str]:
-    match = re.match(SERVICE_PATH_REGEX, path)
-    if match is None:
-        return None
-    return match.groupdict()["sid"]
 
 
 def get_oncall_info(service_id):

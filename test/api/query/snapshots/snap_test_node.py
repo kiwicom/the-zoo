@@ -76,15 +76,16 @@ snapshots['test_dependency 1'] = {
 }
 
 snapshots['test_service 1'] = {
-    'errors': [
-        {
-            'locations': [
-                {
-                    'column': 17,
-                    'line': 11
-                }
-            ],
-            'message': 'Field "pagerdutyService" of type "PagerdutyService" must have a sub selection.'
+    'data': {
+        'node': {
+            'docsUrl': 'https://docs/skypicker/docs/',
+            'id': 'U2VydmljZToxMA==',
+            'impact': 'PROFIT',
+            'name': 'allen-nobles',
+            'owner': 'bradltwat',
+            'pagerdutyInfo': None,
+            'slackChannel': 'https://gitlab.slack',
+            'status': 'BETA'
         }
-    ]
+    }
 }

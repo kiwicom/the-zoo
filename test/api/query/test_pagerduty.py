@@ -4,13 +4,13 @@ from graphql_relay import to_global_id
 pytestmark = pytest.mark.django_db
 
 
-def test_pagerduty_service(snapshot, mocker, call_api, service_factory):
+def test_pagerduty_service(snapshot, capsys, mocker, call_api, service_factory):
     service_factory(
         id=10,
         owner="bradltwat",
         name="allen-nobles",
-        status="fixed",
-        impact="sales",
+        status="beta",
+        impact="profit",
         slack_channel="https://gitlab.slack",
         pagerduty_service="services/1A2B3",
         docs_url="https://docs/skypicker/docs/",
@@ -18,7 +18,7 @@ def test_pagerduty_service(snapshot, mocker, call_api, service_factory):
     id = to_global_id("Service", 10)
 
     mocker.patch(
-        "zoo.pagerduty.tasks.get_oncall_info",
+        "zoo.api.types.get_oncall_info",
         return_value={
             "id": "1A2B3",
             "summary": "service_sumary",
@@ -47,27 +47,27 @@ def test_pagerduty_service(snapshot, mocker, call_api, service_factory):
     query {{
         node (id:"{id}") {{
             ... on Service {{
-                pagerdutyService {{
-                    id,
-                    summary,
-                    htmlUrl,
+                pagerdutyInfo {{
+                    id
+                    summary
+                    htmlUrl
                     oncallPerson {{
-                        id,
-                        type,
-                        summary,
-                        htmlUrl,
-                    }},
-                    pastWeekTotal,
-                    allActiveIncidents(first: 3) {{
-                        totalCount,
+                        id
+                        type
+                        summary
+                        htmlUrl
+                    }}
+                    pastWeekTotal
+                    allActiveIncidents {{
+                        totalCount
                         edges {{
                             node {{
-                                id,
-                                summary,
-                                description,
-                                status,
-                                htmlUrl,
-                                createdAt,
+                                id
+                                summary
+                                description
+                                status
+                                htmlUrl
+                                createdAt
                             }}
                         }}
                     }}

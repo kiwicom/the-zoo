@@ -9,7 +9,7 @@ from graphene_django.types import DjangoObjectType
 from ..analytics import models as analytics_models
 from ..auditing import check_discovery
 from ..auditing import models as auditing_models
-from ..pagerduty.tasks import get_oncall_info, path_to_service_id
+from ..pagerduty.tasks import get_oncall_info
 from ..repos import models as repos_models
 from ..services import models as services_models
 from .paginator import Paginator
@@ -141,7 +141,7 @@ class Service(DjangoObjectType):
     environments = DjangoFilterConnectionField(Environment)
 
     def resolve_pagerduty_info(self, info):
-        service_id = path_to_service_id(self.pagerduty_service)
+        service_id = self.pagerduty_service_id
         if service_id is None:
             return
 

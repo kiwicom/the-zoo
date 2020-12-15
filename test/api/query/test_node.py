@@ -9,10 +9,10 @@ def test_service(snapshot, call_api, service_factory):
         id=10,
         owner="bradltwat",
         name="allen-nobles",
-        status="fixed",
-        impact="sales",
+        status="beta",
+        impact="profit",
         slack_channel="https://gitlab.slack",
-        pagerduty_service="sales/P019873X9",
+        pagerduty_service="services/P019873X9",
         docs_url="https://docs/skypicker/docs/",
     )
     id = to_global_id("Service", 10)
@@ -26,7 +26,7 @@ def test_service(snapshot, call_api, service_factory):
                 status
                 impact
                 slackChannel
-                pagerdutyService
+                pagerdutyInfo {{ id summary }}
                 docsUrl
             }}
         }}

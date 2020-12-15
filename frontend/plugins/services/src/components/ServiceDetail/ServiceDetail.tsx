@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Toolbar, Breadcrumbs, Button, Card, CardHeader, Divider, Grid, Link, Typography } from '@material-ui/core';
 import { useParams } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
@@ -23,7 +23,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import ContentHeader from '../ContentHeader'
 
-const ServiceDetail: FC<{}> = () => {
+const ServiceDetail = () => {
   const { id } = useParams();
   const [response] = useQuery({ query: getService, variables: { id } });
 

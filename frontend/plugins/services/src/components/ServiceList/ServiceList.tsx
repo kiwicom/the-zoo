@@ -1,5 +1,5 @@
 
-import React, { FC } from 'react';
+import React from 'react';
 import { Grid } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import Alert from '@material-ui/lab/Alert';
@@ -7,7 +7,7 @@ import { useQuery } from 'urql';
 import { getServices, Service, Edge } from 'zoo-api';
 import ServiceCard from '../ServiceCard';
 
-const ServiceList: FC<{}> = () => {
+const ServiceList = () => {
   const [response] = useQuery({ query: getServices });
 
   if (response.fetching) {

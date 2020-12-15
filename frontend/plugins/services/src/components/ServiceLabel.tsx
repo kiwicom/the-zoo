@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Chip } from '@material-ui/core';
 
 interface MappingDict {
@@ -17,12 +17,12 @@ const choiceColors: MappingDict = {
   'employees': 'RoyalBlue',
 }
 
-type Props = {
-  name: string;
-  value: string;
+interface Props {
+  name: string
+  value: string
 }
 
-const ServiceLabel: FC<Props> = ({ name, value }) => {
+const ServiceLabel = ({ name, value }: Props) => {
   if (!value) return null;
   const choice = value.toLowerCase(); // Should be fixed in backend instead
 

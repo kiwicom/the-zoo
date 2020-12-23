@@ -8,6 +8,8 @@ export const getServices = `
         owner
         status
         impact
+        ratingGrade
+        ratingReason
         slackChannel
         pagerdutyService
         pagerdutyInfo {
@@ -56,6 +58,8 @@ query ($id: ID!)
       owner
       status
       impact
+      ratingGrade
+      ratingReason
       slackChannel
       pagerdutyService
       sentryStats {
@@ -64,6 +68,7 @@ query ($id: ID!)
         issues {
           edges {
             node {
+              id
               category
               culprit
               events
@@ -71,6 +76,15 @@ query ($id: ID!)
               shortId
               title
               users
+              histogram {
+                edges {
+                  node {
+                    id
+                    name
+                    value
+                  }
+                }
+              }
             }
           }
         }
@@ -167,6 +181,7 @@ export const getCheckResults = `
 
 export type Connection<T> = {
   edges: Edge<T>[]
+  totalCount: number
 }
 
 export type Edge<T> = {
@@ -235,6 +250,12 @@ export type SentryStats = {
   issues: Connection<SentryIssue>;
 }
 
+export type HistogramItem = {
+  id: string;
+  value: number;
+  name: string;
+}
+
 export type SentryIssue = {
   id: string;
   category: string;
@@ -244,6 +265,7 @@ export type SentryIssue = {
   shortId: string;
   title: string;
   users: number;
+  histogram: Connection<HistogramItem>;
 }
 
 export type OncallPerson = {

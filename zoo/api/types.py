@@ -120,10 +120,50 @@ class PagerdutyInfo(graphene.ObjectType):
         )
 
 
+class HistogramItem(graphene.ObjectType):
+    name = graphene.String()
+    value = graphene.String()
+
+    class Meta:
+        interfaces = (Node,)
+
+
+class HistogramItemConnection(Connection):
+    total_count = graphene.Int()
+
+    class Meta:
+        node = HistogramItem
+
+
 class SentryIssue(DjangoObjectType, interfaces=[Node]):
     class Meta:
         model = services_models.SentryIssue
         filter_fields = ["title"]
+
+    histogram = ConnectionField(HistogramItemConnection)
+
+    def resolve_histogram(self, info, **kwargs):
+        paginator = Paginator(**kwargs)
+        edges = []
+
+        last_two_weeks = sorted(self.stats.all(), key=lambda x: x.timestamp)[:14]
+        page_info = paginator.get_page_info(len(last_two_weeks))
+
+        for i, day in enumerate(
+            last_two_weeks[paginator.slice_from : paginator.slice_to]  # Ignore PEP8Bear
+        ):
+            edges.append(
+                EnvironmentConnection_.Edge(
+                    node=HistogramItem(
+                        value=day.count, name=day.timestamp.strftime("%d/%m/%Y")
+                    ),
+                    cursor=paginator.get_edge_cursor(i + 1),
+                )
+            )
+
+        return HistogramItemConnection(
+            page_info=page_info, edges=edges, total_count=len(last_two_weeks)
+        )
 
 
 class SentryStats(graphene.ObjectType):

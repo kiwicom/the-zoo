@@ -144,22 +144,23 @@ class SentryIssue(DjangoObjectType, interfaces=[Node]):
 
     def resolve_histogram(self, info, **kwargs):
         paginator = Paginator(**kwargs)
-        edges = []
-
         last_two_weeks = sorted(self.stats.all(), key=lambda x: x.timestamp)[:14]
         page_info = paginator.get_page_info(len(last_two_weeks))
 
-        for i, day in enumerate(
-            last_two_weeks[paginator.slice_from : paginator.slice_to]  # Ignore PEP8Bear
-        ):
-            edges.append(
-                EnvironmentConnection_.Edge(
-                    node=HistogramItem(
-                        value=day.count, name=day.timestamp.strftime("%d/%m/%Y")
-                    ),
-                    cursor=paginator.get_edge_cursor(i + 1),
-                )
+        edges = [
+            EnvironmentConnection_.Edge(
+                node=HistogramItem(
+                    value=day.count, name=day.timestamp.strftime("%d/%m/%Y")
+                ),
+                cursor=paginator.get_edge_cursor(i + 1),
             )
+            for i, day in enumerate(
+                last_two_weeks[
+                    paginator.slice_from : paginator.slice_to
+                ]  # Ignore PEP8Bear
+            )
+        ]
+
 
         return HistogramItemConnection(
             page_info=page_info, edges=edges, total_count=len(last_two_weeks)

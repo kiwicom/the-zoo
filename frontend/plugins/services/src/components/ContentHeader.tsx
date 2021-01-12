@@ -5,7 +5,7 @@ import { ContentHeader as BackstageContentHeader, SupportButton } from '@backsta
 import { useSettings } from '../state';
 
 interface Props {
-  title: string
+  title?: string
   description?: string
 }
 

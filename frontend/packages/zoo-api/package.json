@@ -7,6 +7,8 @@
   "author": "baptiste.darthenay@kiwi.com",
   "license": "MIT",
   "dependencies": {
+    "@backstage/core": "^0.4.0",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "@urql/exchange-graphcache": "^3.3.4",
     "graphql": "^15.4.0",
     "urql": "^1.11.5"

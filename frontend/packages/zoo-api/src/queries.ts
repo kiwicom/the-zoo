@@ -39,6 +39,18 @@ query ($id: ID!)
       ratingReason
       slackChannel
       pagerdutyService
+      environments {
+        edges {
+          node {
+            id
+            name
+            healthCheckUrl
+            dashboardUrl
+            logsUrl
+            openApiUrl
+          }
+        }
+      }
       sentryStats {
         weeklyEvents
         weeklyUsers
@@ -234,8 +246,7 @@ export type Edge<T> = {
   node: T;
 }
 
-export interface Service {
-  id: string,
+export interface Service extends Node {
   owner: string;
   name: string;
   status: string;
@@ -248,10 +259,10 @@ export interface Service {
   sentryStats: SentryStats;
   docsUrl: string;
   repository: Repository;
-};
+  environments: Connection<Environment>
+}
 
-export interface Repository {
-  id: string;
+export interface Repository extends Node {
   remoteId: number;
   name: string;
   owner: string;
@@ -259,8 +270,15 @@ export interface Repository {
   issues: Connection<Issue>;
 }
 
-export interface Kind {
-  id: string;
+export interface Environment extends Node {
+  name: string;
+  healthCheckUrl: string;
+  dashboardUrl: string;
+  logsUrl: string;
+  openApiUrl: string;
+}
+
+export interface Kind extends Node {
   key: string;
   category: string;
   description: string;
@@ -280,7 +298,6 @@ export enum IssueStatus {
 }
 
 export interface Issue extends Node {
-  id: string;
   kindKey: string;
   kind: Kind;
   status: IssueStatus;
@@ -291,8 +308,7 @@ export interface Issue extends Node {
   patchPreview: string;
 }
 
-export interface PagerdutyInfo {
-  id: string;
+export interface PagerdutyInfo extends Node {
   summary: string;
   htmlUrl: string;
   oncallPerson: OncallPerson;
@@ -323,19 +339,17 @@ export interface SentryIssue extends Node {
   histogram: Connection<HistogramItem>;
 }
 
-export interface OncallPerson {
-  id: string;
+export interface OncallPerson extends Node {
   type: string;
   summary: string;
   htmlUrl: string;
 }
 
-export interface ActiveIncident {
-  id: string
-  summary: string
-  description: string
-  status: string
-  htmlUrl: string
-  createdAt: string
-  color: string
+export interface ActiveIncident extends Node {
+  summary: string;
+  description: string;
+  status: string;
+  htmlUrl: string;
+  createdAt: string;
+  color: string;
 }

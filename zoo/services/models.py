@@ -195,6 +195,7 @@ class Environment(models.Model):
         choices=((item.value, item.value) for item in EnviromentType),
         null=True,
         max_length=100,
+        default=EnviromentType.ZOO.value,
     )
 
 

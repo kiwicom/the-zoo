@@ -66,12 +66,3 @@ $("button.add-environment").click(function () {
         firstSegment.show();
     }
 });
-
-$(".load-gitlab-environment").on("click", function () {
-  gitlabEnvs.load({
-    envTypeZoo: envTypeZoo,
-    envTypeGitlab: envTypeGitlab,
-    envsUrl: envsUrl,
-    repoId: $("#id_repository").val()
-  })
-});

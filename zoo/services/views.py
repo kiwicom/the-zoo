@@ -59,10 +59,8 @@ class ServiceCreate(ServiceEnvironmentMixin, generic_views.CreateView):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet(self.request.POST)
-        else:
-            data["envs_formset"] = forms.ServiceEnvironmentsFormSet()
-            data["env_type_gitlab"] = EnviromentType.GITLAB.value
-            data["env_type_zoo"] = EnviromentType.ZOO.value
+            return data
+        data["envs_formset"] = forms.ServiceEnvironmentsFormSet()
         return data
 
 

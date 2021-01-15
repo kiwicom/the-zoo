@@ -20,6 +20,4 @@ class RepoInput(widgets.TextInput):
         )
 
         context["widget"]["value"] = value
-        context["env_type_gitlab"] = EnviromentType.GITLAB.value
-        context["env_type_zoo"] = EnviromentType.ZOO.value
         return context

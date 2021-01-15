@@ -153,6 +153,7 @@ export default {
       if (this.repoInputInfo.initialValue) {
         this.$store.commit("selectSuggestion", parseInt(this.repoInputInfo.initialValue))
         this.$store.commit("refreshEnteredText")
+        loadGitlabEnvs(parseInt(this.repoInputInfo.initialValue))
       }
     },
     onBlur () {
@@ -160,7 +161,7 @@ export default {
       this.$refs.suggestions.selectSuggestion();
       this.isOnEditMode = false
       this.$store.commit("refreshEnteredText")
-      loadGitlabEnvs(this.inputValue)
+      loadGitlabEnvs(parseInt(this.inputValue))
     },
   },
   components: {

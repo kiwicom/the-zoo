@@ -33,20 +33,22 @@ class Effort(Enum):
 class Kind:  # pylint: disable=too-many-instance-attributes
 
     namespace = attr.ib()
-    category = attr.ib(cmp=False, repr=False)
+    category = attr.ib(eq=False, order=False, repr=False)
     id = attr.ib()
-    title = attr.ib(cmp=False, repr=False)
-    patch = attr.ib(default=None, cmp=False, repr=False)
-    description = attr.ib(default="", cmp=False, repr=False)
+    title = attr.ib(eq=False, order=False, repr=False)
+    patch = attr.ib(default=None, eq=False, order=False, repr=False)
+    description = attr.ib(default="", eq=False, order=False, repr=False)
     severity = attr.ib(
-        cmp=False,
+        eq=False,
+        order=False,
         repr=False,
         default=Severity.UNDEFINED,
         validator=attr.validators.instance_of(Severity),
         converter=Severity,
     )
     effort = attr.ib(
-        cmp=False,
+        eq=False,
+        order=False,
         repr=False,
         default=Effort.UNDEFINED,
         validator=attr.validators.instance_of(Effort),

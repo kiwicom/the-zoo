@@ -6,11 +6,11 @@ from django.conf import settings
 @attr.s(frozen=True, slots=True)
 class Step:
     tag: str = attr.ib()
-    category_name: str = attr.ib(cmp=False, repr=False)
+    category_name: str = attr.ib(eq=False, order=False, repr=False)
     id: str = attr.ib()
-    title: str = attr.ib(cmp=False, repr=False)
-    description: str = attr.ib(cmp=False, repr=False, default=None)
-    help_url: str = attr.ib(cmp=False, repr=False, default=None)
+    title: str = attr.ib(eq=False, order=False, repr=False)
+    description: str = attr.ib(eq=False, order=False, repr=False, default=None)
+    help_url: str = attr.ib(eq=False, order=False, repr=False, default=None)
     is_checked: bool = attr.ib(default=False)
 
     @property

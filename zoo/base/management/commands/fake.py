@@ -33,4 +33,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f'{options["amount"]} services created.'))
 
         auth = ApiTokenFactory.create()
-        self.stdout.write(self.style.SUCCESS(f'graphql api token {auth.token} created.'))
+        self.stdout.write(
+            self.style.SUCCESS(f"graphql api token {auth.token} created.")
+        )

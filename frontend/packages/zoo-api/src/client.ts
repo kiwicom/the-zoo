@@ -12,7 +12,7 @@ const cache = cacheExchange({
 });
 
 export const theZooClient = new Client({
-  url: 'https://zoo.iap.platform-sandbox.skypicker.com/graphql',
+  url: '/graphql',
   exchanges: [cache, dedupExchange, fetchExchange],
 });
 

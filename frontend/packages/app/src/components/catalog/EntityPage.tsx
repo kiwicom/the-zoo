@@ -17,9 +17,9 @@ import { ApiEntity, Entity } from '@backstage/catalog-model';
 import { WarningPanel } from '@backstage/core';
 import {
   ApiDefinitionCard,
-  ConsumedApisCard, 
-  ConsumingComponentsCard, 
-  ProvidedApisCard, 
+  ConsumedApisCard,
+  ConsumingComponentsCard,
+  ProvidedApisCard,
   ProvidingComponentsCard
 } from '@backstage/plugin-api-docs';
 import {

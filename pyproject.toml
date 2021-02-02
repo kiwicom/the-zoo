@@ -1,3 +1,10 @@
+[tool.poetry]
+name = "zoo"
+version = "1.4.5"
+description = "A smart service catalogue providing an overview of your services"
+authors = ["Alex Viscreanu <alexandru.viscreanu@kiwi.com>"]
+license = "MIT"
+
 [tool.black]
 exclude = '''
 /(
@@ -24,4 +31,101 @@ line_length = 88
 multi_line_output = 3
 include_trailing_comma = true
 known_first_party = ["zoo"]
-known_third_party = ["arrow", "attr", "boto3", "celery", "datadog", "dateutil", "ddtrace", "django", "djangoql", "environ", "factory", "faker", "fakeredis", "freezegun", "github", "gitlab", "google", "googleapiclient", "graphene", "graphene_django", "graphql_relay", "gunicorn", "httpretty", "jsonschema", "kubernetes", "markdown", "meilisearch", "pkg_resources", "prance", "pygerduty", "pytest", "pytest_factoryboy", "redis", "requests", "sentry_sdk", "setuptools", "slacker", "snapshottest", "structlog", "testing", "urllib3", "yaml"]
+known_third_party = ["arrow", "attr", "boto3", "celery", "datadog", "dateutil", "ddtrace", "django", "djangoql", "environ", "factory", "faker", "fakeredis", "freezegun", "github", "gitlab", "google", "googleapiclient", "graphene", "graphene_django", "graphql_relay", "gunicorn", "httpretty", "jsonschema", "kubernetes", "markdown", "meilisearch", "pkg_resources", "prance", "pygerduty", "pytest", "pytest_factoryboy", "redis", "requests", "requirements", "sentry_sdk", "slacker", "snapshottest", "structlog", "testing", "urllib3", "yaml"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+arrow = "^0.16.0"
+attrs = "^20.3.0"
+boto3 = "^1.16.63"
+celery = "^4.4.7"
+celery-redbeat = "^1.0.0"
+colorama = "^0.4.4"
+datadog = "^0.39.0"
+ddtrace = "^0.41.2"
+django = "^2.2.18"
+django-debug-toolbar = "^2.2"
+django-environ = "^0.4.5"
+django-extensions = "^3.1.0"
+django-silk = "^4.1.0"
+django-stronghold = "^0.4.0"
+djangoql = "^0.14.3"
+dockerfile-parse = "^1.1.0"
+google-api-python-client = "^1.12.8"
+graphene = "^2.1.8"
+graphene-django = "^2.15.0"
+gunicorn = { version = "^20.0.4", extras = ["gevent"]}
+hiredis = "^1.1.0"
+ipython = "^7.18.1"
+kubernetes = "^11.0.0"
+markdown = "^3.2.2"
+meilisearch = "^0.12.4"
+openapi-spec-validator = "^0.2.9"
+prance = "^0.19.0"
+psycopg2-binary = "^2.8.6"
+pygerduty = "^0.38.3"
+pygithub = "^1.53"
+python-gitlab = "^2.6.0"
+pyyaml = "^5.3.1"
+redis = "^3.5.3"
+requests = "^2.25.1"
+requirements-parser = "^0.2.0"
+sentry-sdk = "^0.17.8"
+slacker = "^0.14.0"
+structlog = "^20.2.0"
+whitenoise = { version = "^5.2.0", extras = ["brotli"]}
+wrapt = "^1.12.1"
+botocore = "^1.19.63"
+cachetools = "^4.2.1"
+certifi = "^2020.12.5"
+Deprecated = "^1.2.11"
+Django = "^2.2.18"
+docutils = "^0.16"
+gevent = "^21.1.2"
+google-api-core = "^1.25.1"
+google-auth = "^1.24.0"
+greenlet = "^1.0.0"
+jedi = "^0.18.0"
+Jinja2 = "^2.11.3"
+Markdown = "^3.3.3"
+parso = "^0.8.1"
+prompt-toolkit = "^3.0.14"
+protobuf = "^3.14.0"
+ptyprocess = "^0.7.0"
+Pygments = "^2.7.4"
+pytz = "^2021.1"
+PyYAML = "^5.4.1"
+rsa = "^4.7"
+s3transfer = "^0.3.4"
+semver = "^2.13.0"
+sortedcontainers = "^2.3.0"
+sqlparse = "^0.4.1"
+tenacity = "^6.3.1"
+toml = "^0.10.2"
+traitlets = "^5.0.5"
+urllib3 = "^1.26.3"
+
+[tool.poetry.dev-dependencies]
+coverage = "^5.3"
+fakeredis = "^1.4.3"
+httpretty = "^1.0.2"
+pylint = "^2.6.0"
+pytest = "^6.0.2"
+pytest-cov = "^2.10.1"
+pytest-django = "^3.10.0"
+pytest-env = "^0.6.2"
+pytest-factoryboy = "^2.0.3"
+pytest-freezegun = "^0.4.2"
+pytest-mock = "^3.3.1"
+pytest-xdist = "^2.1.0"
+snapshottest = "^0.5.1"
+"testing.postgresql" = "^1.3.0"
+tox = "^3.20.0"
+tox-docker = "^2.0.0a3"
+sphinx = "^3.2.1"
+sphinx-rtd-theme = "^0.5.0"
+pre-commit = "^2.10.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

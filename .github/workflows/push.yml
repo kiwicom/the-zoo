@@ -92,7 +92,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .tox
-          key: pylint-${{ hashFiles('requirements/*.txt', 'tox.ini') }}
+          key: pylint-${{ hashFiles('poetry.lock', 'tox.ini') }}
 
       - run: tox -e pylint
 
@@ -134,7 +134,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .tox
-          key: pytest-${{ hashFiles('requirements/*.txt', 'tox.ini') }}
+          key: pytest-${{ hashFiles('poetry.lock', 'tox.ini') }}
 
       - run: adduser -D postgres
       - run: su -l postgres

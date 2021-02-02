@@ -18,12 +18,15 @@ RUN addgroup --system macaque && \
 
 WORKDIR /app
 
-COPY requirements/*.txt ./
+COPY pyproject.toml poetry.lock ./
 
 RUN apt update && \
-    apt install -y --no-install-recommends build-essential ca-certificates libpq-dev && \
+    apt install -y --no-install-recommends build-essential ca-certificates libpq-dev python3-venv && \
     update-ca-certificates && \
-    pip install --no-cache-dir -r base.txt -r test.txt && \
+    pip install --no-cache-dir poetry==1.1.4 && \
+    poetry config virtualenvs.create false && \
+    poetry install && \
+    rm -rf ~/.cache/pypoetry/{cache,artifacts} && \
     apt remove -y build-essential && \
     apt autoremove -y && \
     apt clean autoclean && \
@@ -32,10 +35,9 @@ RUN apt update && \
 COPY --from=fe-builder /app/zoo ./zoo
 COPY . ./
 
-RUN pip install --no-cache-dir -e . && \
-    django-admin check && \
+RUN poetry run python manage.py check && \
     mkdir -p /app/zoo/public/static && \
-    django-admin collectstatic --noinput && \
+    poetry run python manage.py collectstatic --noinput && \
     chown -R macaque:macaque /app
 
 ARG package_version

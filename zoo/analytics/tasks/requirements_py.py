@@ -77,7 +77,7 @@ def is_package_unhealthy(status: int, last_release_date: str) -> bool:
     now = arrow.utcnow()
     updated_ago = now - arrow.get(last_release_date)
 
-    if any(
+    return any(
         [
             (status == 1),
             (status == 7),
@@ -85,10 +85,7 @@ def is_package_unhealthy(status: int, last_release_date: str) -> bool:
             (status == 4 and updated_ago.days > 60),
             (status >= 5 and updated_ago.days > 360),
         ]
-    ):
-        return True
-
-    return False
+    )
 
 
 def get_pypi_metadata(package_name: str):

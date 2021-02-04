@@ -4,7 +4,7 @@ on: push
 jobs:
   container:
     name: Container image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
@@ -31,7 +31,7 @@ jobs:
 
   black:
     name: Code style
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container:
       image: kiwicom/black:20.8b1
       options: -u root
@@ -44,7 +44,7 @@ jobs:
 
   commitsar:
     name: Commit message style
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
@@ -56,8 +56,8 @@ jobs:
 
   pre-commit:
     name: Static checks
-    runs-on: ubuntu-latest
-    container: kiwicom/pre-commit:2.6.0-full
+    runs-on: ubuntu-20.04
+    container: kiwicom/pre-commit:2.9.3
 
     steps:
       - uses: actions/checkout@v2
@@ -78,9 +78,9 @@ jobs:
 
   pylint:
     name: Pylint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container:
-      image: kiwicom/tox:3.19
+      image: kiwicom/tox:3.21.2
       options: -u root
 
     steps:
@@ -98,9 +98,9 @@ jobs:
 
   pytest:
     name: Pytest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container:
-      image: kiwicom/tox:3.19
+      image: kiwicom/tox:3.21.2
       options: -u root
 
     env:
@@ -153,7 +153,7 @@ jobs:
 
   migrations:
     name: Migrations
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: container
 
     services:
@@ -183,7 +183,7 @@ jobs:
 
   sonarcloud:
     name: SonarCloud
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: pytest
 
     steps:

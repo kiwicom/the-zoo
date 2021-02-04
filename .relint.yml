@@ -22,8 +22,3 @@
   pattern: "import zoo\\.{{ cookiecutter.package_name }}|from zoo\\.{{ cookiecutter.package_name }}"
   filename:
     - "zoo/**.py"
-
-- name: Unpinned requirement
-  pattern: "^\\w+\\s"
-  filename:
-    - "*requirements*.txt"

@@ -8,6 +8,7 @@ stdenv.mkDerivation rec {
   buildInputs = [
     glibcLocales
     python
+    poetry
     virtualenv
   ];
 
@@ -33,10 +34,6 @@ stdenv.mkDerivation rec {
 
     export LANG=en_US.UTF8
     export PACKAGE_VERSION=${version}
-    export PIP_CONFIG_FILE=$PWD/.pip.conf
-
-    echo "[global]
-no-cache-dir = true" > $PWD/.pip.conf
 
     ${__helperFuncs}
 
@@ -51,21 +48,7 @@ no-cache-dir = true" > $PWD/.pip.conf
     source $PWD/$VENV/bin/activate
 
     say_green "Installing requirements"
-    REQS=""
-    if [ -f "requirements.txt" ]; then # By default checks if requirements.txt exists
-      REQS="-r requirements.txt"
-    fi
-
-    for f in *-requirements.txt; do # Search for dev-requirements.txt, doc-requirements.txt etc.
-        REQS="''${REQS} -r ''${f}"
-    done
-
-    if [ -d requirements ]; then # for pip-compile-multi requirements are in a requirements folder
-      for f in requirements/*.txt; do
-          REQS="''${REQS} -r ''${f}"
-      done
-    fi
-    pip install $REQS > /dev/null # install all requirements collected
+    poetry install
 
     if [ -f setup.py ]; then # if setup.py exists switch to develop mode
       say "setup.py found!"

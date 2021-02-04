@@ -13,17 +13,22 @@ RUN yarn production
 FROM python:3.8-slim
 
 ENV DJANGO_SETTINGS_MODULE=zoo.base.settings
+ENV POETRY_VERSION=1.1.4
+
 RUN addgroup --system macaque && \
     adduser --no-create-home --disabled-password --system --ingroup macaque macaque
 
 WORKDIR /app
 
-COPY requirements/*.txt ./
+COPY pyproject.toml poetry.lock ./
 
 RUN apt update && \
-    apt install -y --no-install-recommends build-essential ca-certificates libpq-dev && \
+    apt install -y --no-install-recommends build-essential ca-certificates libpq-dev python3-venv && \
     update-ca-certificates && \
-    pip install --no-cache-dir -r base.txt -r test.txt && \
+    pip install --no-cache-dir poetry==$POETRY_VERSION && \
+    poetry config virtualenvs.create false && \
+    poetry install -v && \
+    rm -r ~/.cache/pypoetry && \
     apt remove -y build-essential && \
     apt autoremove -y && \
     apt clean autoclean && \
@@ -32,10 +37,10 @@ RUN apt update && \
 COPY --from=fe-builder /app/zoo ./zoo
 COPY . ./
 
-RUN pip install --no-cache-dir -e . && \
-    django-admin check && \
+RUN poetry install -v && \
+    poetry run python manage.py check && \
     mkdir -p /app/zoo/public/static && \
-    django-admin collectstatic --noinput && \
+    poetry run python manage.py collectstatic --noinput && \
     chown -R macaque:macaque /app
 
 ARG package_version

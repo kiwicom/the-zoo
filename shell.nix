@@ -4,7 +4,7 @@ let pkgs = import <nixpkgs> {};
 in base.overrideAttrs (self: rec {
   buildInputs = self.buildInputs ++ [
     pkgs.yarn
-    pkgs.postgresql
+    pkgs.postgresql_12
   ];
 
   exportVarsHook=''

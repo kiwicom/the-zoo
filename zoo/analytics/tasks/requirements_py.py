@@ -1,10 +1,9 @@
 import re
 
 import arrow
+import requirements
 import structlog
 from pkg_resources import RequirementParseError
-
-import requirements
 
 from ...base.http import session
 from . import PyLibrary

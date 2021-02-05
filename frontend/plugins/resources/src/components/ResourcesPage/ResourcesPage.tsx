@@ -10,11 +10,8 @@ const ResourcesPage = () => (
       <HeaderLabel label="Lifecycle" value="Alpha" />
     </Header>
     <ResourceTabs />
-
     <Content>
-
       <Outlet />
-
     </Content>
   </Page>
 );

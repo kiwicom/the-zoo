@@ -1,3 +1,5 @@
+export const getResources = ``
+
 export const getServices = `
 {
   services(first: 10) {
@@ -352,4 +354,54 @@ export interface ActiveIncident extends Node {
   htmlUrl: string;
   createdAt: string;
   color: string;
+}
+
+export interface Resource extends Node {
+  name: string;
+  type: string;
+  healthStatus: boolean;
+  timestamp: string;
+  license: string;
+  usageCount: number;
+  version: string;
+}
+
+
+
+
+export const DummyResponse = {
+  data: {
+    error: undefined,
+    extensions: undefined,
+    fetching: false,
+    resources: {
+      edges: [
+        {
+          node: {
+            id: "U2VydmljZTox",
+            name: "kiwi-json",
+            version: "0.7.0",
+            type: "Javascript Library",
+            healthStatus: true,
+            timestamp: "",
+            license: "public",
+            usageCount: 54,
+          }
+        },
+        {
+          node: {
+            id: "U2VydmljZT9x",
+            name: "kiwi-structlog-config",
+            version: "0.18.0",
+            type: "Javascript Library",
+            healthStatus: true,
+            timestamp: "",
+            license: "public",
+            usageCount: 4,
+          }
+        }
+      ]
+    }
+
+  }
 }

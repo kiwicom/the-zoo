@@ -10,6 +10,7 @@ export const App = () => (
     <UrqlProvider value={theZooClient}>
         <Routes>
           <Route path="/" element={<ResourcesPage />}>
+            <Route path="/" element={<LibrariesPage />}/>
             <Route path="languages" element={<LanguagesPage />} />
             <Route path="libraries" element={<LibrariesPage />}/>
             <Route path="ci_templates" element={<TemplatesPage />}/>
@@ -19,7 +20,7 @@ export const App = () => (
 );
 
 export const ResourcesTabsLabels = [
-  { id: 0, label: 'Languages', route: 'languages' },
-  { id: 1, label: 'Libraries', route: 'libraries' },
+  { id: 0, label: 'Libraries', route: 'libraries' },
+  { id: 1, label: 'Languages', route: 'languages' },
   { id: 2, label: 'CI/CD Templates', route: 'ci_templates' }
 ];

@@ -12,13 +12,13 @@ import {
   mdiAlphaSCircle,
 } from "@mdi/js";
 
-interface colorInfo {
+interface ColorInfo {
   color: string;
   icon: string;
 }
 
 interface MappingDict {
-  [key: string]: colorInfo;
+  [key: string]: ColorInfo;
 }
 
 const choiceColors: MappingDict = {

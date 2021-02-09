@@ -1,15 +1,15 @@
 import React from "react";
-import {Chip} from "@material-ui/core";
+import { Chip } from "@material-ui/core";
 
 interface Props {
   name: string
 }
-interface colorInfo {
+interface ColorInfo {
   backgroundColor: string;
 }
 
 interface MappingDict {
-  [key: string]: colorInfo;
+  [key: string]: ColorInfo;
 }
 const choiceColors: MappingDict = {
   'Language': {backgroundColor:'brown'},

@@ -1,26 +1,21 @@
 import React from 'react';
-import {Content, Page, Table, TableColumn} from '@backstage/core';
-import {DummyResponse, Edge, Resource} from "../../../../../packages/zoo-api";
+import { Content, Page, Table, TableColumn } from '@backstage/core';
+import { DummyResponse, Resource, unwrap } from "zoo-api";
 import ResourceLink from "../TableComponents/ResourceLink";
-import {Chip, Grid} from "@material-ui/core";
+import { Chip, Grid } from "@material-ui/core";
 import ResourceTypeLabel from "../TableComponents/ResourceTypeLabel";
-import ResourceKind from "../TableComponents/ResourceKind";
 import Alert from "@material-ui/lab/Alert";
 
 
-const generateTableData: (resources: Array<Resource>) => Array<{}> = (resources) => {
-  const data: Array<{}> = [];
-  for(let i=0; i<resources.length; i++){
-    data.push({
-      usage: resources[i].usageCount,
-      name: <ResourceLink name={resources[i].name} id={resources[i].id} />,
-      version: <Chip label={resources[i].version} />,
-      type: <ResourceTypeLabel name={resources[i].type} />,
-      kind: <ResourceKind name={resources[i].name} />,
-    });
-  }
-
-  return data;
+const generateTableData: (resources: Resource[]) => Array<{}> = (resources) => {
+  return resources.map(item => {
+    return {
+      usage: item.usageCount,
+      name: item.name,
+      version: item.version,
+      type: item.type,
+    }
+  });
 };
 
 const columns: TableColumn[] = [
@@ -29,23 +24,23 @@ const columns: TableColumn[] = [
     field: 'usage',
     type: 'numeric',
     highlight: true,
+    render: rowData => <ResourceLink name={rowData.name} id={rowData.id} />
   },
   {
     title: 'Name',
     field: 'name',
+    render: rowData => <ResourceLink name={rowData.name} id={rowData.id} />
   },
   {
     title: 'Leatest Version',
     field: 'version',
+    render: rowData => <Chip label={rowData.version} />
   },
   {
     title: 'Type',
     field: 'type',
-  },
-  {
-    title: 'Kind',
-    field: 'kind',
-  },
+    render: rowData => <ResourceTypeLabel name={rowData.type} />
+  }
 ];
 
 const TemplatesPage = () => {
@@ -75,7 +70,8 @@ const TemplatesPage = () => {
       <Alert severity="error">{response.error.message}</Alert>
     </Grid>;
   }
-  const resources: Resource[] = response.data.resources.edges.map((edge: Edge) => edge.node);
+  const resources = unwrap<Resource>(response.data.resources);
+
 
   const templateData = generateTableData(resources);
 

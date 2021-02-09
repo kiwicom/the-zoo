@@ -391,9 +391,9 @@ export const DummyResponse = {
         {
           node: {
             id: "U2VydmljZT9x",
-            name: "kiwi-structlog-config",
+            name: "structlog-config",
             version: "0.18.0",
-            type: "Javascript Library",
+            type: "Python Library",
             healthStatus: true,
             timestamp: "",
             license: "public",

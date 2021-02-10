@@ -151,7 +151,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "zoo.api.middleware.ApiTokenAuthenticationMiddleware",
 ]
 
 ROOT_URLCONF = "zoo.base.urls"

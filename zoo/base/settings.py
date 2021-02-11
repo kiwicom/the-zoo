@@ -21,6 +21,7 @@ version = _get_app_version()
 root = Path(__file__).parents[1]
 env = environ.Env(
     ZOO_DEBUG=(bool, False),
+    ZOO_USE_HANGAR=(bool, False),
     ZOO_CELERY_BROKER_URL=(str, "redis://redis/0"),
     ZOO_REDIS_CACHE_URL=(str, "redis://redis/1"),
     ZOO_REDBEAT_REDIS_URL=(str, "redis://redis/2"),
@@ -151,8 +152,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "zoo.api.middleware.ApiTokenAuthenticationMiddleware",
 ]
+
+USE_HANGAR = env("ZOO_USE_HANGAR")
+if not USE_HANGAR:
+    MIDDLEWARE.append("zoo.api.middleware.ApiTokenAuthenticationMiddleware")
 
 ROOT_URLCONF = "zoo.base.urls"
 

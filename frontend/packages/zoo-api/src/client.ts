@@ -11,22 +11,9 @@ const cache = cacheExchange({
   },
 });
 
-function getToken(): string {
-  const value = localStorage.getItem("the-zoo.api.token");
-  if (!value) return "";
-  const token = JSON.parse(value)["token"];
-  return token ? token : "";
-}
-
 export const theZooClient = new Client({
-  url: 'http://127.0.0.1:8000/graphql',
+  url: '/graphql',
   exchanges: [cache, dedupExchange, fetchExchange],
-  fetchOptions: () => {
-    const token: string = getToken();
-    return {
-      headers: { Authorization: token ? `Bearer ${token}` : '' },
-    };
-  }
 });
 
 /**

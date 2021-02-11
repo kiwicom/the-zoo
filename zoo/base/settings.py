@@ -155,7 +155,7 @@ MIDDLEWARE = [
 ]
 
 USE_HANGAR = env("ZOO_USE_HANGAR")
-if USE_HANGAR:
+if not USE_HANGAR:
     MIDDLEWARE.append("zoo.api.middleware.ApiTokenAuthenticationMiddleware")
 
 ROOT_URLCONF = "zoo.base.urls"

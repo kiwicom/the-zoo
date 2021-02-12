@@ -1,5 +1,5 @@
 import React, { useReducer, Dispatch, Reducer } from 'react';
-import type { Action, SettingsState, State } from './types';\
+import type { Action, SettingsState, State } from './types';
 
 export type { SettingsState };
 

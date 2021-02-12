@@ -1,12 +1,11 @@
 import React, { useReducer, Dispatch, Reducer } from 'react';
-import type { Action, SettingsState, State } from './types';
+import type { Action, SettingsState, State } from './types';\
 
 export type { SettingsState };
 
 export const AppContext = React.createContext<[State, Dispatch<Action>]>(
   [] as any,
 );
-export const STORAGE_KEY = "the-zoo.api.token";
 
 const initialState: State = {
   token: '',

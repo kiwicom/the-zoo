@@ -33,6 +33,8 @@ export const theZooClient = new Client({
               headers: { Authorization: token ? `Bearer ${token}` : '' },
           };
       }
+
+      return {}
   }
 });
 

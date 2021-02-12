@@ -25,8 +25,8 @@ export const theZooClient = new Client({
   url: '/graphql',
   exchanges: [cache, dedupExchange, fetchExchange],
   fetchOptions: () => {
-      let config = useApi(configApiRef);
-      let useApiTokenAuth = config.getBoolean("app.useApiTokenAuth");
+      const config = useApi(configApiRef);
+      const useApiTokenAuth = config.getBoolean("app.useApiTokenAuth");
 
       if (useApiTokenAuth) {
           const token: string = getToken();

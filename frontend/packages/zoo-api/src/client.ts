@@ -34,7 +34,7 @@ export const theZooClient = new Client({
           };
       }
 
-      return {}
+      return {};
   }
 });
 

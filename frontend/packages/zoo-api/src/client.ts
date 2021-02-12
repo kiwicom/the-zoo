@@ -2,6 +2,7 @@ import { Client, dedupExchange, fetchExchange } from 'urql';
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
 import { Connection, Edge, Node } from './queries';
+import { useApi, configApiRef } from '@backstage/core';
 
 const cache = cacheExchange({
   resolvers: {
@@ -11,9 +12,28 @@ const cache = cacheExchange({
   },
 });
 
+
+function getToken(): string {
+    const value = localeStorage.getItem("the-zoo.api.token");
+    if (!value) return "";
+    const token = JSON.parse(value)["token"];
+    return token ? token : "";
+}
+
 export const theZooClient = new Client({
   url: '/graphql',
   exchanges: [cache, dedupExchange, fetchExchange],
+  fetchOptions: () => {
+      let config = useApi(configApiRef);
+      let useApiTokenAuth = config.getBoolean("app.useApiTokenAuth");
+
+      if (useApiTokenAuth) {
+          const token: string = getToken();
+          return {
+              headers: { Authorization: token ? `Bearer ${token}` : '' },
+          };
+      }
+  }
 });
 
 /**

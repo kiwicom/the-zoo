@@ -1,6 +1,6 @@
 import React from 'react';
 import { ContentHeader as BackstageContentHeader, SupportButton } from '@backstage/core';
-import {Breadcrumbs, Button, Chip, Grid, Link, Menu, MenuItem, Typography} from "@material-ui/core";
+import {Breadcrumbs, Button, Chip, Grid, Link, Typography} from "@material-ui/core";
 import {Link as RouterLink} from "react-router-dom";
 import ResourceTypeLabel from "../TableComponents/ResourceTypeLabel";
 
@@ -8,7 +8,7 @@ interface Props {
   resource?: any // change to type resource
 }
 
-const ContentHeader = ({ resource }: Props) => {
+const DetailPageHeader = ({ resource }: Props) => {
   return (
     <>
       <BackstageContentHeader title={resource.name} description={resource.description}>
@@ -32,4 +32,4 @@ const ContentHeader = ({ resource }: Props) => {
   )
 };
 
-export default ContentHeader;
+export default DetailPageHeader;

@@ -9,7 +9,7 @@ interface Props {
 
 const ResourceLink = ({ name, id}: Props) => {
   return (
-    <Link component={RouterLink} to={`/resources/${id}/${name}`}>{name}</Link>
+    <Link component={RouterLink} to={`/resources/dependencies/${id}`}>{name}</Link>
   );
 };
 

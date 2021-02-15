@@ -1,3 +1,5 @@
+from itertools import product
+
 import graphene
 import structlog
 from django.core.exceptions import ObjectDoesNotExist
@@ -323,10 +325,30 @@ class Service(DjangoObjectType):
 class Repository(DjangoObjectType, interfaces=[Node]):
     issues = DjangoFilterConnectionField(lambda: Issue)
     dependency_usages = DjangoFilterConnectionField(lambda: DependencyUsage)
+    project_details = graphene.Field(lambda: ProjectDetails)
 
     class Meta:
         model = repos_models.Repository
         filter_fields = ["name", "owner"]
+
+    def resolve_project_details(self, info, **kwargs):
+        project_details = self.project_details
+        return ProjectDetails(**project_details)
+
+
+class ProjectDetails(graphene.ObjectType):
+    id = graphene.String()
+    name = graphene.String()
+    description = graphene.String()
+    avatar = graphene.String()
+    url = graphene.String()
+    readme = graphene.String()
+    stars = graphene.Int()
+    forks = graphene.Int()
+    branch_count = graphene.Int()
+    member_count = graphene.Int()
+    issue_count = graphene.Int()
+    last_activity_at = graphene.DateTime()
 
 
 class Dependency(DjangoObjectType, interfaces=[Node]):

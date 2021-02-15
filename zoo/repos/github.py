@@ -2,6 +2,7 @@ from base64 import b64decode as decode
 
 import requests
 import structlog
+from dateutil.parser import parse
 from django.conf import settings
 from github import Github, InputGitTreeElement
 from github.GithubException import (
@@ -90,7 +91,7 @@ def get_project_details(github_id):
         "branch_count": project.get_branches().totalCount,
         "member_count": project.get_contributors().totalCount,
         "issue_count": project.get_issues().totalCount,
-        "last_activity_at": project.updated_at,
+        "last_activity_at": parse(project.updated_at),
     }
 
 

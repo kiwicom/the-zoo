@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Breadcrumbs,
   Button,
@@ -17,7 +16,8 @@ import FilterNoneIcon from '@material-ui/icons/FilterNone';
 import PagesIcon from '@material-ui/icons/Pages';
 import PersonIcon from '@material-ui/icons/Person';
 import StarIcon from '@material-ui/icons/Star';
-import { Repository } from 'zoo-api';
+import React from 'react';
+import { getProjectDetails, Repository, useBackend } from 'zoo-api';
 import Count from './Count';
 
 
@@ -44,11 +44,7 @@ const ServiceRepository = ({ repository }: { repository: Repository }) => (
 
         <Grid item>
           <Grid container direction="row" justify="flex-end">
-            <Grid item><Tooltip placement="top" title="Stars"><IconButton><Count value={3}><StarIcon /></Count></IconButton></Tooltip></Grid>
-            <Grid item><Tooltip placement="top" title="Forks"><IconButton><Count value={1}><FilterNoneIcon /></Count></IconButton></Tooltip></Grid>
-            <Grid item><Tooltip placement="top" title="Branches"><IconButton><Count value={1}><CallSplitIcon /></Count></IconButton></Tooltip></Grid>
-            <Grid item><Tooltip placement="top" title="Issues"><IconButton><Count value={1}><BugReportIcon /></Count></IconButton></Tooltip></Grid>
-            <Grid item><Tooltip placement="top" title="Members"><IconButton><Count value={6}><PersonIcon /></Count></IconButton></Tooltip></Grid>
+            <ProjectDetails repo={repository} />
 
             <Grid item><Button startIcon={<CodeIcon />} variant="contained" color="secondary">Open issue</Button></Grid>
           </Grid>
@@ -57,6 +53,36 @@ const ServiceRepository = ({ repository }: { repository: Repository }) => (
       </Grid>
     </CardContent>
   </Card>
+)
+
+
+const ProjectDetails = ({ repo }: { repo: Repository }) => {
+  const [repository] = useBackend<Repository>("repository", getProjectDetails, { id: repo.id });
+  const empty = { stars: undefined, forks: undefined, branchCount: undefined, issueCount: undefined, memberCount: undefined };
+  const meta = repository ? repository.projectDetails : empty;
+
+  return (
+    <>
+      <DetailIcon title="Stars" count={meta.stars} icon={<StarIcon />} />
+      <DetailIcon title="Forks" count={meta.forks} icon={<FilterNoneIcon />} />
+      <DetailIcon title="Branches" count={meta.branchCount} icon={<CallSplitIcon />} />
+      <DetailIcon title="Issues" count={meta.issueCount} icon={<BugReportIcon />} />
+      <DetailIcon title="Members" count={meta.memberCount} icon={<PersonIcon />} />
+    </>
+  )
+}
+
+const DetailIcon = ({ title, count, icon }: { title: string, count?: number, icon: React.ReactNode | null }) => (
+  <Grid item>
+    <Tooltip placement="top" title={title}>
+      <IconButton>
+        {count ?
+          <Count value={count}>{icon}</Count>
+          : icon
+        }
+      </IconButton>
+    </Tooltip>
+  </Grid>
 )
 
 export default ServiceRepository;

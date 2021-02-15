@@ -11,7 +11,7 @@ const ServiceDetail = () => {
   const [qs, setQueryString] = useSearchParams();
   const [service, component] = useBackend<Service>("service", getService, params);
 
-  if (component) return (<><ContentHeader />{component}</>);
+  if (component) return (<><ContentHeader title={params.name} />{component}</>);
   if (!service) return null;
 
   const environments = unwrap<Environment>(service.environments);

@@ -24,6 +24,7 @@ const ServiceOverview = () => {
       startIcon={<SubjectIcon />}
       variant="contained"
       color="secondary"
+      style={{ marginTop: '8px'}}
     >View report</Button>
   )
 

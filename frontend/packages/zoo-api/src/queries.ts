@@ -28,6 +28,28 @@ export const getServices = `
 }
 `;
 
+export const getProjectDetails = `
+query ($id: ID!)
+  {
+    repository (id: $id) {
+      projectDetails {
+        id
+        name
+        description
+        avatar
+        url
+        readme
+        stars
+        forks
+        branchCount
+        memberCount
+        issueCount
+        lastActivityAt
+      }
+    }
+  }
+`;
+
 export const getService = `
 query ($id: ID!)
   {
@@ -269,7 +291,23 @@ export interface Repository extends Node {
   name: string;
   owner: string;
   url: string;
+  projectDetails: ProjectDetails;
   issues: Connection<Issue>;
+}
+
+export interface ProjectDetails {
+    id: string;
+    name: string;
+    description: string;
+    avatar: string;
+    url: string;
+    readme: string;
+    stars: number;
+    forks: number;
+    branchCount: number;
+    issueCount: number;
+    memberCount: number;
+    lastActivityAt: Date;
 }
 
 export interface Environment extends Node {

@@ -2,6 +2,7 @@ import { errorApiRef, useApi } from '@backstage/core';
 import { useContext, useEffect } from 'react';
 import { API_AUTH_KEY } from 'zoo-api';
 import { Settings } from './types';
+import { AppContext } from './AppState'
 
 export function useSettings() {
   const [settings, dispatch] = useContext(AppContext);

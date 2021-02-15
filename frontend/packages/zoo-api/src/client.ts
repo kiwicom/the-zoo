@@ -15,7 +15,7 @@ const cache = cacheExchange({
 export const API_AUTH_KEY = "the-zoo.api.token";
 
 function getToken(): string {
-    const value = localeStorage.getItem(API_AUTH_KEY);
+    const value = localStorage.getItem(API_AUTH_KEY);
     if (!value) return "";
     const token = JSON.parse(value)["token"];
     return token ? token : "";

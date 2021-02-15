@@ -31,6 +31,7 @@
     "react-router-dom": "6.0.0-beta.0",
     "react-router": "6.0.0-beta.0",
     "urql": "^1.11.6",
+    "recharts": "^1.8.5",
     "zoo-api": "^0.1"
   },
   "devDependencies": {

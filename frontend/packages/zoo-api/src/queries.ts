@@ -405,3 +405,45 @@ export const DummyResponse = {
 
   }
 }
+
+
+export const DummyResourceResponse = {
+  data: {
+
+    error: undefined,
+    extensions: undefined,
+    fetching: false,
+    resource: {
+      id: "U2VydmljZT9x",
+      name: "structlog-config",
+      version: "0.18.0",
+      type: "Python Library",
+      description: "",
+      healthStatus: true,
+      timestamp: "",
+      license: "public",
+      usageCount: 4,
+      versionList: {
+        edges: [
+          {
+            node: {
+              id: "U2VydmljZTox",
+              repoName: "rta-tool",
+              repoOwner: "jaroslav.sevcik",
+            }
+          },
+          {
+            node: {
+              id: "U2VydmljZT9x",
+              repoName: "sms-manager-api",
+              repoOwner: "finance",
+            }
+          }
+        ]
+      }
+    }
+
+  }
+}
+
+

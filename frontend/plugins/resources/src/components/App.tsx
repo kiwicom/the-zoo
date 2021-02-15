@@ -3,8 +3,9 @@ import { Route, Routes } from 'react-router';
 import { theZooClient, UrqlProvider } from 'zoo-api';
 import LanguagesPage from './LanguagesPage';
 import LibrariesPage from './LibrariesPage';
-import ResourcesPage from "./ResourcesPage";
-import TemplatesPage from "./TemplatesPage";
+import ResourcesPage from './ResourcesPage';
+import TemplatesPage from './TemplatesPage';
+import Detailpage from './DetailPage';
 
 export const App = () => (
     <UrqlProvider value={theZooClient}>
@@ -15,6 +16,7 @@ export const App = () => (
             <Route path="libraries" element={<LibrariesPage />}/>
             <Route path="ci_templates" element={<TemplatesPage />}/>
           </Route>
+          <Route path="dependencies/:id" element={<Detailpage />}/>
         </Routes>
     </UrqlProvider>
 );

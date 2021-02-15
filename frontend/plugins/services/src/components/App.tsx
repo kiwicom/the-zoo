@@ -19,7 +19,8 @@ export const App = () => (
             <Route path="/" element={<ServiceList />} />
             <Route path=":id/:name" element={<ServiceDetail />}>
               <Route path="swagger-ui" element={<ServiceApiDoc />} />
-              <Route path="/" element={<ServiceOverview />} />
+              <Route path="/" element={<
+                ServiceOverview />} />
             </Route>
             <Route path=":id/:name/issues" element={<ServiceIssueList />} />
           </Route>

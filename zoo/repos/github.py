@@ -2,6 +2,7 @@ from base64 import b64decode as decode
 
 import requests
 import structlog
+from dateutil.parser import parse
 from django.conf import settings
 from github import Github, InputGitTreeElement
 from github.GithubException import (
@@ -65,7 +66,7 @@ def get_project(github_id):
 
 def download_archive(project, archive, sha=None):
     archive.seek(0)  # needed if retry
-    sha = sha if sha else NotSet
+    sha = sha or NotSet
     archive_url = project.get_archive_link("tarball", ref=sha)
     r = http.session.get(archive_url, stream=True)
     if r.status_code == requests.codes.not_found:
@@ -90,17 +91,14 @@ def get_project_details(github_id):
         "branch_count": project.get_branches().totalCount,
         "member_count": project.get_contributors().totalCount,
         "issue_count": project.get_issues().totalCount,
-        "last_activity_at": project.updated_at,
+        "last_activity_at": parse(project.updated_at),
     }
 
 
 def get_languages(remote_id):
     langs = get_project(remote_id).get_languages()
     sum_of_bytes = sum(langs.values())
-    langs_percent = {}
-    for lang, num in langs.items():
-        langs_percent[lang] = round(num / sum_of_bytes * 100, 2)
-    return langs_percent
+    return {lang: round(num / sum_of_bytes * 100, 2) for lang, num in langs.items()}
 
 
 def get_file_content(github_id, path, ref="master"):

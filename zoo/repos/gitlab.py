@@ -1,4 +1,5 @@
 import structlog
+from dateutil.parser import parse
 from django.conf import settings
 from gitlab import Gitlab, GitlabGetError, GitlabListError
 from requests.exceptions import MissingSchema
@@ -78,7 +79,7 @@ def get_project_details(remote_id):
         "branch_count": project.branches.list(as_list=False).total,
         "member_count": project.members.list(as_list=False).total,
         "issue_count": project.issues.list(as_list=False).total,
-        "last_activity_at": project.last_activity_at,
+        "last_activity_at": parse(project.last_activity_at),
     }
 
 

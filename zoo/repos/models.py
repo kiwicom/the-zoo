@@ -3,6 +3,7 @@ from enum import Enum
 from django.db import models
 
 from ..analytics.models import Dependency
+from .exceptions import RepositoryNotFoundError
 from .utils import get_scm_module
 
 
@@ -69,3 +70,10 @@ class Repository(models.Model):
             Provider.GITLAB.value: f"Merge Request #{mr_id}",
             Provider.GITHUB.value: f"Pull Request #{mr_id}",
         }[self.provider]
+
+    @property
+    def project_details(self) -> dict:
+        try:
+            return self.scm_module.get_project_details(self.remote_id)
+        except RepositoryNotFoundError:
+            raise RepositoryNotFoundError(f"Project {self.remote_id} not found")

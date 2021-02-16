@@ -109,11 +109,11 @@ def check_factory():
 
 @pytest.fixture
 def call_api(client, api_token):
-    def _call_api(query, input=None):
-        variables = json.dumps({"input": input or {}})
+    def _call_api(query, input=None, **vars):
+        variables = {"input": input} if input else vars
         res = client.post(
             "/graphql",
-            {"query": query, "variables": variables},
+            {"query": query, "variables": json.dumps(variables)},
             HTTP_AUTHORIZATION=f"Bearer {api_token.token}",
         )
         return res.json()

@@ -329,9 +329,8 @@ class Repository(DjangoObjectType, interfaces=[Node]):
         model = repos_models.Repository
         filter_fields = ["name", "owner"]
 
-    def resolve_project_details(self, info, **kwargs):
-        project_details = self.project_details
-        return ProjectDetails(**project_details)
+    def resolve_project_details(self, info):
+        return ProjectDetails(**self.project_details)  # pylint: disable=not-a-mapping
 
 
 class ProjectDetails(graphene.ObjectType):

@@ -87,3 +87,13 @@ def test_download_repository__custom_sha(fake_dir, repo_archive, repository, moc
 
     m_get_project.assert_called_once_with(repository.remote_id)
     m_download_archive.assert_called_once_with(mocker.sentinel.project, mocker.ANY, sha)
+
+
+def test_get_repository_project_details(repository, mocker):
+    scm_module = get_scm_module(repository.provider)
+    m_get_project_details = mocker.patch.object(
+        scm_module, "get_project_details", return_value=mocker.sentinel.project_details
+    )
+    assert repository.project_details == mocker.sentinel.project_details
+
+    m_get_project_details.assert_called_once_with(repository.remote_id)

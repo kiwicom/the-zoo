@@ -1,7 +1,9 @@
+from functools import lru_cache
+
 import structlog
 from dateutil.parser import parse
 from django.conf import settings
-from gitlab import Gitlab, GitlabGetError, GitlabListError
+from gitlab import Gitlab, GitlabGetError, GitlabList, GitlabListError
 from requests.exceptions import MissingSchema
 
 from ..base.http import session
@@ -65,6 +67,7 @@ def get_namespaces():
     return []
 
 
+@lru_cache
 def get_project_details(remote_id):
     project = get_project(remote_id)
     return {
@@ -76,9 +79,9 @@ def get_project_details(remote_id):
         "readme": project.readme_url,
         "stars": project.star_count,
         "forks": project.forks_count,
-        "branch_count": project.branches.list(as_list=False).total,
-        "member_count": project.members.list(as_list=False).total,
-        "issue_count": project.issues.list(as_list=False).total,
+        "branch_count": __total(project.branches),
+        "member_count": __total(project.members),
+        "issue_count": __total(project.issues),  # This could fail with TypeError
         "last_activity_at": parse(project.last_activity_at),
     }
 
@@ -165,3 +168,18 @@ def create_merge_request(remote_id, title, source_branch, **kwargs):
         }
     )
     return merge_request.get_id()
+
+
+def __total(objects: GitlabList):
+    """Return the total of GitLab objects, or None if this fail."""
+    try:
+        return objects.list(as_list=False).total
+    except TypeError as error:
+        log.exception(
+            "gitlab.get_project_details.error", error=str(error), path=objects.path
+        )
+
+        if str(error).startswith("int() argument must be a string"):
+            return None
+
+        raise GitlabListError(error)

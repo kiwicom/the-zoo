@@ -1,3 +1,5 @@
+import pytest
+
 from zoo.repos import gitlab as uut
 
 
@@ -49,3 +51,29 @@ def test_gitlab_create_merge_request(mocker):
             "description": "Description\n\n---\n\n*via The Zoo*",
         }
     )
+
+
+def test_total_helper_function(mocker):
+    obj = mocker.Mock()
+    obj.list().total = 74
+    assert uut.__total(obj) == 74
+
+
+def test_total_helper_function_fails(mocker):
+    class GitlabList(mocker.Mock):
+        def _error(self, msg=""):
+            self.msg = msg
+            return self
+
+        def list(self, as_list):
+            return self
+
+        @property
+        def total(self):
+            raise TypeError(self.msg)
+
+    erraneous_query = GitlabList()._error("int() argument must be a string…")
+    assert uut.__total(erraneous_query) is None
+
+    with pytest.raises(uut.GitlabListError):
+        uut.__total(GitlabList()._error("Something else"))

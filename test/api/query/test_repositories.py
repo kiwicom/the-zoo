@@ -1,3 +1,5 @@
+from base64 import b64encode
+
 import pytest
 
 from zoo.repos import models
@@ -51,8 +53,7 @@ def generate_repositories(repository_factory):
 def test_empty(snapshot, call_api):
     query = """
     query {
-      allRepositories {
-        totalCount
+      repositories {
         edges {
           node {
             id
@@ -74,8 +75,7 @@ def test_empty(snapshot, call_api):
 def test_all(snapshot, call_api, generate_repositories):
     query = """
     query {
-      allRepositories {
-        totalCount
+      repositories {
         edges {
           node {
             id
@@ -101,16 +101,14 @@ def test_all(snapshot, call_api, generate_repositories):
 def test_with_issue(snapshot, call_api, generate_issues):
     query = """
     query {
-      allRepositories {
-        totalCount
+      repositories {
         edges {
           node {
             id
             owner
             name
             url
-            allIssues {
-              totalCount
+            issues {
               edges {
                 node {
                   id
@@ -147,8 +145,7 @@ def test_with_issue(snapshot, call_api, generate_issues):
 def test_first(snapshot, call_api, generate_repositories):
     query = """
     query {
-      allRepositories(first: 3){
-        totalCount
+      repositories(first: 3){
         edges {
           node {
             id
@@ -173,8 +170,7 @@ def test_first(snapshot, call_api, generate_repositories):
 def test_first_after(snapshot, call_api, generate_repositories):
     query = """
     query {
-      allRepositories(first: 2, after: "MQ=="){
-        totalCount
+      repositories(first: 2, after: "MQ=="){
         edges {
           node {
             id
@@ -199,8 +195,7 @@ def test_first_after(snapshot, call_api, generate_repositories):
 def test_last(snapshot, call_api, generate_repositories):
     query = """
     query {
-      allRepositories(last: 3){
-        totalCount
+      repositories(last: 3){
         edges {
           node {
             id
@@ -225,8 +220,7 @@ def test_last(snapshot, call_api, generate_repositories):
 def test_last_before(snapshot, call_api, generate_repositories):
     query = """
     query {
-      allRepositories(last: 1, before: "Mgo="){
-        totalCount
+      repositories(last: 1, before: "Mgo="){
         edges {
           node {
             id
@@ -251,16 +245,14 @@ def test_last_before(snapshot, call_api, generate_repositories):
 def test_with_dependency_usage(snapshot, call_api, generate_dependency_usages):
     query = """
     query {
-      allRepositories {
-        totalCount
+      repositories {
         edges {
           node {
             id
             owner
             name
             url
-            allDependencyUsages {
-              totalCount
+            dependencyUsages {
               edges {
                 node {
                   id
@@ -290,4 +282,34 @@ def test_with_dependency_usage(snapshot, call_api, generate_dependency_usages):
     }
     """
     response = call_api(query)
+    snapshot.assert_match(response)
+
+
+def test_with_project_details(snapshot, call_api, mocker, repository_factory):
+    repository_factory(id=1)
+    query = """
+    query ($id: ID!) {
+        repository(id: $id) {
+            projectDetails {
+                id
+                name
+                description
+                avatar
+                url
+                readme
+                stars
+                forks
+                branchCount
+                memberCount
+                issueCount
+                lastActivityAt
+            }
+        }
+    }
+    """
+    mocker.patch(
+        "zoo.repos.models.Repository.project_details",
+        repository_factory._project_details,
+    )
+    response = call_api(query, id=str(b64encode(b"Repository:1")))
     snapshot.assert_match(response)

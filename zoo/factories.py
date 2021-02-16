@@ -1,3 +1,4 @@
+from datetime import datetime
 from random import choice, randint
 
 from django.conf import settings
@@ -31,6 +32,26 @@ class RepositoryFactory(DjangoModelFactory):
     name = Faker("domain_word")
     provider = "gitlab"
     url = LazyAttribute(lambda o: f"https://gitlab.com/{o.owner}/{o.name}")
+
+    _project_details = {
+        "avatar": "https://assets.gitlab-static.net/uploads/-/system/project/avatar/278964/logo-extra-whitespace.png",
+        "branch_count": 6585,
+        "description": (
+            "GitLab is an open source end-to-end software development "
+            "platform with built-in version control, issue tracking, code "
+            "review, CI/CD, and more. Self-host GitLab on your own "
+            "servers, in a container, or on a cloud provider."
+        ),
+        "forks": 3189,
+        "id": 278964,
+        "issue_count": None,
+        "last_activity_at": datetime(2021, 2, 16, 12, 55, 43),
+        "member_count": 87,
+        "name": "GitLab.org / GitLab",
+        "readme": "https://gitlab.com/gitlab-org/gitlab/-/blob/master/README.md",
+        "stars": 2514,
+        "url": "https://gitlab.com/gitlab-org/gitlab",
+    }
 
 
 class IssueFactory(DjangoModelFactory):

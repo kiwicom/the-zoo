@@ -16,27 +16,17 @@ const Detailpage = () => {
   const params = useParams();
   const resourceId = params.id;
 
-  const generateChartData = (resources) => {
-    const chartdata = []
-    for (const resource of resources) {
-      chartdata.push({
-        name: resource.version,
-        value: resource.versionList.edges.length
-      })
-    }
-    return chartdata
-  }
+  const generateChartData = (resources) => resources.map(resource => ({
+    name: resource.version,
+    value: resource.versionList.edges.length
+  }));
+
   const getChartColors = (chartData) => {
     function randomHSL(){
       return `hsla(${~~(360 * Math.random())},70%,70%,0.8)`
     }
 
-    const colors = []
-    for (let i = 0; i < chartData.length; i++) {
-      colors.push(randomHSL())
-    }
-
-    return colors
+    return Array.from({length: chartData.length}, () => randomHSL())
   }
 
 

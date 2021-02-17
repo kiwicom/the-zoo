@@ -1,11 +1,11 @@
-import {Cell, Pie, PieChart, Sector, ResponsiveContainer} from "recharts";
-import React, { useState }   from "react";
+import { Cell, Pie, PieChart, Sector, ResponsiveContainer } from 'recharts';
+import React, { useState }   from 'react';
+import { chartDataInterface} from "./DetailPage";
 
 
-
-const renderActiveShape = (props) => {
+const renderActiveShape = (props:any) => {
   const RADIAN = Math.PI / 180;
-  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, value } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
   const sx = cx + (outerRadius + 10) * cos;
@@ -47,16 +47,15 @@ const renderActiveShape = (props) => {
 };
 
 type Props = {
-  chartData: any[];
-  chartColors: any[];
+  chartData: chartDataInterface[];
+  chartColors: string[];
 }
-
 
 const VersionDistribution = ({ chartData, chartColors }: Props) => {
 
   const [activeIndex, setActiveIndex] = useState(0)
 
-  const onPieEnter = (_, index) => {
+  const onPieEnter = (_, index:number) => {
     setActiveIndex(index)
   };
 
@@ -73,7 +72,7 @@ const VersionDistribution = ({ chartData, chartColors }: Props) => {
           dataKey="value"
           onMouseEnter={onPieEnter}
         >
-          {chartData.map((entry, index) => (
+          {chartData.map((_, index) => (
             <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
             ))}
         </Pie>

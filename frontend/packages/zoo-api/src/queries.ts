@@ -1,4 +1,62 @@
-export const getResources = ``
+export const getDependencies = `
+query ($type: [String]!)
+{
+  dependencies(type_In: $type) {
+    edges {
+      cursor
+      node {
+        id
+        name
+        type
+        healthStatus
+        timestamp
+        license
+        dependencyVersion
+        dependencyUsages {
+          edges {
+            node {
+            id
+              majorVersion
+              minorVersion
+              patchVersion
+              version
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`
+
+export const getDependency = `
+query ($id: ID!)
+  {
+    dependency(id: $id) {
+      id
+      name
+      type
+      healthStatus
+      license
+      dependencyUsages {
+          edges {
+            node {
+              id
+              majorVersion
+              minorVersion
+              patchVersion
+              version
+              repo {
+                id
+                owner
+                name
+              }
+            }
+          }
+        }
+    }
+  }
+`
 
 export const getServices = `
 {
@@ -262,7 +320,7 @@ interface Node {
 
 export type Connection<T> = {
   edges: Edge<T>[]
-  totalCount: number
+  totalCount?: number;
 }
 
 export type Edge<T> = {
@@ -394,54 +452,24 @@ export interface ActiveIncident extends Node {
   color: string;
 }
 
-export interface Resource extends Node {
+export interface Dependancy extends Node {
   name: string;
   type: string;
   healthStatus: boolean;
   timestamp: string;
   license: string;
-  usageCount: number;
-  version: string;
+  dependencyVersion: string
+  dependencyUsages: Connection<DependancyUsage>
+
 }
+export interface DependancyUsage extends Node {
+  majorVersion: number;
+  minorVersion: number;
+  patchVersion: number;
+  version: string;
+  forProduction: boolean;
+  repo: Repository
 
-
-
-
-export const DummyResponse = {
-  data: {
-    error: undefined,
-    extensions: undefined,
-    fetching: false,
-    resources: {
-      edges: [
-        {
-          node: {
-            id: "U2VydmljZTox",
-            name: "kiwi-json",
-            version: "0.7.0",
-            type: "Javascript Library",
-            healthStatus: true,
-            timestamp: "",
-            license: "public",
-            usageCount: 54,
-          }
-        },
-        {
-          node: {
-            id: "U2VydmljZT9x",
-            name: "structlog-config",
-            version: "0.18.0",
-            type: "Python Library",
-            healthStatus: true,
-            timestamp: "",
-            license: "public",
-            usageCount: 4,
-          }
-        }
-      ]
-    }
-
-  }
 }
 
 

@@ -81,8 +81,6 @@ const VersionDistribution = ({ chartData, chartColors }: Props) => {
     </ResponsiveContainer>
 
   );
-
-
 }
 
 

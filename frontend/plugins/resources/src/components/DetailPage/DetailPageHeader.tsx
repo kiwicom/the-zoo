@@ -1,18 +1,21 @@
 import React from 'react';
+import ResourceTypeLabel from '../TableComponents/ResourceTypeLabel';
 import { ContentHeader as BackstageContentHeader, SupportButton } from '@backstage/core';
-import {Breadcrumbs, Button, Chip, Grid, Link, Typography} from "@material-ui/core";
-import {Link as RouterLink} from "react-router-dom";
-import ResourceTypeLabel from "../TableComponents/ResourceTypeLabel";
+import { Breadcrumbs, Grid, Link, Typography } from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
+import { capitalize } from '../TableComponents/TableData';
+import { Dependancy } from 'zoo-api';
 
 interface Props {
-  resource?: any // change to type resource
+  resource: Dependancy
 }
 
 const DetailPageHeader = ({ resource }: Props) => {
+
   return (
     <>
-      <BackstageContentHeader title={resource.name} description={resource.description}>
-        <SupportButton slackChannel="#plz-platform-software">A description of your plugin goes here.</SupportButton>
+      <BackstageContentHeader title={resource.name} description="">
+        <SupportButton slackChannel="#plz-platform-software"></SupportButton>
       </BackstageContentHeader>
       <Grid container direction="row" justify="space-between">
         <Grid item>
@@ -25,7 +28,7 @@ const DetailPageHeader = ({ resource }: Props) => {
         </Grid>
 
         <Grid item>
-          <ResourceTypeLabel name={resource.type} />
+          <ResourceTypeLabel name={capitalize(resource.type)} />
         </Grid>
       </Grid>
     </>

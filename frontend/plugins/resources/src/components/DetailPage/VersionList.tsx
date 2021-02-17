@@ -1,48 +1,50 @@
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Typography from "@material-ui/core/Typography";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import Grid from "@material-ui/core/Grid";
-import React from "react";
-import {Card, CardContent, Chip, Link} from "@material-ui/core";
-import {Link as RouterLink} from "react-router-dom";
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
+import { Card, CardContent, Chip, Link } from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
+import { DependancyUsage } from 'zoo-api';
 
 
-// interface Repo {
-//   repoName: string;
-//   repoAbsoluteUrl: string;
-//   repoOwner: string;
-//   repoOwnerUrl: string;
-//   status: string;
-//   impact: string;
-// }
-//
-// interface Versions {
-//   version: string;
-//   repos: Repo[]
-// }
+export interface SortedVersions { [key: string]: any[]; }
+
+export const sortDependencyUsages = (versions:DependancyUsage[]) => {
+  const sortedVersions:SortedVersions = {}
+
+  for (const version of versions) {
+    if(sortedVersions[version.version]){
+      sortedVersions[version.version].push(version.repo)
+      continue
+    }
+    sortedVersions[version.version] = [version.repo]
+  }
+
+  return sortedVersions
+}
 
 
-const VersionList = (versionList) => {
-  const versions = versionList.versionList
-  console.log(versions)
+const VersionList = ({ activeVersions, dependencyId }: { activeVersions: DependancyUsage[], dependencyId: string }) => {
+  const versions = sortDependencyUsages(activeVersions)
 
   return (
     <>
-      {versions.map(version => (
-          <Accordion key={version.version}>
+      {Object.keys(versions).map((version, _) => (
+          <Accordion key={version}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
-              aria-controls={`${version.version}-content`}
-              id={`${version.version}-header`}
+              aria-controls={`${version}-content`}
+              id={`${version}-header`}
             >
-              <Chip label={version.version} />
+              <Chip label={version} />
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={3} direction="column">
-                {version.versionList.edges.map(repo => (
-                  <Grid item key={repo.node.id}>
+                {versions[version].map(repo => (
+                  <Grid item key={repo.id}>
                     <Card>
                       <CardContent>
                         <Grid container direction="row" justify="space-between" alignItems="center">
@@ -50,11 +52,11 @@ const VersionList = (versionList) => {
                             <Grid container alignItems="baseline">
                               <Grid item>
                                 <Typography variant="h5">
-                                  <Link component={RouterLink} to={`/resources/dependencies/${repo.node.id}`}>{repo.node.repoName}</Link>
+                                  <Link component={RouterLink} to={`/resources/dependencies/${dependencyId}`}>{repo.name}</Link>
                                 </Typography>
                               </Grid>
                               <Grid item>
-                                owned by&nbsp;{repo.node.repoOwner}
+                                owned by&nbsp;{repo.owner}
                               </Grid>
                             </Grid>
                           </Grid>

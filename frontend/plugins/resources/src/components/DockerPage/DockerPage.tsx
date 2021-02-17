@@ -5,13 +5,13 @@ import { Grid } from '@material-ui/core';
 import { generateTableData, commonColumns } from '../TableComponents/TableData'
 
 
-const TemplatesPage = () => {
-  const [response, component] = useBackend<Connection<Dependancy>>("dependencies", getDependencies, {type: ["Gitlab-ci.yml"]});
+const DockerPage = () => {
+  const [response, component] = useBackend<Connection<Dependancy>>("dependencies", getDependencies, {type: ["Docker Image"]});
 
   if (component) return <Grid item>{component}</Grid>;
   if (!response) return null;
   const deps = unwrap<Dependancy>(response);
-  const templateData = generateTableData(deps);
+  const dockerData = generateTableData(deps);
 
   return (
     <Page themeId="home">
@@ -19,7 +19,7 @@ const TemplatesPage = () => {
         <div>
           <Table
             options={{ paging: true, padding: 'default' }}
-            data={templateData}
+            data={dockerData}
             columns={commonColumns}
           />
         </div>
@@ -28,4 +28,4 @@ const TemplatesPage = () => {
   )
 };
 
-export default TemplatesPage;
+export default DockerPage;

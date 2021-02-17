@@ -1,3 +1,4 @@
+import django_filters
 import graphene
 import structlog
 from django.core.exceptions import ObjectDoesNotExist
@@ -8,6 +9,7 @@ from graphene_django.types import DjangoObjectType
 from graphql_relay.utils import base64
 
 from ..analytics import models as analytics_models
+from ..analytics.models import DependencyUsage as DependencyUsageModel
 from ..auditing import check_discovery
 from ..auditing import models as auditing_models
 from ..pagerduty.tasks import get_oncall_info
@@ -348,12 +350,26 @@ class ProjectDetails(graphene.ObjectType):
     last_activity_at = graphene.DateTime()
 
 
-class Dependency(DjangoObjectType, interfaces=[Node]):
-    dependency_usages = DjangoFilterConnectionField(lambda: DependencyUsage)
+class TypeInFilter(django_filters.BaseInFilter, django_filters.CharFilter):
+    pass
+
+
+class DependencyFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(lookup_expr=["iexact"])
+    type__in = TypeInFilter(field_name="type", lookup_expr="in")
 
     class Meta:
         model = analytics_models.Dependency
-        filter_fields = ["name", "type"]
+        fields = ["name", "type"]
+
+
+class Dependency(DjangoObjectType, interfaces=[Node]):
+    dependency_usages = DjangoFilterConnectionField(lambda: DependencyUsage)
+    dependency_version = graphene.String()
+
+    class Meta:
+        model = analytics_models.Dependency
+        filterset_class = DependencyFilter
 
     @classmethod
     def from_db(cls, dependency):
@@ -383,13 +399,12 @@ class Dependency(DjangoObjectType, interfaces=[Node]):
             page_info=page_info, edges=edges, total_count=total
         )
 
-    @classmethod
-    def get_node(cls, info, id):
-        try:
-            dependency = analytics_models.Dependency.objects.get(id=id)
-            return cls.from_db(dependency)
-        except ObjectDoesNotExist:
-            return None
+    def resolve_dependency_version(self, info, **kwargs):
+        versions = DependencyUsageModel.versions(
+            queryset=analytics_models.DependencyUsage.objects.get_queryset(), limit=1
+        )
+
+        return str(versions[0][0])
 
 
 class DependencyUsage(DjangoObjectType, interfaces=[Node]):
@@ -412,14 +427,6 @@ class DependencyUsage(DjangoObjectType, interfaces=[Node]):
             for_production=dependency_usage.for_production,
             version=dependency_usage.version,
         )
-
-    @classmethod
-    def get_node(cls, info, id):
-        try:
-            dependency_usage = analytics_models.DependencyUsage.objects.get(id=id)
-            return cls.from_db(dependency_usage)
-        except ObjectDoesNotExist:
-            return None
 
     def resolve_dependency(self, info):
         return Dependency.from_db(

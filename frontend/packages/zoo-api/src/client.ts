@@ -7,6 +7,7 @@ const cache = cacheExchange({
   resolvers: {
     Query: {
       services: relayPagination(),
+      dependencies: relayPagination(),
     },
   },
 });

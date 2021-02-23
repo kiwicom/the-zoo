@@ -1,6 +1,6 @@
 import { Cell, Pie, PieChart, Sector, ResponsiveContainer } from 'recharts';
 import React, { useState }   from 'react';
-import { chartDataInterface} from "./DetailPage";
+import { ChartDataInterface} from "./DetailPage";
 
 
 const renderActiveShape = (props:any) => {
@@ -47,7 +47,7 @@ const renderActiveShape = (props:any) => {
 };
 
 type Props = {
-  chartData: chartDataInterface[];
+  chartData: ChartDataInterface[];
   chartColors: string[];
 }
 

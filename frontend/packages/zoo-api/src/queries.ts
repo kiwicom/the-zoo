@@ -452,17 +452,17 @@ export interface ActiveIncident extends Node {
   color: string;
 }
 
-export interface Dependancy extends Node {
+export interface Dependency extends Node {
   name: string;
   type: string;
   healthStatus: boolean;
   timestamp: string;
   license: string;
   dependencyVersion: string
-  dependencyUsages: Connection<DependancyUsage>
+  dependencyUsages: Connection<DependencyUsage>
 
 }
-export interface DependancyUsage extends Node {
+export interface DependencyUsage extends Node {
   majorVersion: number;
   minorVersion: number;
   patchVersion: number;

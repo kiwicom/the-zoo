@@ -4,10 +4,10 @@ import { ContentHeader as BackstageContentHeader, SupportButton } from '@backsta
 import { Breadcrumbs, Grid, Link, Typography } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 import { capitalize } from '../TableComponents/TableData';
-import { Dependancy } from 'zoo-api';
+import { Dependency } from 'zoo-api';
 
 interface Props {
-  resource: Dependancy
+  resource: Dependency
 }
 
 const DetailPageHeader = ({ resource }: Props) => {

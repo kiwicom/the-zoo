@@ -7,12 +7,12 @@ import Grid from '@material-ui/core/Grid';
 import React from 'react';
 import { Card, CardContent, Chip, Link } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
-import { DependancyUsage } from 'zoo-api';
+import { DependencyUsage } from 'zoo-api';
 
 
-export interface SortedVersions { [key: string]: any[]; }
+export interface SortedVersions { [key: string]: object[]; }
 
-export const sortDependencyUsages = (versions:DependancyUsage[]) => {
+export const sortDependencyUsages = (versions:DependencyUsage[]) => {
   const sortedVersions:SortedVersions = {}
 
   for (const version of versions) {
@@ -27,7 +27,7 @@ export const sortDependencyUsages = (versions:DependancyUsage[]) => {
 }
 
 
-const VersionList = ({ activeVersions, dependencyId }: { activeVersions: DependancyUsage[], dependencyId: string }) => {
+const VersionList = ({ activeVersions, dependencyId }: { activeVersions: DependencyUsage[], dependencyId: string }) => {
   const versions = sortDependencyUsages(activeVersions)
 
   return (

@@ -7,10 +7,10 @@ import VersionList from './VersionList';
 import { Outlet, useParams } from 'react-router-dom';
 import { Content, Page } from '@backstage/core';
 import { Card, CardContent } from '@material-ui/core';
-import { Dependancy, DependancyUsage, getDependency, unwrap, useBackend } from 'zoo-api';
+import { Dependency, DependencyUsage, getDependency, unwrap, useBackend } from 'zoo-api';
 import { sortDependencyUsages, SortedVersions } from './VersionList';
 
-export interface chartDataInterface {
+export interface ChartDataInterface {
   name: string;
   value: number;
 }
@@ -24,7 +24,7 @@ const Detailpage = () => {
     value: resources[resource].length
   }));
 
-  const getChartColors = (chartData:chartDataInterface[]) => {
+  const getChartColors = (chartData:ChartDataInterface[]) => {
     function randomHSL(){
       return `hsla(${~~(360 * Math.random())},70%,70%,0.8)`
     }
@@ -32,12 +32,12 @@ const Detailpage = () => {
     return Array.from({length: chartData.length}, () => randomHSL())
   }
 
-  const [response, component] = useBackend<Dependancy>("dependency", getDependency, params);
+  const [response, component] = useBackend<Dependency>("dependency", getDependency, params);
 
   if (component) return <Grid item>{component}</Grid>;
   if (!response) return null;
 
-  const versions = unwrap<DependancyUsage>(response.dependencyUsages);
+  const versions = unwrap<DependencyUsage>(response.dependencyUsages);
   const chartData = generateChartData(sortDependencyUsages(versions));
 
   return (

@@ -1,4 +1,4 @@
-import {Dependancy} from 'zoo-api';
+import {Dependency} from 'zoo-api';
 import {TableColumn} from '@backstage/core';
 import ResourceLink from './ResourceLink';
 import {Chip} from '@material-ui/core';
@@ -16,17 +16,17 @@ export const commonColumns: TableColumn[] = [
   {
     title: 'Name',
     field: 'name',
-    render: (rowData:any) => <ResourceLink name={rowData.name} id={rowData.id} />
+    render: (rowData:object) => <ResourceLink name={rowData.name} id={rowData.id} />
   },
   {
     title: 'Leatest Version',
     field: 'version',
-    render: (rowData:any) => <Chip label={rowData.version} />
+    render: (rowData:object) => <Chip label={rowData.version} />
   },
   {
     title: 'Type',
     field: 'type',
-    render: (rowData:any) => <ResourceTypeLabel name={rowData.type} />
+    render: (rowData:object) => <ResourceTypeLabel name={rowData.type} />
   },
 ];
 
@@ -35,7 +35,7 @@ export const capitalize: (word:string) =>string = (word) => {
   return cleanWord[0].toUpperCase() + cleanWord.slice(1)
 }
 
-export const generateTableData: (resources: Dependancy[]) => Array<{}> = (resources) => {
+export const generateTableData: (resources: Dependency[]) => Array<{}> = (resources) => {
   return resources.map(item => {
     return {
       id: item.id,

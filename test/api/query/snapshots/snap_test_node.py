@@ -9,44 +9,25 @@ snapshots = Snapshot()
 
 snapshots['test_dependency 1'] = {
     'data': {
-        'node': None
-    },
-    'errors': [
-        {
-            'locations': [
-                {
-                    'column': 13,
-                    'line': 5
-                }
-            ],
-            'message': "'Dependency' object has no attribute 'pk'",
-            'path': [
-                'node',
-                'id'
-            ]
+        'node': {
+            'id': 'RGVwZW5kZW5jeToxMA==',
+            'name': 'python',
+            'type': 'LANGUAGE'
         }
-    ]
+    }
 }
 
 snapshots['test_dependency_usage 1'] = {
     'data': {
-        'node': None
-    },
-    'errors': [
-        {
-            'locations': [
-                {
-                    'column': 13,
-                    'line': 5
-                }
-            ],
-            'message': "'DependencyUsage' object has no attribute 'pk'",
-            'path': [
-                'node',
-                'id'
-            ]
+        'node': {
+            'forProduction': False,
+            'id': 'RGVwZW5kZW5jeVVzYWdlOjEw',
+            'majorVersion': 3,
+            'minorVersion': 2,
+            'patchVersion': 4,
+            'version': '3.2.4'
         }
-    ]
+    }
 }
 
 snapshots['test_issue 1'] = {

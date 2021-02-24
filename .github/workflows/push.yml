@@ -62,8 +62,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: apk add --no-cache tar
-
       - name: Cache
         uses: actions/cache@v2
         with:
@@ -87,7 +85,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: apk add --no-cache tar
+      - run: apk add --no-cache cargo tar
 
       - name: Cache
         uses: actions/cache@v2
@@ -129,7 +127,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: apk add --no-cache tar
+      - run: apk add --no-cache cargo tar
 
       - name: Cache
         uses: actions/cache@v2

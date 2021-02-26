@@ -3,6 +3,7 @@ import pytest
 from slacker import Error as SlackError
 
 import zoo.auditing.runner as uut
+from zoo import auditing
 from zoo.auditing.models import Issue
 
 pytestmark = pytest.mark.django_db
@@ -62,12 +63,13 @@ def test_save_check_result__found_new_issue(is_found, status, repository, freeze
     ),
 )
 def test_save_check_result__existing_issue(
-    is_found, old_status, new_status, issue_factory, freezer
+    is_found, old_status, new_status, issue_factory, service_factory, freezer
 ):
     issue = issue_factory(
         status=old_status, last_check=arrow.utcnow().shift(years=-1).datetime
     )
     repository = issue.repository
+    service = service_factory(repository=repository)
 
     uut.save_check_result(repository, issue.kind_key, is_found)
 
@@ -110,9 +112,11 @@ def test_save_check_result__details_of_new_issue(
     ),
 )
 def test_save_check_result__details_of_existing_issue(
-    is_found, old_details, details, expected_details, issue_factory
+    is_found, old_details, details, expected_details, issue_factory, service_factory
 ):
     issue = issue_factory(details=old_details)
+    service = service_factory(repository=issue.repository)
+
     uut.save_check_result(issue.repository, issue.kind_key, is_found, details)
 
     new_issue = Issue.objects.get()
@@ -178,10 +182,11 @@ def test_check_repository__failing_check(repository, fake_path, mocker):
     )
 
 
-def test_run_checks_and_save_results(repository, fake_path, mocker):
+def test_run_checks_and_save_results(repository, fake_path, mocker, service_factory):
     checks = [check_passing, check_found, check_unknown]
 
     uut.run_checks_and_save_results(checks, repository, fake_path)
+    service = service_factory(repository=repository)
 
     assert Issue.objects.count() == 2
 
@@ -251,6 +256,7 @@ def test_notify_status_change(mocker, issue_factory, service_factory):
     issue = issue_factory(repository=service.repository)
     log = mocker.patch("zoo.auditing.runner.log", mocker.Mock())
     slack = mocker.patch("zoo.auditing.runner.slack", mocker.Mock())
+    m_reverse = mocker.patch("zoo.auditing.runner.reverse", mocker.Mock())
 
     uut.notify_status_change(issue)
     slack.chat.post_message.assert_called_once()
@@ -258,6 +264,9 @@ def test_notify_status_change(mocker, issue_factory, service_factory):
     assert channel == service.slack_channel
     assert issue.kind.title in text
     assert issue.repository.name in text
+    m_reverse.assert_called_once_with(
+        "audit_report", args=("services", service.owner_slug, service.name_slug)
+    )
 
     # Unhappy path
     slack.chat.post_message.side_effect = SlackError("channel_not_found")

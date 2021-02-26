@@ -9,6 +9,7 @@ from django.urls import reverse
 from slacker import Error as SlackError
 from slacker import Slacker
 
+from ..services.models import Service
 from .check_discovery import CHECKS
 from .models import Issue
 
@@ -79,9 +80,10 @@ def update_issue(issue: Issue, is_found, details=None):
 def notify_status_change(issue: Issue):
     if Issue.Status(issue.status) in [Issue.Status.NEW, Issue.Status.REOPENED]:
         site = Site.objects.get_current()
+        service = Service.objects.get(repository=issue.repository)
         audit_url = reverse(
             "audit_report",
-            args=("services", issue.repository.owner, issue.repository.name),
+            args=("services", service.owner_slug, service.name_slug),
         )
         text = "{status} issue {issue} on <{repo.url}|{repo.name}>.".format(
             status=issue.status.title(),

@@ -274,3 +274,30 @@ def test_notify_status_change(mocker, issue_factory, service_factory):
     log.exception.assert_called_once_with(
         "auditing.update_issue.slack_error", error="Error('channel_not_found')"
     )
+
+
+def test_notify_status_change_monorepo(mocker, issue_factory, service_factory):
+    service = service_factory()
+    service_2 = service_factory(repository=service.repository)
+    issue = issue_factory(repository=service.repository)
+    log = mocker.patch("zoo.auditing.runner.log", mocker.Mock())
+    slack = mocker.patch("zoo.auditing.runner.slack", mocker.Mock())
+    m_reverse = mocker.patch("zoo.auditing.runner.reverse", mocker.Mock())
+
+    uut.notify_status_change(issue)
+    assert slack.chat.post_message.call_count == 2
+    channels = []
+    texts = []
+    for args_list in slack.chat.post_message.call_args_list:
+        channels.append(args_list.args[0])
+        texts.append(args_list.args[1])
+    assert service.slack_channel in channels
+    assert service_2.slack_channel in channels
+    assert any(issue.kind.title in text for text in texts)
+    assert any(issue.repository.name in text for text in texts)
+    assert m_reverse.call_count == 2
+
+    # Unhappy path
+    slack.chat.post_message.side_effect = SlackError("channel_not_found")
+    uut.notify_status_change(issue)
+    assert log.exception.call_count == 2

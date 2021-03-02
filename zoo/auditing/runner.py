@@ -80,21 +80,21 @@ def update_issue(issue: Issue, is_found, details=None):
 def notify_status_change(issue: Issue):
     if Issue.Status(issue.status) in [Issue.Status.NEW, Issue.Status.REOPENED]:
         site = Site.objects.get_current()
-        service = Service.objects.get(repository=issue.repository)
-        audit_url = reverse(
-            "audit_report",
-            args=("services", service.owner_slug, service.name_slug),
+        services = Service.objects.filter(repository=issue.repository).exclude(
+            slack_channel__isnull=True
         )
-        text = "{status} issue {issue} on <{repo.url}|{repo.name}>.".format(
-            status=issue.status.title(),
-            issue=f"<http://{site.domain}{audit_url}|{issue.kind.title}>",
-            repo=issue.repository,
-        )
-        for channel in issue.repository.services.values_list(
-            "slack_channel", flat=True
-        ):
+        for service in services:
+            audit_url = reverse(
+                "audit_report",
+                args=("services", service.owner_slug, service.name_slug),
+            )
+            text = "{status} issue {issue} on <{repo.url}|{repo.name}>.".format(
+                status=issue.status.title(),
+                issue=f"<http://{site.domain}{audit_url}|{issue.kind.title}>",
+                repo=issue.repository,
+            )
             try:
-                slack.chat.post_message(channel, text)
+                slack.chat.post_message(service.slack_channel, text)
             except SlackError as error:
                 log.exception("auditing.update_issue.slack_error", error=repr(error))
 

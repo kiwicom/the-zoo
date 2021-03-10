@@ -21,47 +21,47 @@
 </template>
 
 <script>
-  import ProjectHeader from "./ProjectHeader";
-  import { curry, prepend, take, group, drop } from "ramda"
+  import ProjectHeader from "./ProjectHeader"
+  import { curry, isEmpty, prepend, take, drop } from "ramda"
 
   var groupsOf = curry(function group(n, list) {
     return isEmpty(list)
       ? []
-      : prepend(take(n, list), group(n, drop(n, list)));
-  });
+      : prepend(take(n, list), group(n, drop(n, list)))
+  })
 
   export default {
     props: ["issue", "name"],
     data() {
       return {
         page: 1
-      };
+      }
     },
     computed: {
       projectsGroups () {
-        return groupsOf(10, this.issue.projects);
+        return groupsOf(10, this.issue.projects)
       },
       numberOfPages () {
-        return this.projectsGroups.length;
+        return this.projectsGroups.length
       },
       pageProjects () {
-        return this.projectsGroups[this.page - 1];
+        return this.projectsGroups[this.page - 1]
       }
     },
     methods: {
       nextPage () {
         if (this.page < this.numberOfPages) {
-          this.page++;
+          this.page++
         }
       },
       prevPage () {
         if (this.page > 1) {
-          this.page--;
+          this.page--
         }
       }
     },
     components: {
       ProjectHeader
     }
-  };
+  }
 </script>

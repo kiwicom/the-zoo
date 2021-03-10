@@ -7,8 +7,36 @@ from . import CiTemplate, DockerImage
 
 def parse_gitlab_ci_template(parsed_yaml):
     """Parse gitlab-ci.yml file for names of templates."""
-    for name in parsed_yaml.get("include", {}):
-        yield CiTemplate(Path(name).stem)
+    for inclusion in parsed_yaml.get("include", {}):
+        if isinstance(inclusion, str):
+            yield CiTemplate(Path(inclusion).stem)
+            continue
+
+        name, prefix = "", ""
+        # Inclusion methods that are based on a single keyword
+        simple = (
+            ("template", "gitlab"),  # GitLab provided template
+            ("local", "local"),  # Files within the repo
+            ("remote", "remote"),  # Files outside of the repo
+        )
+
+        for keyword, category in simple:
+            if keyword in inclusion:
+                prefix = category
+                name = inclusion[keyword]
+                break
+
+        if name and prefix:
+            yield CiTemplate(f"{prefix}:{name}")
+            continue
+
+        if file := inclusion.get("file"):
+            files = file if isinstance(file, list) else [file]
+            project = inclusion["project"]
+            suffix = f"@{inclusion['ref']}" if "ref" in inclusion else ""
+
+            for file in files:
+                yield CiTemplate(f"repo:{project}/{file}{suffix}")
 
 
 def get_image(image_def):

@@ -13,6 +13,9 @@ def parse_gitlab_ci_template(parsed_yaml):
 
 def get_image(image_def):
     """Get names of docker images from yaml dict."""
+    if isinstance(image_def, dict):
+        image_def = image_def.get("name")
+
     if image_def is None:
         return None
 

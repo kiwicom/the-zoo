@@ -1,3 +1,4 @@
+import hashlib
 import importlib
 import json
 import tarfile
@@ -16,6 +17,8 @@ from ..base import redis
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 
 OPENAPI_SCAN_EXCLUDE = ["k8s", "test", ".gitlab", ".github"]
+OPENAPI_INVALID_MARKER = "invalid"
+OPENAPI_FINGERPRINT_MAX_AGE = 360 * 24 * 60 * 60  # ~1 year
 
 log = structlog.get_logger()
 
@@ -73,13 +76,7 @@ def _parse_file(path, base=None):
 
 
 def openapi_definition(request, repository):
-
-    redis_conn = redis.get_connection()
-    key = f"openapi-{repository.provider}-{repository.remote_id}"
-
-    if redis_conn.exists(key) and "force" not in request.GET:
-        return JsonResponse(json.loads(redis_conn.get(key)), safe=False)
-
+    redis_conn = redis.get_connection(decode_responses=True)
     specs = []
 
     with tempfile.TemporaryDirectory() as repo_dir:
@@ -94,9 +91,23 @@ def openapi_definition(request, repository):
                 if any(directory in str(path) for directory in OPENAPI_SCAN_EXCLUDE):
                     continue
 
-                specs.append(_parse_file(path, repo_path))
+                fingerprint = f"{ext}-{hashlib.md5(path.read_text().encode()).hexdigest()}"
+
+                if specification := redis_conn.get(fingerprint):
+                    # We store all file fingerprints in redis, valid or invalid, to avoid
+                    # attempting to parse the same file over and over if it hasn't
+                    # changed at all
+                    if specification != OPENAPI_INVALID_MARKER:
+                        specs.append(json.loads(specification))
+
+                else:
+                    parsed = _parse_file(path, repo_path)
+                    specs.append(parsed)
+                    redis_conn.set(
+                        fingerprint,
+                        json.dumps(parsed, cls=DjangoJSONEncoder) if parsed else OPENAPI_INVALID_MARKER,
+                        ex=OPENAPI_FINGERPRINT_MAX_AGE
+                    )
 
     specs = list(filter(None, specs))
-
-    redis_conn.set(key, json.dumps(specs, cls=DjangoJSONEncoder), ex=1800)
     return JsonResponse(specs, safe=False)

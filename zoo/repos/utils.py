@@ -48,10 +48,13 @@ def download_repository(repository, fake_dir, sha=None):
         except MissingFilesError as e:
             raise MissingFilesError(f"{repository} doesn't have any files.") from e
 
-        archive.seek(0)
-        with tarfile.open(fileobj=archive) as tar:
-            inner_folder = tar.next().name
-            tar.extractall(fake_dir)
+        try:
+            archive.seek(0)
+            with tarfile.open(fileobj=archive) as tar:
+                inner_folder = tar.next().name
+                tar.extractall(fake_dir)
+        except tarfile.ReadError as e:
+            raise MissingFilesError(f"{repository} doesn't have any files.") from e
 
     return Path(fake_dir) / inner_folder
 

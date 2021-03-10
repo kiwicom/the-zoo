@@ -39,22 +39,27 @@ def parse_gitlab_ci_template(parsed_yaml):
                 yield CiTemplate(f"repo:{project}/{file}{suffix}")
 
 
-def get_image(image_def):
+def get_image(definition):
     """Get names of docker images from yaml dict."""
-    if isinstance(image_def, dict):
-        image_def = image_def.get("name")
+    if isinstance(definition, dict):
+        definition = definition.get("name")
 
-    if image_def is None:
+    if definition is None:
         return None
 
-    if ":" in image_def:
-        name, version = image_def.split(":")
+    reference = definition
+    name, version, hash = "", "", ""
+
+    if "@" in definition:
+        reference, hash = definition.split("@", 1)
+    if ":" in reference:
+        name, version = definition.split(":", 1)
     else:
-        name = image_def
+        name = reference
         version = "latest"
 
     if "$CI_REGISTRY_IMAGE" not in name:
-        return DockerImage(name, version=version)
+        return DockerImage(name, version=f"{version}{hash}")
 
 
 def parse_docker_images(parsed_yaml):

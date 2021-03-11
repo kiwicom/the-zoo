@@ -131,3 +131,41 @@ tox-docker = ">=2.0.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.pylint.master]
+jobs=2
+
+[tool.pylint.messages_control]
+disable = [
+  "abstract-method",
+  "bad-continuation",
+  "bare-except",
+  "broad-except",
+  "duplicate-code",
+  "fixme",
+  "inconsistent-return-statements",
+  "invalid-name",
+  "line-too-long",
+  "locally-disabled",
+  "missing-docstring",
+  "no-member",
+  "no-self-use",
+  "no-value-for-parameter",
+  "protected-access",
+  "raise-missing-from",
+  "redefined-builtin",
+  "redefined-outer-name",
+  "relative-import",
+  "too-few-public-methods",
+  "too-many-ancestors",
+  "ungrouped-imports",
+  "unused-argument",
+  "wrong-import-position"
+]
+
+[tool.pylint.reports]
+output-format="colorized"
+
+[tool.pylint.format]
+logging-modules=["logging", "structlog"]

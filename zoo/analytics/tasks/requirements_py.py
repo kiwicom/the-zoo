@@ -54,7 +54,7 @@ def _get_packages(req_file_path, repository, path, for_production):
                     requirement.name, lib_version, for_production, health_status
                 )
 
-    except RequirementParseError:
+    except (RequirementParseError, ValueError):
         log.exception("analytics.requirements_py.analyze.error")
         return
 

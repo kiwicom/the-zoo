@@ -1,6 +1,7 @@
 import hashlib
 import itertools
 import tempfile
+from collections import namedtuple
 from typing import Dict
 
 import structlog
@@ -10,15 +11,30 @@ from django.conf import settings
 from ..analytics.tasks import repo_analyzers
 from ..auditing import runner
 from ..auditing.check_discovery import CHECKS as AUDITING_CHECKS
+from ..repos.models import Endpoint
 from ..services.models import Environment, Service
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 from .github import get_repositories as get_github_repositories
 from .gitlab import get_repositories as get_gitlab_repositories
 from .models import Repository
-from .utils import download_repository, get_scm_module
+from .utils import download_repository, get_scm_module, openapi_definition
 from .zoo_yml import parse, validate
 
 log = structlog.get_logger()
+
+# Necessary because openapi allows other keys like parameters inside the path object
+# and it uses dynamic keys everywhere
+HTTP_METHODS = (
+    "get",
+    "head",
+    "post",
+    "put",
+    "delete",
+    "connect",
+    "options",
+    "trace",
+    "patch",
+)
 
 
 @shared_task
@@ -86,8 +102,46 @@ def pull(reference, provider):
             log.info("repos.pull.git_error", repo=repository, error=err)
             return
 
+        index_api(repository, repo_path)
         repo_analyzers.run_all(repository, repo_path)
         runner.run_checks_and_save_results(AUDITING_CHECKS, repository, repo_path)
+
+
+def index_api(repository, repo_path):
+    specifications = openapi_definition(repository, repo_path=repo_path)
+    endpoints = []
+
+    EpData = namedtuple("EpData", ["path", "method", "summary", "operation"])
+
+    for spec in specifications:
+        paths = spec.get("paths", [])
+
+        for path in paths:
+            for method in paths[path]:
+                if method.lower() not in HTTP_METHODS:
+                    continue
+
+                log.debug("repos.index_api", repo=repository, path=path, method=method)
+                endpoints.append(
+                    EpData(
+                        path=path,
+                        method=method,
+                        summary=paths[path][method].get("summary"),
+                        operation=paths[path][method].get("operationId"),
+                    )
+                )
+
+    for endpoint in endpoints:
+        Endpoint.objects.update_or_create(
+            defaults={
+                "summary": endpoint.summary,
+                "operation": endpoint.operation,
+            },
+            path=endpoint.path,
+            method=endpoint.method,
+            repository=repository,
+        )
+    log.info("repos.index_api.done", repo=repository, endpoints=len(endpoints))
 
 
 @shared_task

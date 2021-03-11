@@ -57,6 +57,7 @@ def test_download_repository(fake_dir, repo_archive, repository, mocker):
         "readme.md",
         "requirements.txt",
         "package.json",
+        "openapi.json",
     }
     assert (repo_path / "readme.md").read_text() == "Hello world!"
 
@@ -82,6 +83,7 @@ def test_download_repository__custom_sha(fake_dir, repo_archive, repository, moc
         "readme.md",
         "requirements.txt",
         "package.json",
+        "openapi.json",
     }
     assert (repo_path / "readme.md").read_text() == "Hello world!"
 

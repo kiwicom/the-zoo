@@ -69,3 +69,20 @@ class Repository(models.Model):
             Provider.GITLAB.value: f"Merge Request #{mr_id}",
             Provider.GITHUB.value: f"Pull Request #{mr_id}",
         }[self.provider]
+
+
+class Endpoint(models.Model):
+    class Meta:
+        unique_together = ("path", "method", "repository")
+
+    path = models.CharField(max_length=200)
+    method = models.CharField(max_length=10)
+    repository = models.ForeignKey(
+        "repos.Repository",
+        on_delete=models.CASCADE,
+        related_name="endpoints",
+        null=True,
+        blank=True,
+    )
+    summary = models.CharField(max_length=500, null=True, blank=True)
+    operation = models.CharField(max_length=200, null=True, blank=True)

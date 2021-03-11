@@ -1,9 +1,10 @@
+import fakeredis
 import pytest
 
 from zoo.analytics.models import Dependency, DependencyType, DependencyUsage
 from zoo.auditing.models import Issue
 from zoo.repos import tasks as uut
-from zoo.repos.models import Provider
+from zoo.repos.models import Endpoint
 from zoo.repos.utils import get_scm_module
 
 from .. import dummy
@@ -29,6 +30,11 @@ def test_pull(mocker, repository, languages_method, python_value, repo_archive):
     m_download_archive = mocker.patch.object(
         scm_module, "download_archive", return_value=repo_archive
     )
+
+    def redis(**kwargs):
+        return fakeredis.FakeStrictRedis(**kwargs)
+
+    mocker.patch("zoo.base.redis.get_connection", redis)
 
     # test
     uut.pull(repository.remote_id, repository.provider)
@@ -82,3 +88,20 @@ def test_pull(mocker, repository, languages_method, python_value, repo_archive):
     assert dep_usage_3.repo == repository
     assert dep_usage_3.for_production is None
     assert dep_usage_3.version is None
+
+    # assert openapi
+    assert Endpoint.objects.count() == 0  # the test folder is excluded by default
+
+    mocker.patch("zoo.repos.utils.OPENAPI_SCAN_EXCLUDE", [])
+    uut.pull(repository.remote_id, repository.provider)
+
+    assert Endpoint.objects.count() == 3
+    assert Endpoint.objects.filter(path="/pets").count() == 2
+    assert Endpoint.objects.filter(path="/pets/{petId}").count() == 1
+
+    endpoint = Endpoint.objects.get(path="/pets/{petId}")
+
+    assert endpoint.repository == repository
+    assert endpoint.method == "get"
+    assert endpoint.operation == "showPetById"
+    assert endpoint.summary == "Info for a specific pet"

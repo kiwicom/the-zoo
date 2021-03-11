@@ -9,8 +9,8 @@ import structlog
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from prance import ResolvingParser, ValidationError
-from prance.util.url import ResolutionError
 from prance.util.formats import ParseError
+from prance.util.url import ResolutionError
 from yaml.composer import ComposerError
 from yaml.scanner import ScannerError
 
@@ -81,39 +81,64 @@ def _parse_file(path, base=None):
         )
 
 
-def openapi_definition(request, repository):
+def openapi_definition(repository, request=None, repo_path=None):
     redis_conn = redis.get_connection(decode_responses=True)
     specs = []
 
-    with tempfile.TemporaryDirectory() as repo_dir:
-        try:
-            repo_path = download_repository(repository, repo_dir)
-        except (MissingFilesError, RepositoryNotFoundError) as err:
-            log.info("repos.views.openapi.git_error", repo=repository, error=err)
-            return JsonResponse({"error": "error downloading repository"}, status=500)
+    if repo_path is None:
+        with tempfile.TemporaryDirectory() as repo_dir:
+            try:
+                repo_path = download_repository(repository, repo_dir)
+            except (MissingFilesError, RepositoryNotFoundError) as err:
+                log.info("repos.views.openapi.git_error", repo=repository, error=err)
+                return JsonResponse(
+                    {"error": "error downloading repository"}, status=500
+                )
 
-        for ext in ("json", "yml", "yaml"):
-            for path in repo_path.glob(f"**/*.{ext}"):
-                if any(directory in str(path) for directory in OPENAPI_SCAN_EXCLUDE):
-                    continue
+    for ext in ("json", "yml", "yaml"):
+        for path in repo_path.glob(f"**/*.{ext}"):
+            if any(directory in str(path) for directory in OPENAPI_SCAN_EXCLUDE):
+                log.debug(
+                    "repos.views.openapi.exclude", repo=repository, file=path.name
+                )
+                continue
 
-                fingerprint = f"{ext}-{hashlib.md5(path.read_text().encode()).hexdigest()}"
+            fingerprint = f"{ext}-{hashlib.md5(path.read_text().encode()).hexdigest()}"
+            log.debug("repos.views.openapi.scan", repo=repository, file=path.name)
 
-                if specification := redis_conn.get(fingerprint):
-                    # We store all file fingerprints in redis, valid or invalid, to avoid
-                    # attempting to parse the same file over and over if it hasn't
-                    # changed at all
-                    if specification != OPENAPI_INVALID_MARKER:
-                        specs.append(json.loads(specification))
-
-                else:
-                    parsed = _parse_file(path, repo_path)
-                    specs.append(parsed)
-                    redis_conn.set(
-                        fingerprint,
-                        json.dumps(parsed, cls=DjangoJSONEncoder) if parsed else OPENAPI_INVALID_MARKER,
-                        ex=OPENAPI_FINGERPRINT_MAX_AGE
+            if specification := redis_conn.get(fingerprint):
+                log.debug(
+                    "repos.views.openapi.cache_hit",
+                    repo=repository,
+                    file=path.name,
+                    fingerprint=fingerprint,
+                )
+                # We store all file fingerprints in redis, valid or invalid, to avoid
+                # attempting to parse the same file over and over if it hasn't
+                # changed at all
+                if specification != OPENAPI_INVALID_MARKER:
+                    log.debug(
+                        "repos.views.openapi.cache_invalid",
+                        repo=repository,
+                        fingerprint=fingerprint,
                     )
+                    specs.append(json.loads(specification))
 
-    specs = list(filter(None, specs))
-    return JsonResponse(specs, safe=False)
+            else:
+                parsed = _parse_file(path, repo_path)
+                specs.append(parsed)
+                redis_conn.set(
+                    fingerprint,
+                    json.dumps(parsed, cls=DjangoJSONEncoder)
+                    if parsed
+                    else OPENAPI_INVALID_MARKER,
+                    ex=OPENAPI_FINGERPRINT_MAX_AGE,
+                )
+                log.debug(
+                    "repos.views.openapi.cache_store",
+                    repo=repository,
+                    fingerprint=fingerprint,
+                )
+
+    log.info("repos.views.openapi.done", repo=repository, specs=len(specs))
+    return list(filter(None, specs))

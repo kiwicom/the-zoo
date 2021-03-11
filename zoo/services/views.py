@@ -222,4 +222,4 @@ class ServiceOpenApiDefinition(ServiceMixin, generic_views.View):
         if specs:
             return JsonResponse(specs, safe=False)
 
-        return openapi_definition(request, service.repository)
+        return JsonResponse(openapi_definition(service.repository, request), safe=False)

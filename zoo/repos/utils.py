@@ -10,6 +10,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from prance import ResolvingParser, ValidationError
 from prance.util.url import ResolutionError
+from prance.util.formats import ParseError
 from yaml.composer import ComposerError
 from yaml.scanner import ScannerError
 
@@ -72,6 +73,8 @@ def _parse_file(path, base=None):
         ScannerError,
         UnicodeDecodeError,
         ValidationError,
+        ParseError,
+        TypeError,
     ) as err:
         log.info(
             "repos.views.openapi.invalid", path=str(path.relative_to(base)), error=err

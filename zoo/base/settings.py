@@ -11,7 +11,7 @@ from pathlib import Path
 
 import environ
 import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.django import DjangoIntegration, ignore_logger
 
 from ..utils import _get_app_version
 from . import logs
@@ -233,6 +233,7 @@ SENTRY_URL = env("ZOO_SENTRY_URL")
 SENTRY_ORGANIZATION = env("ZOO_SENTRY_ORGANIZATION")
 SENTRY_API_KEY = env("ZOO_SENTRY_API_KEY")
 
+ignore_logger("bandit.core.tester")
 sentry_sdk.init(
     integrations=[DjangoIntegration()],
     release=version,

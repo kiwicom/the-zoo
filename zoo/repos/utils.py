@@ -77,7 +77,7 @@ def _parse_file(path, base=None):
         TypeError,
     ) as err:
         log.info(
-            "repos.views.openapi.invalid", path=str(path.relative_to(base)), error=err
+            "repos.utils.openapi.invalid", path=str(path.relative_to(base)), error=err
         )
 
 
@@ -86,29 +86,36 @@ def openapi_definition(repository, request=None, repo_path=None):
     specs = []
 
     if repo_path is None:
+        log.debug("repos.utils.openapi.download", repo=repository)
         with tempfile.TemporaryDirectory() as repo_dir:
             try:
                 repo_path = download_repository(repository, repo_dir)
+                log.debug(
+                    "repos.utils.openapi.downloaded",
+                    repo=repository,
+                    repo_path=repo_path,
+                )
             except (MissingFilesError, RepositoryNotFoundError) as err:
-                log.info("repos.views.openapi.git_error", repo=repository, error=err)
+                log.info("repos.utils.openapi.git_error", repo=repository, error=err)
                 return JsonResponse(
                     {"error": "error downloading repository"}, status=500
                 )
+    log.info("repos.utils.openapi.storage", repo_path=repo_path)
 
     for ext in ("json", "yml", "yaml"):
         for path in repo_path.glob(f"**/*.{ext}"):
             if any(directory in str(path) for directory in OPENAPI_SCAN_EXCLUDE):
                 log.debug(
-                    "repos.views.openapi.exclude", repo=repository, file=path.name
+                    "repos.utils.openapi.exclude", repo=repository, file=path.name
                 )
                 continue
 
             fingerprint = f"{ext}-{hashlib.md5(path.read_text().encode()).hexdigest()}"
-            log.debug("repos.views.openapi.scan", repo=repository, file=path.name)
+            log.debug("repos.utils.openapi.scan", repo=repository, file=path.name)
 
             if specification := redis_conn.get(fingerprint):
                 log.debug(
-                    "repos.views.openapi.cache_hit",
+                    "repos.utils.openapi.cache_hit",
                     repo=repository,
                     file=path.name,
                     fingerprint=fingerprint,
@@ -118,7 +125,7 @@ def openapi_definition(repository, request=None, repo_path=None):
                 # changed at all
                 if specification != OPENAPI_INVALID_MARKER:
                     log.debug(
-                        "repos.views.openapi.cache_invalid",
+                        "repos.utils.openapi.cache_invalid",
                         repo=repository,
                         fingerprint=fingerprint,
                     )
@@ -135,10 +142,10 @@ def openapi_definition(repository, request=None, repo_path=None):
                     ex=OPENAPI_FINGERPRINT_MAX_AGE,
                 )
                 log.debug(
-                    "repos.views.openapi.cache_store",
+                    "repos.utils.openapi.cache_store",
                     repo=repository,
                     fingerprint=fingerprint,
                 )
 
-    log.info("repos.views.openapi.done", repo=repository, specs=len(specs))
+    log.info("repos.utils.openapi.done", repo=repository, specs=len(specs))
     return list(filter(None, specs))

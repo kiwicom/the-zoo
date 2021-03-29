@@ -1,5 +1,8 @@
+import tempfile
+from pathlib import Path
+
+import fakeredis
 import pytest
-from gitlab import GitlabGetError, GitlabListError
 
 import zoo.repos.utils as uut
 from zoo.repos.exceptions import MissingFilesError, RepositoryNotFoundError
@@ -89,3 +92,35 @@ def test_download_repository__custom_sha(fake_dir, repo_archive, repository, moc
 
     m_get_project.assert_called_once_with(repository.remote_id)
     m_download_archive.assert_called_once_with(mocker.sentinel.project, mocker.ANY, sha)
+
+
+@pytest.mark.parametrize("repository__provider", [item.value for item in Provider])
+def test_openapi_definition(fake_path, repo_archive, repository, mocker):
+    scm_module = get_scm_module(repository.provider)
+    m_get_project = mocker.patch.object(
+        scm_module, "get_project", return_value=mocker.sentinel.project
+    )
+    m_download_archive = mocker.patch.object(
+        scm_module, "download_archive", return_value=repo_archive
+    )
+
+    fake_path.mkdir(parents=True, exist_ok=True)
+    mocker.patch("tempfile.mkdtemp", return_value=str(fake_path))
+    mocker.patch("zoo.repos.utils.OPENAPI_SCAN_EXCLUDE", [])
+
+    def redis(**kwargs):
+        return fakeredis.FakeStrictRedis(**kwargs)
+
+    mocker.patch("zoo.base.redis.get_connection", redis)
+
+    specs = uut.openapi_definition(repository)
+
+    m_get_project.assert_called_once_with(repository.remote_id)
+    m_download_archive.assert_called_once_with(
+        mocker.sentinel.project, mocker.ANY, None
+    )
+
+    assert len(specs) == 1  # spec is readable
+    assert specs[0]["info"]["title"] == "Petstore"
+    assert specs[0]["info"]["version"] == "1.0.0"
+    assert not fake_path.exists()  # cleaned up

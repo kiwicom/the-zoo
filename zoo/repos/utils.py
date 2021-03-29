@@ -1,13 +1,13 @@
 import hashlib
 import importlib
 import json
+import shutil
 import tarfile
 import tempfile
 from pathlib import Path
 
 import structlog
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import JsonResponse
 from prance import ResolvingParser, ValidationError
 from prance.util.formats import ParseError
 from prance.util.url import ResolutionError
@@ -83,23 +83,28 @@ def _parse_file(path, base=None):
 
 def openapi_definition(repository, request=None, repo_path=None):
     redis_conn = redis.get_connection(decode_responses=True)
+    tmp_dir = None
     specs = []
 
     if repo_path is None:
-        log.debug("repos.utils.openapi.download", repo=repository)
-        with tempfile.TemporaryDirectory() as repo_dir:
-            try:
-                repo_path = download_repository(repository, repo_dir)
-                log.debug(
-                    "repos.utils.openapi.downloaded",
-                    repo=repository,
-                    repo_path=repo_path,
-                )
-            except (MissingFilesError, RepositoryNotFoundError) as err:
-                log.info("repos.utils.openapi.git_error", repo=repository, error=err)
-                return JsonResponse(
-                    {"error": "error downloading repository"}, status=500
-                )
+        try:
+            log.debug("repos.utils.openapi.download", repo=repository)
+            tmp_dir = tempfile.mkdtemp()
+            repo_path = download_repository(repository, tmp_dir)
+            log.debug(
+                "repos.utils.openapi.downloaded",
+                repo=repository,
+                repo_path=repo_path,
+            )
+        except (
+            FileExistsError,
+            PermissionError,
+            MissingFilesError,
+            RepositoryNotFoundError,
+        ) as err:
+            log.info("repos.utils.openapi.download_error", repo=repository, error=err)
+            return []
+
     log.info("repos.utils.openapi.storage", repo_path=repo_path)
 
     for ext in ("json", "yml", "yaml"):
@@ -146,6 +151,9 @@ def openapi_definition(repository, request=None, repo_path=None):
                     repo=repository,
                     fingerprint=fingerprint,
                 )
+
+    if tmp_dir is not None:
+        shutil.rmtree(tmp_dir)
 
     log.info("repos.utils.openapi.done", repo=repository, specs=len(specs))
     return list(filter(None, specs))

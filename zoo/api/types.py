@@ -430,3 +430,19 @@ class CheckResult(graphene.ObjectType):
 
     def resolve_description(self, info):
         return self.kind.format_description(self.details)
+
+
+class SearchResult(graphene.ObjectType):
+    dependency = graphene.Field(Dependency)
+    service = graphene.Field(Service)
+
+    class Meta:
+        interfaces = (relay.Node,)
+
+
+class SearchResultsConnection(relay.Connection):
+    total_analytics_count = graphene.Int()
+    total_services_count = graphene.Int()
+
+    class Meta:
+        node = SearchResult

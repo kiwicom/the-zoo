@@ -1,4 +1,5 @@
 import json
+from enum import Enum
 
 import meilisearch
 import structlog
@@ -12,12 +13,20 @@ from zoo.utils import model_instance_to_json_object
 log = structlog.get_logger()
 
 
+class IndexType(Enum):
+    Service = "services"
+    Dependency = "analytics"
+
+
 class Indexer:
     def __init__(self):
         self.meiliclient = meilisearch.Client(
             settings.MEILI_HOST, settings.MEILI_MASTER_KEY
         )
-        self.models_to_index = [(Service, "services"), (Dependency, "analytics")]
+        self.models_to_index = [
+            (Service, IndexType.Service.value),
+            (Dependency, IndexType.Dependency.value),
+        ]
 
     def index_specified_models(self):
         for model, index_name in self.models_to_index:
@@ -27,9 +36,9 @@ class Indexer:
                     serialized_model_instance["fields"][
                         "id"
                     ] = serialized_model_instance["pk"]
-                    self.meiliclient.get_index(index_name).update_documents(
-                        [serialized_model_instance["fields"]]
-                    )
+                    self.meiliclient.get_or_create_index(
+                        index_name, {"name": model.__name__}
+                    ).update_documents([serialized_model_instance["fields"]])
                 # deepcode ignore W0703: Multiple Possible Exceptions
                 except Exception as err:
                     log.info(
@@ -47,7 +56,7 @@ class Indexer:
             json_definition = json.loads(definition)
             try:
                 json_definition["id"] = key
-                self.meiliclient.get_index("open-api").update_documents(
+                self.meiliclient.get_or_create_index("open-api").update_documents(
                     [{json_definition}]
                 )
             # deepcode ignore W0703: Multiple Possible Exceptions

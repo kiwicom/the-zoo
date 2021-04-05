@@ -131,6 +131,12 @@ class LibraryList(generic_views.ListView):
 
         return queryset.order_by("name")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["project_links"] = ["Support", "Repository", "Documentation"]
+        return context
+
 
 class LibraryUpdate(LibraryMixin, generic_views.UpdateView):
     form_class = forms.LibraryForm

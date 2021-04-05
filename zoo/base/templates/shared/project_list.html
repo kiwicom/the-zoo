@@ -2,109 +2,18 @@
 {% load static %}
 {% load utils %}
 
-{% block navtitle %}
-  {{ block.super }}
-  <div class="ui right aligned category fluid search project-filter">
-    <div class="ui left labeled icon fluid input">
-      <div class="ui basic label" data-html='<h5>Filter {{ project_type }} like</h5><p><code>name="vaporizer"</code><br><code>owner="booking" and status="production"</code><br>or<br><a href="https://github.com/ivelum/djangoql#language-reference" target="_blank" rel="noopener noreferrer">Check language reference</a><br></p>'>
-        <i class="info icon"></i>
-      </div>
-      <input class="prompt" type="text" placeholder="Search {{ project_type }}..." tabindex="1">
-      <i class="search icon"></i>
-    </div>
-    <div class="results"></div>
-  </div>
-{% endblock %}
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{% static 'project_list.css' %}">
 {% endblock %}
 
 {% block content %}
-{% for object in object_list %}
-<div class="ui project segment">
-  <h3 class="ui header">
-    <span>
-      <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
-      <small>
-        ·
-        owned by
-        {% if object.owner_url %}
-          <a href="{{ object.owner_url }}">{{ object.owner }}</a>
-          {% else %}
-          {{ object.owner }}
-        {% endif %}
-      </small>
-    </span>
-
-    {% spaceless %}
-    <div class="flex-horizontal tags-wrapper">
-      {% if object.status %}
-      <a class="ui {% label_color 'status' object.status %} circular label">status:{{ object.status }}</a>
-      {% endif %}
-      {% if object.impact %}
-      <a class="ui {% label_color 'impact' object.impact %} circular label">impact:{{ object.impact }}</a>
-      {% endif %}
-    </div>
-    {% endspaceless %}
-
-  </h3>
-  <div class="flex-horizontal actions-wrapper">
-    {% block project_links %}
-    {% endblock %}
-  </div>
-</div>
-{% empty %}
-<div class="ui basic segment">
-  <div class="ui very padded placeholder segment">
-    <div class="ui icon header">
-      <i class="huge grin beam sweat outline icon"></i>
-      <br>
-      <div class="content">
-        Oops! We couldn't find your thing...
-        <div class="sub header">
-          Make sure the query is correct or add the project if needed
-        </div>
-      </div>
-    </div>
-    <br>
-    <a href="{% url project_create_view %}" class="ui yellow black-text button">Add project</a>
-  </div>
-</div>
-{% endfor %}
-{% if is_paginated %}
-<div class="ui basic center aligned segment">
-  <div class="ui pagination menu">
-    {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="item">
-      <i class="chevron left icon"></i>
-    </a>
-    {% else %}
-    <div class="active item">
-      <i class="chevron left icon"></i>
-    </div>
-    {% endif %}
-    <div class="item">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
-    {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="item">
-      <i class="chevron right icon"></i>
-    </a>
-    {% else %}
-    <div class="active item">
-      <i class="chevron right icon"></i>
-    </div>
-    {% endif %}
-  </div>
-</div>
-{% endif %}
-
-<a href="{% url project_create_view %}">
-  <button class="ui huge yellow corner circular icon button">
-    <i class="ui plus icon"></i>
-  </button>
-</a>
+  {% with object_list=object_list project_create_view=project_create_view is_paginated=is_paginated page_obj=page_obj request=request project_links=project_links %}
+  {% include 'shared/base_list.html' %}
+  {% endwith %}
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'project_list.js' %}"></script>
+  {{ block.super }}
+  <script src="{% static 'project_list.js' %}"></script>
 {% endblock %}

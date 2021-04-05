@@ -1,0 +1,41 @@
+{% load utils %}
+
+<table class="ui sortable very basic table" summary="List of resources">
+  <thead>
+  <tr>
+    <th scope="col" class="sorted collapsing">Usage</th>
+    <th scope="col" class="collapsing">Name</th>
+    <th scope="col" class="">Latest version</th>
+    <th scope="col" class="center aligned collapsing">Kind</th>
+    <th scope="col" class="center aligned collapsing">Type</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for object in dependencies %}
+    {% url 'dependency_detail' object.id as detail_url %}
+    <tr>
+      <td class="right aligned">{{ object.depusage.all.count }}</td>
+      <td><a href="{{ detail_url }}" style="white-space: nowrap">{{ object.name }}</a></td>
+      {% with object.depusage|dependency_versions:1 as version %}
+        <td>{% if version.0.0 %}<span class="ui label">{{ version.0.0 }}</span>{% endif %}</td>
+      {% endwith %}
+        <td class="center aligned">
+          {% if "Library" in object.type %}
+          <div class="ui label">
+            {% if "kiwi-" in object.name %}
+              Internal
+            {% else %}
+              External
+            {% endif %}
+          </div>
+          {% endif %}
+        </td>
+      <td class="center aligned">
+        <div class="ui {% label_color 'language' object.type %} label">
+            {{ object.type }}
+        </div>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>

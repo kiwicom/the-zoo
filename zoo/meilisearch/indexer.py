@@ -1,4 +1,5 @@
 import json
+from enum import Enum
 
 import meilisearch
 import structlog
@@ -12,12 +13,20 @@ from zoo.utils import model_instance_to_json_object
 log = structlog.get_logger()
 
 
+class IndexType(Enum):
+    Service = "services"
+    Dependency = "analytics"
+
+
 class Indexer:
     def __init__(self):
         self.meiliclient = meilisearch.Client(
             settings.MEILI_HOST, settings.MEILI_MASTER_KEY
         )
-        self.models_to_index = [(Service, "services"), (Dependency, "analytics")]
+        self.models_to_index = [
+            (Service, IndexType.Service.value),
+            (Dependency, IndexType.Dependency.value),
+        ]
 
     def index_specified_models(self):
         for model, index_name in self.models_to_index:

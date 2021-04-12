@@ -41,7 +41,7 @@
   {% for form in envs_formset %}
     <div class="ui secondary segment environment" {% if not form.has_changed and forloop.counter > 1 %}style="display: none"{% endif %}>
       <div class="ui top left attached label paddingless gitlab-img" {% if form.type != env_type_gitlab %} style="display: none"{% endif %}>
-        <img src="{% static 'img/gitlab-icon-rgb.svg' %}" alt="gitlab">
+        <img src="{% static 'img/gitlab-icon.svg' %}" alt="gitlab">
       </div>
       {% if forloop.counter > 1 and form.type != env_type_gitlab %}
         <div class="ui top right attached label paddingless">

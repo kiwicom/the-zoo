@@ -60,6 +60,14 @@ class EnvironmentForm(forms.ModelForm):
         }
 
 
+class LinkForm(forms.ModelForm):
+    class Meta:
+        model = models.Link
+        fields = ["name", "url", "icon"]
+
+    labels = {"name": "Name", "url": "URL", "icon": "Icon"}
+
+
 class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
 
     namespace = "service_"
@@ -170,6 +178,15 @@ ServiceEnvironmentsFormSet = forms.inlineformset_factory(
     models.Service,
     models.Environment,
     form=EnvironmentForm,
+    extra=5,
+    max_num=5,
+    can_delete=True,
+)
+
+ServiceLinksFormSet = forms.inlineformset_factory(
+    models.Service,
+    models.Link,
+    form=LinkForm,
     extra=5,
     max_num=5,
     can_delete=True,

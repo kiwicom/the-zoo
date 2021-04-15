@@ -52,7 +52,25 @@ class ServiceEnvironmentMixin:
         return super().form_valid(form)
 
 
-class ServiceCreate(ServiceEnvironmentMixin, generic_views.CreateView):
+class ServiceLinkMixin:
+    def form_valid(self, form):
+        context = self.get_context_data()
+        links_formset = context["links_formset"]
+        with transaction.atomic():
+            self.object = form.save()
+            log.info(form.data)
+
+            if links_formset.is_valid():
+                links_formset.instance = self.object
+                links_formset.save()
+            else:
+                return self.form_invalid(form)
+        return super().form_valid(form)
+
+
+class ServiceCreate(
+    ServiceEnvironmentMixin, ServiceLinkMixin, generic_views.CreateView
+):
     form_class = forms.ServiceForm
     model = form_class.Meta.model
 
@@ -60,8 +78,10 @@ class ServiceCreate(ServiceEnvironmentMixin, generic_views.CreateView):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet(self.request.POST)
+            data["links_formset"] = forms.ServiceLinksFormSet(self.request.POST)
         else:
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet()
+            data["links_formset"] = forms.ServiceLinksFormSet()
         return data
 
 
@@ -186,7 +206,9 @@ class ServiceList(generic_views.ListView):
         return queryset.order_by("name")
 
 
-class ServiceUpdate(ServiceEnvironmentMixin, ServiceMixin, generic_views.UpdateView):
+class ServiceUpdate(
+    ServiceEnvironmentMixin, ServiceLinkMixin, ServiceMixin, generic_views.UpdateView
+):
     form_class = forms.ServiceForm
     model = form_class.Meta.model
 
@@ -196,10 +218,14 @@ class ServiceUpdate(ServiceEnvironmentMixin, ServiceMixin, generic_views.UpdateV
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet(
                 self.request.POST, instance=self.object
             )
+            data["links_formset"] = forms.ServiceLinksFormSet(
+                self.request.POST, instance=self.object
+            )
         else:
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet(
                 instance=self.object
             )
+            data["links_formset"] = forms.ServiceLinksFormSet(instance=self.object)
         return data
 
 

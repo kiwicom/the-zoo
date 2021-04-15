@@ -95,11 +95,52 @@ class Environment(graphene.ObjectType):
         interfaces = (relay.Node,)
 
 
+class Link(graphene.ObjectType):
+    name = graphene.String()
+    url = graphene.List(graphene.String)
+    icon = graphene.String()
+    service = graphene.Field(lambda: Service)
+
+    @classmethod
+    def from_db(cls, link):
+        return cls(
+            id=link.id,
+            name=link.name,
+            url=link.url,
+            icon=link.icon,
+            service=link.service_id,
+        )
+
+    @classmethod
+    def get_node(cls, info, link_id):
+        try:
+            link = services_models.Link.objects.get(id=link_id)
+            return cls.from_db(link)
+        except ObjectDoesNotExist:
+            return None
+
+    def resolve_service(self, info):
+        try:
+            return Service.from_db(services_models.Service.objects.get(id=self.service))
+        except ObjectDoesNotExist:
+            return None
+
+    class Meta:
+        interfaces = (relay.Node,)
+
+
 class EnvironmentConnection(relay.Connection):
     total_count = graphene.Int()
 
     class Meta:
         node = Environment
+
+
+class LinkConnection(relay.Connection):
+    total_count = graphene.Int()
+
+    class Meta:
+        node = Link
 
 
 class Service(graphene.ObjectType):
@@ -112,6 +153,7 @@ class Service(graphene.ObjectType):
     pagerduty_service = graphene.String()
     docs_url = graphene.String()
     all_environments = relay.ConnectionField(EnvironmentConnection)
+    all_links = relay.ConnectionField(LinkConnection)
 
     @classmethod
     def from_db(cls, service):

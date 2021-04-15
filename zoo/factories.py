@@ -19,7 +19,7 @@ from zoo.auditing.check_discovery import Kind
 from zoo.auditing.models import Issue
 from zoo.datacenters.models import InfraNode
 from zoo.repos.models import Repository
-from zoo.services.models import Environment, Impact, Service, Status, Tier
+from zoo.services.models import Environment, Impact, Link, Service, Status, Tier
 
 
 class RepositoryFactory(DjangoModelFactory):
@@ -116,6 +116,15 @@ class DependencyUsageFactory(DjangoModelFactory):
     dependency = SubFactory(DependencyFactory)
     repo = SubFactory(RepositoryFactory)
     for_production = choice(["t", "f"])
+
+
+class LinkFactory(DjangoModelFactory):
+    class Meta:
+        model = Link
+
+    name = Faker("domain_word")
+    url = Faker("uri")
+    service = SubFactory(ServiceFactory)
 
 
 class KindFactory(Factory):

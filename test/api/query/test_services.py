@@ -121,6 +121,39 @@ def generate_services_with_environments(service_factory, environment_factory):
     )
 
 
+@pytest.fixture
+def generate_services_with_links(service_factory, link_factory):
+    service = service_factory(
+        id=1,
+        name="martinez",
+        owner="michaelbennett",
+        impact="profit",
+        docs_url="https://docsurl",
+        pagerduty_service="/services",
+        slack_channel="https://slackchannel",
+        status="fixed",
+        repository__id=78,
+        repository__remote_id=239,
+        repository__owner="jasckson",
+        repository__name="thiwer",
+        repository__url="https://gitlab.com/thiwer/thiwer",
+    )
+    link_factory(
+        id=1,
+        service=service,
+        name="Datadog",
+        url="https://datadog.com",
+        icon="datadog",
+    )
+    link_factory(
+        id=2,
+        service=service,
+        name="Sentry",
+        url="https://sentry.com",
+        icon="Sentry",
+    )
+
+
 def test_empty(snapshot, call_api):
     query = """
     query {
@@ -352,6 +385,52 @@ def test_last_before(snapshot, call_api, generate_services):
             slackChannel
             pagerdutyService
             docsUrl
+          }
+        }
+        pageInfo {
+            hasPreviousPage
+            hasNextPage
+            startCursor
+            endCursor
+        }
+      }
+    }
+    """
+    response = call_api(query)
+    snapshot.assert_match(response)
+
+
+def test_with_links(snapshot, call_api, generate_services_with_links):
+    query = """
+    query {
+      allServices {
+        totalCount
+        edges {
+          node {
+            id
+            name
+            owner
+            status
+            impact
+            slackChannel
+            pagerdutyService
+            docsUrl
+            allLinks {
+              totalCount
+              edges {
+                node {
+                  name
+                  url
+                  icon
+                }
+              }
+              pageInfo {
+                  hasPreviousPage
+                  hasNextPage
+                  startCursor
+                  endCursor
+              }
+            }
           }
         }
         pageInfo {

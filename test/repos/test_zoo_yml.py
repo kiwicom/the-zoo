@@ -9,7 +9,9 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def generate_services_with_environments(service_factory, environment_factory):
+def generate_services_with_environments_and_links(
+    service_factory, environment_factory, link_factory
+):
     service = service_factory(
         id=1,
         name="martinez",
@@ -39,11 +41,20 @@ def generate_services_with_environments(service_factory, environment_factory):
         name="staging",
         service_urls=["https://serviceurl1", "https://serviceurl2"],
         dashboard_url="https://dashboardurl",
-        health_check_url="https://healthcheckurl",
+    )
+    link_factory(
+        id=1,
+        name="Datadog",
+        url="https://dashboard.datadog.com",
+        icon="poop",
+        service=service,
+    )
+    link_factory(
+        id=2, name="Sentry", url="https://dashboard.sentry.com", service=service
     )
 
 
-def test_generate(generate_services_with_environments):
+def test_generate(generate_services_with_environments_and_links):
     expected = """
 type: service
 name: martinez
@@ -65,10 +76,17 @@ environments:
   - https://serviceurl2
 - name: staging
   dashboard_url: https://dashboardurl
-  health_check_url: https://healthcheckurl
+  health_check_url: null
   service_urls:
   - https://serviceurl1
   - https://serviceurl2
+links:
+- name: Datadog
+  url: https://dashboard.datadog.com
+  icon: poop
+- name: Sentry
+  url: https://dashboard.sentry.com
+  icon: null
 """
     service_1 = Service.objects.get(pk=1)
     content = uut.generate(service_1)

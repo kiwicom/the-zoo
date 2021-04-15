@@ -3,7 +3,11 @@ from faker import Faker
 
 from zoo.instance.models import Helpers, Placeholders
 from zoo.repos.models import Repository
-from zoo.services.forms import ServiceEnvironmentsFormSet, ServiceForm
+from zoo.services.forms import (
+    ServiceEnvironmentsFormSet,
+    ServiceForm,
+    ServiceLinksFormSet,
+)
 from zoo.services.models import Service
 
 pytestmark = pytest.mark.django_db
@@ -120,8 +124,30 @@ service_environments_form__set_data = {
 }
 
 
+service_links_form__set_data = {
+    "links-TOTAL_FORMS": "2",
+    "links-INITIAL_FORMS": "0",
+    "links-MIN_NUM_FORMS": "2",
+    "links-MAX_NUM_FORMS": "2",
+    "links-0-name": fake.word(),
+    "links-0-url": fake.url(),
+    "links-0-icon": fake.word(),
+    "links-0-DELETE": False,
+    "links-1-name": fake.word(),
+    "links-1-url": fake.url(),
+    "links-1-icon": fake.word(),
+    "links-1-DELETE": False,
+}
+
+
 def test_service_environment_formset__complete__correct(repository):
     form = ServiceEnvironmentsFormSet(data=service_environments_form__set_data)
+
+    assert form.is_valid()
+
+
+def test_service_link_formset__complete__correct(repository):
+    form = ServiceLinksFormSet(data=service_links_form__set_data)
 
     assert form.is_valid()
 
@@ -132,3 +158,9 @@ def test_service_environment_formset__complete__incorrect(repository):
     )
     assert not form.is_valid()
     assert form.forms[0].errors == {"dashboard_url": ["Enter a valid URL."]}
+
+
+def test_service_link_formset__complete__incorrect(repository):
+    form = ServiceLinksFormSet({**service_links_form__set_data, "links-0-url": "-"})
+    assert not form.is_valid()
+    assert form.forms[0].errors == {"url": ["Enter a valid URL."]}

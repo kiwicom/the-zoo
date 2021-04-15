@@ -244,6 +244,23 @@ class SentryIssueStats(models.Model):
     )
 
 
+class Link(models.Model):
+    name = models.CharField(max_length=32)
+    icon = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        help_text="https://fomantic-ui.com/elements/icon.html",
+    )
+    url = models.URLField()
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name="links",
+        related_query_name="link",
+    )
+
+
 class ServiceQLSchema(DjangoQLSchema):
     include = (Service, Environment)
 

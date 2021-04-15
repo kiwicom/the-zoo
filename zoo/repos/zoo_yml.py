@@ -53,6 +53,17 @@ ZOO_JSON_SCHEMA = """
                             type: string
                     health_check_url:
                         type: ["string", "null"]
+        links:
+            type: array
+            items:
+                type: object
+                properties:
+                    name:
+                        type: string
+                    url:
+                        type: string
+                    icon:
+                        type: ["string", "null"]
     additionalProperties: false
     required:
         - type
@@ -89,6 +100,7 @@ def generate(service: Service) -> str:
         "pagerduty_service": service.pagerduty_service,
         "tags": service.tags,
         "environments": [],
+        "links": [],
     }
 
     for env in service.environments.all():
@@ -99,5 +111,14 @@ def generate(service: Service) -> str:
             "service_urls": env.service_urls,
         }
         result["environments"].append(environ)
+
+    for link in service.links.all():
+        result["links"].append(
+            {
+                "name": link.name,
+                "url": link.url,
+                "icon": link.icon,
+            }
+        )
 
     return dump(result, sort_keys=False)

@@ -1,7 +1,8 @@
 import { errorApiRef, useApi } from '@backstage/core';
 import { useContext, useEffect } from 'react';
-import { AppContext, STORAGE_KEY } from './AppState';
+import { API_AUTH_KEY } from 'zoo-api';
 import { Settings } from './types';
+import { AppContext } from './AppState'
 
 export function useSettings() {
   const [settings, dispatch] = useContext(AppContext);
@@ -11,8 +12,8 @@ export function useSettings() {
   useEffect(() => {
     const rehydrate = () => {
       try {
-        const stateFromStorage = JSON.parse(
-          localStorage.getItem(STORAGE_KEY)!,
+          const stateFromStorage = JSON.parse(
+              localStorage.getItem(API_AUTH_KEY)!,
         );
         if (
           stateFromStorage &&
@@ -33,7 +34,7 @@ export function useSettings() {
   }, [dispatch, errorApi, settings]);
 
   const persist = (state: Settings) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    localStorage.setItem(API_AUTH_KEY, JSON.stringify(state));
   };
 
   return [

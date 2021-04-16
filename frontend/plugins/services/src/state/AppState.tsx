@@ -6,7 +6,6 @@ export type { SettingsState };
 export const AppContext = React.createContext<[State, Dispatch<Action>]>(
   [] as any,
 );
-export const STORAGE_KEY = "the-zoo.api.token";
 
 const initialState: State = {
   token: '',

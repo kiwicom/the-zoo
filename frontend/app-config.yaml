@@ -1,6 +1,7 @@
 app:
   title: Hangar App
   baseUrl: http://localhost:3000
+  useApiTokenAuth: false
 
 organization:
   name: Kiwi.com

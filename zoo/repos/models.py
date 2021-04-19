@@ -100,5 +100,5 @@ class RepositoryEnvironment(models.Model):
         related_query_name="repository_environment",
     )
 
-    name = models.CharField(max_length=100)
-    external_url = models.CharField(max_length=100, null=True)
+    name = models.CharField(max_length=200)
+    external_url = models.CharField(max_length=300, null=True)

@@ -217,13 +217,17 @@ def get_zoo_file_content(proj: Dict) -> str:
 
 def sync_enviroments_from_gitlab(repo: Repository):
     gl_envs = get_project_enviroments(repo.remote_id)
+
+    if not gl_envs:
+        return
+
     envs = []
     for gl_env in gl_envs:
         env, _ = RepositoryEnvironment.objects.get_or_create(
-            repository_id=repo.id,
-            name=gl_env.name,
-            external_url=gl_env.external_url,
+            repository_id=repo.id, name=gl_env.name
         )
+        env.external_url = gl_env.external_url
+        env.save()
         envs.append(env)
 
     RepositoryEnvironment.objects.filter(repository_id=repo.id).exclude(
@@ -240,6 +244,6 @@ def sync_enviroments_from_gitlab(repo: Repository):
             Environment.objects.update_or_create(
                 service_id=service.id,
                 name=env.name,
-                external_url=env.external_url,
+                dashboard_url=env.external_url,
                 type=EnviromentType.GITLAB.value,
             )

@@ -33,6 +33,9 @@ def get_gitlab_envs(request):
     if not project_id:
         return JsonResponse({"message": "Missing project_id"}, safe=False)
 
+    if not project_id.isdigit():
+        return JsonResponse({"message": "project_id is not a numeric"}, safe=False)
+
     try:
         repo = Repository.objects.get(id=project_id, provider=Provider.GITLAB.value)
     except RepositoryNotFoundError:

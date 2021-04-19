@@ -54,6 +54,8 @@ const gitlabEnvs = {
     firstSegment.show();
   },
   load: (gitlabEnvsInfo) => {
+    if (Number.isNaN(gitlabEnvsInfo.repoId)) { return }
+
     //delete previous gitlab envs
     gitlabEnvs._resetGilabEnvs(gitlabEnvsInfo.envTypeGitlab)
 

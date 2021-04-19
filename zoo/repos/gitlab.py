@@ -17,7 +17,7 @@ def get_project_enviroments(remote_id):
     try:
         project = gitlab.projects.get(remote_id)
         return project.environments.list(as_list=False)
-    except GitlabGetError:
+    except (GitlabGetError, GitlabListError):
         return []
 
 

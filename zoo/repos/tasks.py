@@ -41,6 +41,8 @@ HTTP_METHODS = (
 
 @shared_task
 def sync_repos():
+
+    i = 0
     for project in itertools.chain(
         get_github_repositories(), get_gitlab_repositories()
     ):
@@ -48,7 +50,8 @@ def sync_repos():
             continue
         if settings.SYNC_REPOS_SKIP_PERSONAL and project["is_personal"]:
             continue
-
+        i += 1
+        log.info("sync_repos.fetch", repo_number=i, project=project)
         try:
             repo = Repository.objects.get(
                 remote_id=project["id"], provider=project["provider"]
@@ -71,7 +74,10 @@ def sync_repos():
         repo.save()
 
         if project["provider"] == "gitlab":
+            log.info("sync_repos.calling.sync_enviroments_from_gitlab")
             sync_enviroments_from_gitlab(repo)
+
+    log.info("sync_repos.total", repo_number=i)
 
 
 @shared_task
@@ -219,16 +225,22 @@ def sync_enviroments_from_gitlab(repo: Repository):
     gl_envs = get_project_enviroments(repo.remote_id)
 
     if not gl_envs:
+        log.info("sync_enviroments_from_gitlab.no_envs")
         return
 
     envs = []
+    i = 0
+    log.info("sync_enviroments_from_gitlab.start")
     for gl_env in gl_envs:
+        if gl_env.state != "available":
+            continue
         env, _ = RepositoryEnvironment.objects.get_or_create(
             repository_id=repo.id, name=gl_env.name
         )
         env.external_url = gl_env.external_url
         env.save()
         envs.append(env)
+        i += 1
 
     RepositoryEnvironment.objects.filter(repository_id=repo.id).exclude(
         id__in=[env.id for env in envs]
@@ -241,9 +253,12 @@ def sync_enviroments_from_gitlab(repo: Repository):
             service_id=service.id, type=EnviromentType.GITLAB.value
         ).exclude(name__in=[env.name for env in envs]).delete()
         for env in envs:
-            Environment.objects.update_or_create(
+            service_env, _ = Environment.objects.get_or_create(
                 service_id=service.id,
                 name=env.name,
-                dashboard_url=env.external_url,
                 type=EnviromentType.GITLAB.value,
             )
+            service_env.dashboard_url = env.external_url
+            service_env.save()
+
+    log.info("sync_enviroments_from_gitlab.total.synced", envs_synced=i)

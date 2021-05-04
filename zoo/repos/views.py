@@ -44,7 +44,8 @@ def get_gitlab_envs(request):
     return JsonResponse(
         [
             {"name": gl_env.name, "dashboardUrl": gl_env.external_url}
-            for gl_env in repo.repository_environments.all()
+            for index, gl_env in enumerate(repo.repository_environments.all())
+            if index < 10
         ],
         safe=False,
     )

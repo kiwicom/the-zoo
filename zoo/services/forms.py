@@ -16,6 +16,7 @@ from ..checklists.forms import TagInput
 from ..repos.forms import RepoInput
 from ..repos.github import get_namespaces as get_github_namespaces
 from ..repos.gitlab import get_namespaces as get_gitlab_namespaces
+from ..repos.models import Provider
 from . import models
 
 
@@ -58,7 +59,6 @@ class EnvironmentForm(forms.ModelForm):
             "logs_url",
             "service_urls",
             "open_api_url",
-            "type",
         ]
         labels = {
             "dashboard_url": "Dashboard URL",
@@ -178,7 +178,25 @@ class ServiceForm(WidgetAttrsMixin, forms.ModelForm):
                 repository.save()
         except (KeyError, AttributeError):
             pass
-        return super().save()
+
+        service = super().save()
+        self.create_gitlab_envs(service)
+        return service
+
+    def create_gitlab_envs(self, service):
+        if not service.repository:
+            return
+
+        if service.repository.provider == Provider.GITHUB:
+            return
+
+        for env in service.repository.repository_environments.all():
+            models.Environment.objects.update_or_create(
+                type=models.EnviromentType.GITLAB,
+                name=env.name,
+                dashboard_url=env.external_url,
+                service_id=service.id,
+            )
 
 
 ServiceEnvironmentsFormSet = forms.inlineformset_factory(

@@ -23,8 +23,6 @@
     initialValue: '{{ widget.value|default:"" }}'
   };
   const gitlabEnvsInfo = {
-    envTypeGitlab: '{{ env_type_gitlab }}',
-    imageUrl: '{% static 'img/gitlab-icon.svg' %}',
     envsUrl: '{% url "get_gitlab_envs" %}'
   }
 </script>

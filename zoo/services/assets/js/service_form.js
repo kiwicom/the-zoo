@@ -94,3 +94,9 @@ $('.icon-hint .label').popup({
     variation: 'inverted',
     position: 'left center'
 });
+
+$(".ui.green.button").on('submit', function(e) {
+  e.preventDefault();
+  $("#gitlab_envs input").prop('disabled', true)
+  $(this).submit();
+});

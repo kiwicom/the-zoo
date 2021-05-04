@@ -16,6 +16,7 @@ class FakeGitlabEnviroment:
         self.name = self.fake.word() if name is None else name
         self.slug = self.fake.word() if slug is None else slug
         self.external_url = self.fake.url() if external_url is None else external_url
+        self.state = "available"
 
 
 class FakeGitProject:

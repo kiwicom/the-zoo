@@ -210,7 +210,7 @@ class Query(graphene.ObjectType):
                 results["hits"], search_index, search_results
             )
 
-            offset = offset + limit
+            offset += limit
 
         return search_results
 

@@ -1,8 +1,10 @@
+from math import ceil
+
 import structlog
 from django.apps import apps
 from django.views.generic import TemplateView
 
-from .meilli_client import meili_client
+from .meili_client import meili_client
 
 log = structlog.get_logger()
 
@@ -29,7 +31,7 @@ class MeiliSearchView(TemplateView):
 
     def _search(self, search_query, index_type, offset=0, limit=meili_limit):
         objects_to_return = {}
-        new_offset = 0
+        new_offset, total_hits = 0, 0
         indexes = meili_client.get_indexes()
         for index in indexes:
             results = meili_client.get_index(index["uid"]).search(
@@ -56,8 +58,8 @@ class MeiliSearchView(TemplateView):
                 "previous_page": None,
             }
 
-        total_pages = int(total_hits / limit)
-        current_page = int((offset + limit) / limit)
+        total_pages = ceil(total_hits / limit)
+        current_page = ceil((offset + limit) / limit)
         next_page = None if total_pages == current_page else current_page + 1
         previous_page = None if next_page == 1 else current_page - 1
 

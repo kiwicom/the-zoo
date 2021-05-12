@@ -1,3 +1,5 @@
+from math import ceil
+
 import graphene
 from django.apps import apps
 from graphene import relay
@@ -5,7 +7,7 @@ from graphene import relay
 from ..analytics.models import Dependency, DependencyType, DependencyUsage
 from ..auditing.models import Issue
 from ..meilisearch.indexer import IndexType
-from ..meilisearch.meilli_client import meili_client
+from ..meilisearch.meili_client import meili_client
 from ..repos.models import Repository
 from ..services.models import Service
 from . import types
@@ -156,12 +158,8 @@ class Query(graphene.ObjectType):
 
     def resolve_all_search_results(self, info, **kwargs):
         paginator = Paginator(**kwargs)
-        query_param = kwargs["search_query"] if "search_query" in kwargs else ""
-        search_type = (
-            kwargs["search_type"]
-            if "search_type" in kwargs
-            else IndexType.Service.value
-        )
+        query_param = kwargs.get("search_query", "")
+        search_type = kwargs.get("search_type", IndexType.Service.value)
 
         indexes = meili_client.get_indexes()
         # get all total counts for each meili index
@@ -177,7 +175,7 @@ class Query(graphene.ObjectType):
 
         # get all results for requested index
         search_results = Query._get_all_for_index(
-            query_param, search_index, total_count[search_index["uid"]]
+            query_param, search_index, total_count.get(search_index["uid"])
         )
         edges = []
         for i, search_result in enumerate(
@@ -197,24 +195,25 @@ class Query(graphene.ObjectType):
 
     @staticmethod
     def _get_all_for_index(query_param, search_index, total_count):
-        offset = 0
-        limit = 100
-        search_results = []
-        while total_count != len(search_results):
+        limit, search_results = 100, []
+
+        if not any([total_count, search_index]):
+            return search_results
+
+        pages = ceil(total_count / limit)
+        for page in range(pages):
             results = meili_client.get_index(search_index["uid"]).search(
-                query=query_param, opt_params={"offset": offset, "limit": limit}
+                query=query_param, opt_params={"offset": page * limit, "limit": limit}
             )
-
-            search_results = Query._objects_from_result(
-                results["hits"], search_index, search_results
+            search_results.extend(
+                Query._objects_from_result(results["hits"], search_index)
             )
-
-            offset += limit
 
         return search_results
 
     @staticmethod
-    def _objects_from_result(search_results, index, result_objects=None):
+    def _objects_from_result(search_results, index):
+        result_objects = []
         try:
             model = apps.get_model(index["uid"], index["name"])
             for i, result in enumerate(search_results):

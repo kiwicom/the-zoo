@@ -15,7 +15,7 @@ class BaseConfig(AppConfig):
         from ..analytics import tasks as analytics_tasks
         from ..auditing import tasks as auditing_tasks
         from ..datacenters import tasks as datacenters_tasks
-        from ..meilisearch import tasks as meilisearch_tasks
+        from ..globalsearch import tasks as meilisearch_tasks
         from ..objectives import tasks as objective_tasks
         from ..repos import tasks as repos_tasks
         from ..services import tasks as service_tasks

@@ -3,7 +3,7 @@ import time
 import pytest
 
 from zoo.analytics.models import Dependency, DependencyType
-from zoo.meilisearch.indexer import Indexer as uut
+from zoo.globalsearch.indexer import Indexer as uut
 from zoo.services.models import Service
 
 pytestmark = pytest.mark.django_db

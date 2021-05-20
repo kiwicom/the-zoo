@@ -9,7 +9,7 @@ from .meili_client import meili_client
 log = structlog.get_logger()
 
 
-class MeiliSearchView(TemplateView):
+class GlobalSearchView(TemplateView):
     template_name = "search_overview.html"
     context_object_name = "context"
     meili_limit = 20

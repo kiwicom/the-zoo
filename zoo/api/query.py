@@ -6,8 +6,8 @@ from graphene import relay
 
 from ..analytics.models import Dependency, DependencyType, DependencyUsage
 from ..auditing.models import Issue
-from ..meilisearch.indexer import IndexType
-from ..meilisearch.meili_client import meili_client
+from ..globalsearch.indexer import IndexType
+from ..globalsearch.meili_client import meili_client
 from ..repos.models import Repository
 from ..services.models import Service
 from . import types
@@ -217,12 +217,12 @@ class Query(graphene.ObjectType):
         try:
             model = apps.get_model(index["uid"], index["name"])
             for i, result in enumerate(search_results):
-                object = model.objects.get(pk=result["id"])
+                model_object = model.objects.get(pk=result["id"])
                 if index["name"] == IndexType.Dependency.name:
-                    dependency = types.Dependency.from_db(object)
+                    dependency = types.Dependency.from_db(model_object)
                     node = types.SearchResult(id=i, dependency=dependency)
                 if index["name"] == IndexType.Service.name:
-                    service = types.Service.from_db(object)
+                    service = types.Service.from_db(model_object)
                     node = types.SearchResult(id=i, service=service)
                 result_objects.append(node)
         except LookupError:

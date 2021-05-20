@@ -25,6 +25,6 @@ def test_search_result():
         "Service": [service],
         "Schema": [],
     }
-    with patch("zoo.meilisearch.views.MeiliSearchView") as mock_view:
+    with patch("zoo.globalsearch.views.GlobalSearchView") as mock_view:
         mock_view.get_context_data.return_value = expected_result
         assert expected_result == mock_view.get_context_data()

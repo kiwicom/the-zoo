@@ -1,6 +1,6 @@
 from celery import shared_task
 
-from zoo.meilisearch.indexer import Indexer
+from zoo.globalsearch.indexer import Indexer
 
 
 @shared_task

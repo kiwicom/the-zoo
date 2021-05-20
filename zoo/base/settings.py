@@ -107,7 +107,7 @@ INSTALLED_APPS = [
     "zoo.datacenters.apps.DatacentersConfig",
     "zoo.instance.apps.InstanceConfig",
     "zoo.libraries.apps.LibrariesConfig",
-    "zoo.meilisearch.apps.MeiliSearchConfig",
+    "zoo.globalsearch.apps.GlobalSearchConfig",
     "zoo.objectives.apps.ObjectivesConfig",
     "zoo.pagerduty.apps.PagerdutyConfig",
     "zoo.repos.apps.ReposConfig",

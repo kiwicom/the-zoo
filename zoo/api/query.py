@@ -1,14 +1,20 @@
+from math import ceil
+
 import graphene
+from django.apps import apps
 from graphene import relay
 
 from ..analytics.models import Dependency, DependencyType, DependencyUsage
 from ..auditing.models import Issue
+from ..globalsearch.indexer import IndexType
+from ..globalsearch.meili_client import meili_client
 from ..repos.models import Repository
 from ..services.models import Service
 from . import types
 from .paginator import Paginator
 
 DependencyTypeEnum = graphene.Enum.from_enum(DependencyType)
+SearchTypeEnum = graphene.Enum.from_enum(IndexType)
 
 
 class Query(graphene.ObjectType):
@@ -34,6 +40,13 @@ class Query(graphene.ObjectType):
     all_dependency_usages = relay.ConnectionField(
         types.DependencyUsageConnection,
         description="List of dependency usages. Returns first 10 nodes if pagination is not specified.",
+    )
+
+    all_search_results = relay.ConnectionField(
+        types.SearchResultsConnection,
+        description="List of search results. Returns first 10 nodes if pagination is not specified.",
+        search_query=graphene.String(),
+        search_type=SearchTypeEnum(),
     )
 
     def resolve_all_issues(self, info, **kwargs):
@@ -142,3 +155,77 @@ class Query(graphene.ObjectType):
         return types.DependencyUsageConnection(
             page_info=page_info, edges=edges, total_count=total
         )
+
+    def resolve_all_search_results(self, info, **kwargs):
+        paginator = Paginator(**kwargs)
+        query_param = kwargs.get("search_query", "")
+        search_type = kwargs.get("search_type", IndexType.Service.value)
+
+        indexes = meili_client.get_indexes()
+        # get all total counts for each meili index
+        search_index = None
+        total_count = {}
+        for index in indexes:
+            total_count[index["uid"]] = meili_client.get_index(index["uid"]).search(
+                query=query_param, opt_params={"offset": 0, "limit": 1}
+            )["nbHits"]
+
+            if index["uid"] == search_type:
+                search_index = index
+
+        # get all results for requested index
+        search_results = Query._get_all_for_index(
+            query_param, search_index, total_count.get(search_index["uid"])
+        )
+        edges = []
+        for i, search_result in enumerate(
+            search_results[paginator.slice_from : paginator.slice_to]
+        ):
+            cursor = paginator.get_edge_cursor(i + 1)
+            edges.append(
+                types.SearchResultsConnection.Edge(node=search_result, cursor=cursor)
+            )
+
+        return types.SearchResultsConnection(
+            page_info=paginator.get_page_info(total_count[search_type]),
+            edges=edges,
+            total_services_count=total_count[IndexType.Service.value],
+            total_analytics_count=total_count[IndexType.Dependency.value],
+        )
+
+    @staticmethod
+    def _get_all_for_index(query_param, search_index, total_count):
+        limit, search_results = 100, []
+
+        if not any([total_count, search_index]):
+            return search_results
+
+        pages = ceil(total_count / limit)
+        for page in range(pages):
+            results = meili_client.get_index(search_index["uid"]).search(
+                query=query_param, opt_params={"offset": page * limit, "limit": limit}
+            )
+            search_results.extend(
+                Query._objects_from_result(results["hits"], search_index)
+            )
+
+        return search_results
+
+    @staticmethod
+    def _objects_from_result(search_results, index):
+        result_objects = []
+        try:
+            model = apps.get_model(index["uid"], index["name"])
+            for i, result in enumerate(search_results):
+                model_object = model.objects.get(pk=result["id"])
+                if index["name"] == IndexType.Dependency.name:
+                    dependency = types.Dependency.from_db(model_object)
+                    node = types.SearchResult(id=i, dependency=dependency)
+                if index["name"] == IndexType.Service.name:
+                    service = types.Service.from_db(model_object)
+                    node = types.SearchResult(id=i, service=service)
+                result_objects.append(node)
+        except LookupError:
+            pass
+
+        return result_objects

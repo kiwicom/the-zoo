@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load utils %}
+
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'project_list.css' %}">
+{% endblock %}
+
+{% block menu %}
+  {% with selected='search_overview' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block navtitle %}
+  {% with icon='search' header='Search Results' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+  {% if not total_service and not total_dependency %}
+    <div class="ui basic segment">
+      <div class="ui very padded placeholder segment">
+        <div class="ui icon header">
+          <i class="huge grin beam sweat outline icon"></i>
+          <br>
+          <div class="content">
+            Oops! We couldn't find your thing...
+            <div class="sub header">
+              Make sure the query is correct
+            </div>
+          </div>
+        </div>
+        <br>
+      </div>
+    </div>
+  {% else  %}
+    <nav class="ui container secondary pointing menu">
+      <a href="{% url 'search_overview'%}?q={{ search_query }}&t=services"
+         class="{% if service %}active {% endif %}item">
+        <i aria-hidden="true" class="cogs icon"></i>
+        Services ({{ total_service }})
+      </a>
+      <a href="{% url 'search_overview' %}?q={{ search_query }}&t=analytics"
+         class="{% if dependencies %}active {% endif %}item">
+        <i aria-hidden="true" class="book icon"></i>
+        Resources({{ total_dependency }})
+      </a>
+    </nav>
+
+    {% if service %}
+      {% with object_list=service project_links=project_links %}
+        {% include 'shared/base_list.html' %}
+      {% endwith %}
+    {% endif %}
+
+    {% if dependency %}
+      {% include 'dependency.html' with dependencies=dependency %}
+    {% endif %}
+    <!-- Custom pagination for meilisearch -->
+    <div class="ui basic center aligned segment">
+      <div class="ui pagination menu">
+        {% if pagination.previous_page %}
+          <a href="?page={{ pagination.previous_page }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="item">
+            <i class="chevron left icon"></i>
+          </a>
+        {% else %}
+          <div class="active item">
+            <i class="chevron left icon"></i>
+          </div>
+        {% endif %}
+        <div class="item">Page {{ pagination.current_page }} of {{ pagination.total_pages }}</div>
+        {% if pagination.next_page %}
+          <a href="?page={{ pagination.next_page }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="item">
+            <i class="chevron right icon"></i>
+          </a>
+        {% else %}
+          <div class="active item">
+            <i class="chevron right icon"></i>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="{% static 'project_list.js' %}"></script>
+{% endblock %}

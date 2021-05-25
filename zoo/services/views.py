@@ -205,6 +205,18 @@ class ServiceList(generic_views.ListView):
 
         return queryset.order_by("name")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["project_links"] = [
+            "Support",
+            "Repository",
+            "Dashboard",
+            "Alerts",
+            "Documentation",
+        ]
+        return context
+
 
 class ServiceUpdate(
     ServiceEnvironmentMixin, ServiceLinkMixin, ServiceMixin, generic_views.UpdateView

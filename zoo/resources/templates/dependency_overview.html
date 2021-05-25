@@ -86,5 +86,6 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'dependency_overview.js' %}"></script>
+  {{ block.super }}
+  <script src="{% static 'dependency_overview.js' %}"></script>
 {% endblock scripts %}

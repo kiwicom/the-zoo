@@ -35,6 +35,7 @@ $("button.remove-environment").click(function () {
     var uiSegment = checkbox.closest(".ui.segment");
     uiSegment.hide();
     uiSegment.find(".field.name input").prop("required", false);
+    uiSegment.find(".field.type input").val("");
 
     var hidden = $(".ui.segment.environment:hidden");
     if (hidden.length > 0) {
@@ -58,15 +59,16 @@ $("button.remove-link").click(function () {
 
 $("button.add-environment").click(function () {
     $(this).blur();
-    var hidden = $(".ui.segment.environment:hidden");
+    let hidden = $(".ui.segment.environment:hidden");
     if (hidden.length > 0) {
         if (hidden.length == 1) {
             $(this).prop("disabled", true);
         }
 
-        var firstSegment = hidden.eq(0);
+        let firstSegment = hidden.eq(0);
         firstSegment.find(":not(.no-reset) input").val("");
         firstSegment.find(".field.name input").prop("required", true);
+        firstSegment.find('input[name$="type"]').val(envTypeZoo);
         firstSegment.show();
     }
 });
@@ -91,4 +93,10 @@ $('.icon-hint .label').popup({
     hoverable: true,
     variation: 'inverted',
     position: 'left center'
+});
+
+$(".ui.green.button").on('submit', function(e) {
+  e.preventDefault();
+  $("#gitlab_envs input").prop('disabled', true)
+  $(this).submit();
 });

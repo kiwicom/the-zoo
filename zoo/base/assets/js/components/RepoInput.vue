@@ -36,6 +36,8 @@
 import { match } from "ramda"
 import RepoInputSuggestions from "./RepoInputSuggestions"
 import $ from 'jquery/src/jquery'
+import { gitlabEnvs } from "../../../../services/assets/js/gitlab_envs.js"
+
 
 function createPopup () {
   $('i.magic.icon').popup({
@@ -49,6 +51,11 @@ function createPopup () {
 
 function popupAction (action) {
   $('i.magic.icon').popup(action)
+}
+
+function loadGitlabEnvs(repoId) {
+  gitlabEnvsInfo["repoId"] = repoId
+  gitlabEnvs.load(gitlabEnvsInfo)
 }
 
 export default {
@@ -153,6 +160,7 @@ export default {
       this.$refs.suggestions.selectSuggestion();
       this.isOnEditMode = false
       this.$store.commit("refreshEnteredText")
+      loadGitlabEnvs(parseInt(this.inputValue))
     },
   },
   components: {

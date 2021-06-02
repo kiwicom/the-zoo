@@ -86,3 +86,19 @@ class Endpoint(models.Model):
     )
     summary = models.CharField(max_length=500, null=True, blank=True)
     operation = models.CharField(max_length=200, null=True, blank=True)
+
+
+class RepositoryEnvironment(models.Model):
+    class Meta:
+        unique_together = ("repository", "name")
+        ordering = ["name"]
+
+    repository = models.ForeignKey(
+        Repository,
+        on_delete=models.CASCADE,
+        related_name="repository_environments",
+        related_query_name="repository_environment",
+    )
+
+    name = models.CharField(max_length=200)
+    external_url = models.CharField(max_length=300, null=True)

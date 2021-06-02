@@ -3,10 +3,20 @@ from unittest.mock import patch
 import pytest
 from faker import Faker
 
-from zoo.repos.models import Provider, Repository
+from zoo.repos.models import Provider, Repository, RepositoryEnvironment
 from zoo.repos.tasks import sync_repos
 
 pytestmark = pytest.mark.django_db
+
+
+class FakeGitlabEnviroment:
+    def __init__(self, id=None, name=None, external_url=None, slug=None):
+        self.fake = Faker()
+        self.id = self.fake.pyint() if id is None else id
+        self.name = self.fake.word() if name is None else name
+        self.slug = self.fake.word() if slug is None else slug
+        self.external_url = self.fake.url() if external_url is None else external_url
+        self.state = "available"
 
 
 class FakeGitProject:
@@ -53,38 +63,23 @@ def generate_project_list(pid=None, owner=None, name=None, url=None, **kwargs):
     }
 
 
+def generate_proj_envs_list():
+    return [FakeGitlabEnviroment()]
+
+
 def test_sync_untouched_repo(repository):
     project_list = generate_project_list(
         repository.remote_id, repository.owner, repository.name, repository.url
     )
+    gitlab_envs = generate_proj_envs_list()
     with patch(
         "gitlab.v4.objects.ProjectManager.list", return_value=project_list["gitlab"]
     ), patch(
         "github.AuthenticatedUser.AuthenticatedUser.get_repos",
         return_value=project_list["github"],
-    ):
-        sync_repos()
-
-    gitlab_project = project_list["gitlab"][0]
-    assert gitlab_project.id == repository.remote_id
-    assert gitlab_project.namespace["full_path"] == repository.owner
-    assert gitlab_project.path == repository.name
-    assert gitlab_project.web_url == repository.url
-
-    github_project = project_list["github"][0]
-    assert github_project.id == repository.remote_id + 1
-    assert github_project.owner.login == repository.owner
-    assert github_project.name == repository.name
-    assert github_project.svn_url == repository.url
-
-
-def test_sync_moved_repo(repository):
-    project_list = generate_project_list(repository.remote_id)
-    with patch(
-        "gitlab.v4.objects.ProjectManager.list", return_value=project_list["gitlab"]
     ), patch(
-        "github.AuthenticatedUser.AuthenticatedUser.get_repos",
-        return_value=project_list["github"],
+        "zoo.repos.tasks.get_project_enviroments",
+        return_value=gitlab_envs,
     ):
         sync_repos()
 
@@ -95,6 +90,45 @@ def test_sync_moved_repo(repository):
     assert gitlab_project.namespace["full_path"] == repository.owner
     assert gitlab_project.path == repository.name
     assert gitlab_project.web_url == repository.url
+
+    repo_env = repository.repository_environments.first()
+    assert gitlab_envs[0].name == repo_env.name
+    assert gitlab_envs[0].external_url == repo_env.external_url
+
+    github_project = project_list["github"][0]
+    repository = Repository.objects.get(
+        remote_id=github_project.id, provider=Provider.GITHUB.value
+    )
+    assert github_project.owner.login == repository.owner
+    assert github_project.name == repository.name
+    assert github_project.svn_url == repository.url
+
+
+def test_sync_moved_repo(repository):
+    project_list = generate_project_list(repository.remote_id)
+    gitlab_envs = generate_proj_envs_list()
+    with patch(
+        "gitlab.v4.objects.ProjectManager.list", return_value=project_list["gitlab"]
+    ), patch(
+        "github.AuthenticatedUser.AuthenticatedUser.get_repos",
+        return_value=project_list["github"],
+    ), patch(
+        "zoo.repos.tasks.get_project_enviroments",
+        return_value=gitlab_envs,
+    ):
+        sync_repos()
+
+    gitlab_project = project_list["gitlab"][0]
+    repository = Repository.objects.get(
+        remote_id=gitlab_project.id, provider=Provider.GITLAB.value
+    )
+    assert gitlab_project.namespace["full_path"] == repository.owner
+    assert gitlab_project.path == repository.name
+    assert gitlab_project.web_url == repository.url
+
+    repo_env = repository.repository_environments.first()
+    assert gitlab_envs[0].name == repo_env.name
+    assert gitlab_envs[0].external_url == repo_env.external_url
 
     github_project = project_list["github"][0]
     repository = Repository.objects.get(

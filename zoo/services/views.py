@@ -16,7 +16,7 @@ from ..auditing.models import Issue
 from ..checklists.steps import STEPS
 from ..repos.utils import openapi_definition
 from . import forms, models
-from .models import Service
+from .models import EnviromentType, Environment, Service
 
 log = structlog.get_logger()
 
@@ -43,7 +43,6 @@ class ServiceEnvironmentMixin:
         with transaction.atomic():
             self.object = form.save()
             log.info(form.data)
-
             if envs_formset.is_valid():
                 envs_formset.instance = self.object
                 envs_formset.save()
@@ -160,11 +159,13 @@ class ServiceDetail(ServiceMixin, generic_views.DetailView):
                 status=Issue.Status.NEW.value
             ).count()
 
+        context["environment_type_gitlab"] = str(EnviromentType.GITLAB)
         context["sentry_data"] = self.get_sentry_context()
         context["checklist"] = self.get_checklists_context()
         context["environment"] = self.object.get_environment(
             self.request.GET.get("environment")
         )
+        context["environments_dict"] = list(self.object.environments_dict.values())[:10]
 
         return context
 
@@ -234,8 +235,10 @@ class ServiceUpdate(
                 self.request.POST, instance=self.object
             )
         else:
+            data["envs_gitlab"] = Environment.objects.filter(type=EnviromentType.GITLAB)
             data["envs_formset"] = forms.ServiceEnvironmentsFormSet(
-                instance=self.object
+                instance=self.object,
+                queryset=Environment.objects.filter(type=EnviromentType.ZOO),
             )
             data["links_formset"] = forms.ServiceLinksFormSet(instance=self.object)
         return data

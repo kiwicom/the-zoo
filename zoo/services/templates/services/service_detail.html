@@ -57,14 +57,18 @@
       docs
     </a>
 
-    {% if object.environments_dict|length >= 1 %}
+    {% if environments_dict|length >= 1 %}
     <div class="ui environments item top pointing fade dropdown">
       <i class="laptop icon"></i> env:{{ environment.name }}
       <div class="large bottom menu transition">
         <h4 class="ui header">Environments</h4>
-        {% for name in object.environments_dict %}
-          <a class="item {% if environment.name == name %}active{% endif %}" href="{{ request.path }}?environment={{ name }}">
-            <i class="laptop icon"></i> {{ name }}
+        {% for env in environments_dict %}
+          <a class="item {% if environment.name == env.name %}active{% endif %}" href="{{ request.path }}?environment={{ env.name }}">
+            {% if env.type == environment_type_gitlab %}
+              <img src="{% static 'img/gitlab-icon.svg' %}" alt="gitlab" style="width: 30px; margin-right: 0px;"> {{ env.name }}
+            {% else %}
+              <i class="laptop icon"></i> {{ env.name }}
+            {% endif %}
           </a>
         {% endfor %}
       </div>

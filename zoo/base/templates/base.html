@@ -35,15 +35,14 @@
       {% endif %}
       {% block search_form %}
         <div class="ui item">
-        <div class="ui right aligned category fluid search project-filter" style="width: 250px;">
-          <div class="ui left labeled icon fluid input">
-            <input id="search-bar" name="q" class="prompt" type="text" placeholder="Search ..." tabindex="1">
-            <i class="search icon"></i>
-          </div>
-          <div class="results"></div>
+          <div class="ui right aligned category fluid search project-filter" style="min-width: 200px;">
+            <div class="ui left labeled icon fluid input">
+              <input id="search-bar" name="q" class="prompt" type="text" placeholder="Search ..." tabindex="1">
+              <i class="search icon"></i>
+            </div>
+            <div class="results"></div>
           </div>
         </div>
-      </div>
         {% endblock %}
       <div class="ui link item user-actions">
         <i class="user icon"></i>

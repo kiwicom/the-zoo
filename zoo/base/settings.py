@@ -105,6 +105,7 @@ INSTALLED_APPS = [
     "zoo.auditing.apps.AuditingConfig",
     "zoo.checklists.apps.ChecklistsConfig",
     "zoo.datacenters.apps.DatacentersConfig",
+    "zoo.components.apps.ComponentsConfig",
     "zoo.instance.apps.InstanceConfig",
     "zoo.libraries.apps.LibrariesConfig",
     "zoo.globalsearch.apps.GlobalSearchConfig",
@@ -250,6 +251,7 @@ ZOO_AUDITING_DROP_ISSUES = env("ZOO_AUDITING_DROP_ISSUES")
 ZOO_YAML_FILE = env("ZOO_YAML_FILE")
 ZOO_YAML_DEFAULT_REF = env("ZOO_YAML_DEFAULT_REF")
 
+ZOO_ALLOWED_COMPONENTS = ""
 AWS_CONFIG = env("AWS_CONFIG")
 AWS_CONFIG_FILE = env("AWS_CONFIG_FILE")
 AWS_CREDENTIALS = env("AWS_SHARED_CREDENTIALS")

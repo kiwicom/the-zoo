@@ -17,13 +17,17 @@ def generate_links(service_factory, link_factory):
     )
     link_factory(
         id=1,
-        service=service,
+        content_object=service,
         name="Datadog",
         url="https://datadog.com",
         icon="datadog",
     )
     link_factory(
-        id=2, service=service, name="Sentry", url="https://sentry.com", icon="sentry"
+        id=2,
+        content_object=service,
+        name="Sentry",
+        url="https://sentry.com",
+        icon="sentry",
     )
 
 

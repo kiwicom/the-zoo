@@ -140,14 +140,14 @@ def generate_services_with_links(service_factory, link_factory):
     )
     link_factory(
         id=1,
-        service=service,
+        content_object=service,
         name="Datadog",
         url="https://datadog.com",
         icon="datadog",
     )
     link_factory(
         id=2,
-        service=service,
+        content_object=service,
         name="Sentry",
         url="https://sentry.com",
         icon="Sentry",

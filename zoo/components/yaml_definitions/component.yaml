@@ -1,0 +1,51 @@
+type: object
+properties:
+    apiVersion:
+        type: string
+    kind: "component"
+    metadata:
+        type: object
+        properties:
+            name:
+                type: string
+            owner:
+                type: string
+            description:
+                type: ["string", "null"]
+            tags:
+                type: [array, null]
+                items:
+                    type: string
+            links:
+                type: ["array", "null"]
+                items:
+                    type: object
+                    properties:
+                        name:
+                            type: string
+                        url:
+                            type: string
+                        icon:
+                            type: ["string", "null"]
+            group:
+                type: object
+                properties:
+                    product_owner:
+                        type: ["string", "null"]
+                    project_owner:
+                        type: ["string", "null"]
+                    maintainers:
+                        type: ["array", "null"]
+                        items:
+                            type: string
+    spec:
+        type: object
+        properties:
+            type: string
+            enum: []
+additionalProperties: false
+required:
+    - kind
+    - name
+    - owner
+    - type

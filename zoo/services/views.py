@@ -3,8 +3,6 @@ import re
 
 import requests
 import structlog
-from django.core.exceptions import SuspiciousOperation
-from django.db import transaction
 from django.db.models import Q
 from django.http import Http404, JsonResponse
 from django.urls import reverse_lazy
@@ -15,7 +13,7 @@ from djangoql.queryset import apply_search
 from ..auditing.models import Issue
 from ..checklists.steps import STEPS
 from ..repos.utils import openapi_definition
-from . import forms, models
+from . import models
 from .models import EnviromentType, Environment, Service
 
 log = structlog.get_logger()
@@ -34,76 +32,6 @@ class ServiceMixin:
 
         except queryset.model.DoesNotExist:
             raise Http404("Service.DoesNotExist")
-
-
-class ServiceEnvironmentMixin:
-    def form_valid(self, form):
-        context = self.get_context_data()
-        envs_formset = context["envs_formset"]
-        with transaction.atomic():
-            self.object = form.save()
-            log.info(form.data)
-            if envs_formset.is_valid():
-                envs_formset.instance = self.object
-                envs_formset.save()
-            else:
-                return self.form_invalid(form)
-        return super().form_valid(form)
-
-
-class ServiceLinkMixin:
-    def form_valid(self, form):
-        context = self.get_context_data()
-        links_formset = context["links_formset"]
-        with transaction.atomic():
-            self.object = form.save()
-            log.info(form.data)
-
-            if links_formset.is_valid():
-                links_formset.instance = self.object
-                links_formset.save()
-            else:
-                return self.form_invalid(form)
-        return super().form_valid(form)
-
-
-class ServiceCreate(
-    ServiceEnvironmentMixin, ServiceLinkMixin, generic_views.CreateView
-):
-    form_class = forms.ServiceForm
-    model = form_class.Meta.model
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        if self.request.POST:
-            data["envs_formset"] = forms.ServiceEnvironmentsFormSet(self.request.POST)
-            data["links_formset"] = forms.ServiceLinksFormSet(self.request.POST)
-        else:
-            data["envs_formset"] = forms.ServiceEnvironmentsFormSet()
-            data["links_formset"] = forms.ServiceLinksFormSet()
-        return data
-
-
-class ServiceDelete(generic_views.DeleteView):
-    model = models.Service
-    success_url = reverse_lazy("service_list")
-
-    def get_object(self, queryset=None):
-        owner_slug = self.kwargs.get("owner_slug")
-        name_slug = self.kwargs.get("name_slug")
-
-        if queryset is None:
-            queryset = self.get_queryset()
-
-        if owner_slug is None or name_slug is None:
-            raise SuspiciousOperation(
-                "ServiceDelete view must be called with owner_slug and name_slug"
-            )
-
-        try:
-            return queryset.get(owner_slug=owner_slug, name_slug=name_slug)
-        except self.model.DoesNotExist:
-            raise Http404(f"Service {owner_slug}/{name_slug} does not exist")
 
 
 class ServiceDetail(ServiceMixin, generic_views.DetailView):
@@ -217,31 +145,6 @@ class ServiceList(generic_views.ListView):
             "Documentation",
         ]
         return context
-
-
-class ServiceUpdate(
-    ServiceEnvironmentMixin, ServiceLinkMixin, ServiceMixin, generic_views.UpdateView
-):
-    form_class = forms.ServiceForm
-    model = form_class.Meta.model
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        if self.request.POST:
-            data["envs_formset"] = forms.ServiceEnvironmentsFormSet(
-                self.request.POST, instance=self.object
-            )
-            data["links_formset"] = forms.ServiceLinksFormSet(
-                self.request.POST, instance=self.object
-            )
-        else:
-            data["envs_gitlab"] = Environment.objects.filter(type=EnviromentType.GITLAB)
-            data["envs_formset"] = forms.ServiceEnvironmentsFormSet(
-                instance=self.object,
-                queryset=Environment.objects.filter(type=EnviromentType.ZOO),
-            )
-            data["links_formset"] = forms.ServiceLinksFormSet(instance=self.object)
-        return data
 
 
 class ServiceOpenApiDefinition(ServiceMixin, generic_views.View):

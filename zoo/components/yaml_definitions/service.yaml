@@ -1,0 +1,91 @@
+type: object
+properties:
+    apiVersion:
+        type: string
+    kind: "component"
+    metadata:
+        type: object
+        properties:
+            name:
+                type: string
+            owner:
+                type: string
+            description:
+                type: ["string", "null"]
+            tags:
+                type: [array, null]
+                items:
+                    type: string
+            links:
+                type: ["array", "null"]
+                items:
+                    type: object
+                    properties:
+                        name:
+                            type: string
+                        url:
+                            type: string
+                        icon:
+                            type: ["string", "null"]
+            group:
+                type: object
+                properties:
+                    product_owner:
+                        type: string
+                    project_owner:
+                        type: string
+                    maintainers:
+                        type: array
+                        items:
+                            type: string
+    spec:
+        type: object
+        properties:
+            type: "service"
+            lifecycle:
+                type: string
+                enum: ["beta", "production", "deprecated", "discontinued" ]
+            impact:
+                type: string
+                enum: ["profit", "customers", "employees" ]
+            analysis:
+                type: ["array", "null" ]
+                items:
+                    type: object
+                    properties:
+                        exclusions:
+                            type: array
+                            items:
+                                type: string
+            integrations:
+                type: [ "array", "null" ]
+                items:
+                    type: object
+                    properties:
+                        sentry:
+                            type: string
+                        pagerduty_service:
+                            type: string
+                        sonarqube_project:
+                            type: string
+            environments:
+                type: array
+                items:
+                    type: object
+                    properties:
+                        name:
+                            type: string
+                        dashboard_url:
+                            type: [ "string", "null" ]
+                        service_urls:
+                            type: array
+                            items:
+                                type: string
+                        health_check_url:
+                            type: [ "string", null ]
+additionalProperties: false
+required:
+    - kind
+    - name
+    - owner
+    - type

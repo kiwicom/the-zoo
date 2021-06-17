@@ -3,10 +3,8 @@ import os
 import tarfile
 from pathlib import Path
 
-import meilisearch
 import pytest
 import testing.postgresql
-from django.conf import settings
 from django.db import connections
 from environ import Env
 from faker import Faker
@@ -15,14 +13,19 @@ from pytest_factoryboy import register
 from zoo.auditing.runner import CheckContext
 from zoo.factories import (
     ApiTokenFactory,
+    BaseComponentFactory,
     DependencyFactory,
     DependencyUsageFactory,
     EnvironmentFactory,
+    GroupFactory,
     InfraNodeFactory,
     IssueFactory,
     KindFactory,
+    LibraryComponentFactory,
+    LibraryFactory,
     LinkFactory,
     RepositoryFactory,
+    ServiceComponentFactory,
     ServiceFactory,
     TierFactory,
     UserFactory,
@@ -42,6 +45,11 @@ register(DependencyFactory)
 register(DependencyUsageFactory)
 register(KindFactory)
 register(InfraNodeFactory)
+register(BaseComponentFactory)
+register(LibraryComponentFactory)
+register(ServiceComponentFactory)
+register(LibraryFactory)
+register(GroupFactory)
 
 
 fake = Faker()

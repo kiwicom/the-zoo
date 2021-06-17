@@ -3,6 +3,8 @@ from collections import OrderedDict, namedtuple
 
 import arrow
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres import fields as pg_fields
 from django.db import models
 from django.dispatch import receiver
@@ -10,7 +12,7 @@ from django.urls import reverse
 from djangoql.schema import DjangoQLSchema
 
 from . import ratings
-from .constants import EnviromentType, Impact, SentryIssueCategory, Status
+from .constants import EnviromentType, Impact, Lifecycle, SentryIssueCategory
 from .managers import SentryIssueManager
 
 
@@ -26,8 +28,8 @@ class Service(models.Model):
         blank=True,
         help_text="Short description of this service",
     )
-    status = models.CharField(
-        choices=((item.value, item.value) for item in Status),
+    lifecycle = models.CharField(
+        choices=((item.value, item.value) for item in Lifecycle),
         null=True,
         blank=True,
         max_length=100,
@@ -246,23 +248,6 @@ class SentryIssueStats(models.Model):
     count = models.IntegerField()
     issue = models.ForeignKey(
         "services.SentryIssue", on_delete=models.CASCADE, related_name="stats"
-    )
-
-
-class Link(models.Model):
-    name = models.CharField(max_length=32)
-    icon = models.CharField(
-        max_length=16,
-        null=True,
-        blank=True,
-        help_text="https://fomantic-ui.com/elements/icon.html",
-    )
-    url = models.URLField()
-    service = models.ForeignKey(
-        Service,
-        on_delete=models.CASCADE,
-        related_name="links",
-        related_query_name="link",
     )
 
 

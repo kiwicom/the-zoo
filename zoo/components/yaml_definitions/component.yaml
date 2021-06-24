@@ -1,51 +1,61 @@
-type: object
-properties:
-    apiVersion:
-        type: string
-    kind: "component"
-    metadata:
-        type: object
-        properties:
-            name:
-                type: string
-            owner:
-                type: string
-            description:
-                type: ["string", "null"]
-            tags:
-                type: [array, null]
-                items:
-                    type: string
-            links:
-                type: ["array", "null"]
-                items:
-                    type: object
-                    properties:
-                        name:
-                            type: string
-                        url:
-                            type: string
-                        icon:
-                            type: ["string", "null"]
-            group:
-                type: object
-                properties:
-                    product_owner:
-                        type: ["string", "null"]
-                    project_owner:
-                        type: ["string", "null"]
-                    maintainers:
-                        type: ["array", "null"]
-                        items:
-                            type: string
-    spec:
-        type: object
-        properties:
-            type: string
-            enum: []
+---
 additionalProperties: false
+properties:
+  apiVersion:
+    type: string
+  kind:
+    enum:
+      - component
+    type: string
+  metadata:
+    properties:
+      description:
+        nullable: true
+        type: string
+      group:
+        properties:
+          maintainers:
+            items:
+              type: string
+            type: array
+          product_owner:
+            nullable: true
+            type: string
+          project_owner:
+            nullable: true
+            type: string
+        type: object
+      links:
+        items:
+          properties:
+            icon:
+              nullable: true
+              type: string
+            name:
+              type: string
+            url:
+              type: string
+          type: object
+        type: array
+      name:
+        type: string
+      owner:
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+    type: object
+  spec:
+    properties:
+      type:
+        enum:
+          - database
+        type: string
+    type: object
 required:
-    - kind
-    - name
-    - owner
-    - type
+  - kind
+  - name
+  - owner
+  - type
+type: object

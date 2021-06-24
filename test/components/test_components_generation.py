@@ -15,9 +15,9 @@ def generate_base_component(base_component_factory, link_factory, group_factory)
     component = base_component_factory(
         id=1,
         name="base",
-        type="component",
+        type="database",
         description="This is my fancy component",
-        kind="kind",
+        kind="component",
         owner="platform",
         service=None,
         library=None,
@@ -40,24 +40,23 @@ def generate_base_component(base_component_factory, link_factory, group_factory)
         id=2,
         name="Sentry",
         url="https://sentry.skypicker.com",
-        icon="poop",
         component=component,
     )
 
 
 def test_generate_base_component(generate_base_component):
     expected = """
-apiVersion: v1alpha1,
-kind: component,
-metadata:
-    name: base,
-    owner: platform,
+- apiVersion: v1alpha1
+  kind: component
+  metadata:
+    name: base
+    owner: platform
     group:
-        product_owner: john
-        project_owner: doe
-        maintainers: []
-    description: This is my fancy component,
-    tags: [],
+      product_owner: john
+      project_owner: doe
+      maintainers: []
+    description: This is my fancy component
+    tags: []
     links:
     - name: Datadog
       url: https://dashboard.datadog.com
@@ -65,6 +64,8 @@ metadata:
     - name: Sentry
       url: https://sentry.skypicker.com
       icon: null
+  spec:
+    type: database
 """
     repository = Repository.objects.get(pk=1)
     content = generate(repository)

@@ -19,21 +19,27 @@ SCHEMAS = {
 
 
 def select_schema(component):
-    try:
-        if component["spec"]["type"].lower() == "service":
-            return yaml.load(SCHEMAS["service"], Loader=yaml.FullLoader)
-        elif component["spec"]["type"].lower() == "library":
-            return yaml.load(SCHEMAS["library"], Loader=yaml.FullLoader)
-    except KeyError:
-        return yaml.load(SCHEMAS["base_component"], Loader=yaml.FullLoader)
+    if component["spec"]["type"].lower() == "service":
+        return "/Users/jaroslav.sevcik/work/the-zoo/zoo/components/yaml_definitions/service.yaml"
+        # return SCHEMAS["service"]
+    elif component["spec"]["type"].lower() == "library":
+        return "/Users/jaroslav.sevcik/work/the-zoo/zoo/components/yaml_definitions/library.yaml"
+        # return SCHEMAS["library"]
+    else:
+        return "/Users/jaroslav.sevcik/work/the-zoo/zoo/components/yaml_definitions/component.yaml"
+        # return SCHEMAS["base_component"]
 
 
 def validate(_yaml: str) -> bool:
     try:
         all_components = load_all(_yaml, FullLoader)
-        for component in all_components:
-            schema = select_schema(component)
-            schema_validate(component, schema)
+        for component in all_components:  # list(list)
+            schema = select_schema(component[0])
+            if not schema:
+                raise ValidationError
+            with open(schema, "r") as schema_file:
+                schema_dict = yaml.load(schema_file, FullLoader)
+                schema_validate(component[0], schema_dict)
     except ValidationError as err:
         log.info("repos.sync_entity_yml.validation_error", error=err)
         return False
@@ -64,6 +70,7 @@ def generate(repository: Repository) -> str:
                 "tags": component.tags,
                 "links": [],
             },
+            "spec": {"type": component.type},
         }
 
         for link in component.links.all():
@@ -73,6 +80,7 @@ def generate(repository: Repository) -> str:
         # Library component
         if component.library:
             component_document["spec"] = {
+                "type": "library",
                 "lifecycle": component.library.lifecycle,
                 "impact": component.library.impact,
                 "analysis": [],
@@ -84,6 +92,7 @@ def generate(repository: Repository) -> str:
         # Service component
         elif component.service:
             component_document["spec"] = {
+                "type": "service",
                 "lifecycle": component.service.lifecycle,
                 "impact": component.service.impact,
                 "analysis": [],

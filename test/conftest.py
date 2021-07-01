@@ -13,7 +13,9 @@ from pytest_factoryboy import register
 from zoo.auditing.runner import CheckContext
 from zoo.factories import (
     ApiTokenFactory,
-    BaseComponentFactory,
+    ComponentBaseFactory,
+    ComponentLibraryFactory,
+    ComponentServiceFactory,
     DependencyFactory,
     DependencyUsageFactory,
     EnvironmentFactory,
@@ -21,11 +23,9 @@ from zoo.factories import (
     InfraNodeFactory,
     IssueFactory,
     KindFactory,
-    LibraryComponentFactory,
     LibraryFactory,
     LinkFactory,
     RepositoryFactory,
-    ServiceComponentFactory,
     ServiceFactory,
     TierFactory,
     UserFactory,
@@ -45,9 +45,9 @@ register(DependencyFactory)
 register(DependencyUsageFactory)
 register(KindFactory)
 register(InfraNodeFactory)
-register(BaseComponentFactory)
-register(LibraryComponentFactory)
-register(ServiceComponentFactory)
+register(ComponentBaseFactory)
+register(ComponentLibraryFactory)
+register(ComponentServiceFactory)
 register(LibraryFactory)
 register(GroupFactory)
 

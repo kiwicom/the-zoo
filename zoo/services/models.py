@@ -11,6 +11,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from djangoql.schema import DjangoQLSchema
 
+from ..entities.models import Entity
 from . import ratings
 from .constants import EnviromentType, Impact, Lifecycle, SentryIssueCategory
 from .managers import SentryIssueManager

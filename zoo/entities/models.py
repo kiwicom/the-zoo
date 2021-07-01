@@ -22,22 +22,22 @@ class Link(models.Model):
         help_text="https://fomantic-ui.com/elements/icon.html",
     )
     url = models.URLField()
-    component = models.ForeignKey(
-        "components.Component",
+    entity = models.ForeignKey(
+        "entities.Entity",
         related_name="links",
         related_query_name="link",
         on_delete=models.PROTECT,
     )
 
 
-class Component(models.Model):
+class Entity(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=32)
     description = models.CharField(max_length=255, null=True, blank=True)
     kind = models.CharField(max_length=16)
     owner = models.CharField(max_length=50)
     group = models.OneToOneField(
-        "components.Group",
+        "entities.Group",
         related_name="components",
         related_query_name="component",
         on_delete=models.PROTECT,
@@ -50,8 +50,8 @@ class Component(models.Model):
     )
     source = models.ForeignKey(
         "repos.Repository",
-        related_name="components",
-        related_query_name="component",
+        related_name="entities",
+        related_query_name="entity",
         on_delete=models.PROTECT,
     )
     service = models.OneToOneField(

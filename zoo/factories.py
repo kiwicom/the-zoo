@@ -17,8 +17,8 @@ from zoo.analytics.tasks.repo_analyzers import unpack_version
 from zoo.api.models import ApiToken
 from zoo.auditing.check_discovery import Kind
 from zoo.auditing.models import Issue
-from zoo.components.models import Component, Group, Link
 from zoo.datacenters.models import InfraNode
+from zoo.entities.models import Entity, Group, Link
 from zoo.libraries.models import Library
 from zoo.repos.models import Repository, RepositoryEnvironment
 from zoo.services.constants import Lifecycle
@@ -182,9 +182,9 @@ class LibraryFactory(Factory):
     repository = SubFactory(RepositoryFactory)
 
 
-class BaseComponentFactory(Factory):
+class ComponentBaseFactory(Factory):
     class Meta:
-        model = Component
+        model = Entity
 
     name = Faker("domain_word")
     type = Faker("domain_word")
@@ -197,9 +197,9 @@ class BaseComponentFactory(Factory):
     group = SubFactory(GroupFactory)
 
 
-class ServiceComponentFactory(Factory):
+class ComponentServiceFactory(Factory):
     class Meta:
-        model = Component
+        model = Entity
 
     name = Faker("domain_word")
     type = Faker("domain_word")
@@ -212,9 +212,9 @@ class ServiceComponentFactory(Factory):
     group = SubFactory(GroupFactory)
 
 
-class LibraryComponentFactory(Factory):
+class ComponentLibraryFactory(Factory):
     class Meta:
-        model = Component
+        model = Entity
 
     name = Faker("domain_word")
     type = Faker("domain_word")

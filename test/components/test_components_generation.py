@@ -1,7 +1,7 @@
 import pytest
 import yaml
 
-from zoo.repos.components_yaml import generate, validate
+from zoo.repos.entities_yaml import generate, validate
 from zoo.repos.models import Repository
 from zoo.services.models import Environment, Service
 

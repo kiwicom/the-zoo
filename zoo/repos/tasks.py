@@ -11,11 +11,11 @@ from django.conf import settings
 from ..analytics.tasks import repo_analyzers
 from ..auditing import runner
 from ..auditing.check_discovery import CHECKS as AUDITING_CHECKS
-from ..components.builder import ComponentBuilder
+from ..entities.builder import EntityBuilder
 from ..repos.models import Endpoint
 from ..services.constants import EnviromentType
 from ..services.models import Environment, Service
-from .components_yaml import parse, validate
+from .entities_yaml import parse, validate
 from .exceptions import MissingFilesError, RepositoryNotFoundError
 from .github import get_repositories as get_github_repositories
 from .gitlab import get_project_enviroments

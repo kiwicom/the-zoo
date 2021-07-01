@@ -3,15 +3,15 @@ from zoo.entities.models import Entity, Group
 
 class EntityBuilder:
     def entity(self, data):
-        if data["kind"] == "component":
-            if data["spec"]["type"] == "service":
-                self._build_service(data)
-            elif data["spec"]["spec"] == "library":
-                self._build_library(data)
-            else:
-                self._build_base_component(data)
-        else:
+        if data["kind"] != "component":
             return NotImplemented
+
+        if data["spec"]["type"] == "service":
+            self._build_service(data)
+        elif data["spec"]["spec"] == "library":
+            self._build_library(data)
+        else:
+            self._build_base_component(data)
 
     @staticmethod
     def _build_base_component(data):

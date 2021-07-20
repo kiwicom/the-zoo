@@ -53,7 +53,17 @@ class Indexer:
         definition_keys = redis_conn.keys()
         for key in definition_keys:
             definition = redis_conn.get(key)
-            json_definition = json.loads(definition)
+            try:
+                json_definition = json.loads(definition)
+            except json.JSONDecodeError as err:
+                log.info(
+                    "Failed to decode definition",
+                    error=err,
+                    definition=definition,
+                    key=key,
+                )
+                continue
+
             try:
                 json_definition["id"] = key
                 self.meiliclient.get_or_create_index("open-api").update_documents(

@@ -68,7 +68,6 @@ $("button.add-environment").click(function () {
         let firstSegment = hidden.eq(0);
         firstSegment.find(":not(.no-reset) input").val("");
         firstSegment.find(".field.name input").prop("required", true);
-        firstSegment.find('input[name$="type"]').val(envTypeZoo);
         firstSegment.show();
     }
 });

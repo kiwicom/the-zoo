@@ -38,7 +38,7 @@ def get_gitlab_envs(request):
 
     try:
         repo = Repository.objects.get(id=project_id, provider=Provider.GITLAB.value)
-    except RepositoryNotFoundError:
+    except Repository.DoesNotExist:
         return JsonResponse({"message": "Wrong project_id"}, safe=False)
 
     return JsonResponse(

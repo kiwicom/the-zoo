@@ -10,8 +10,8 @@
 {{ block.super }}
 
 <div class="flex-horizontal">
-  {% if object.status %}
-  <a class="ui {% label_color 'status' object.status %} large circular regular-font label">status:{{ object.status }}</a>
+  {% if object.lifecycle %}
+  <a class="ui {% label_color 'lifecycle' object.lifecycle %} large circular regular-font label">lifecycle:{{ object.lifecycle }}</a>
   {% endif %}
 
   {% if object.impact %}

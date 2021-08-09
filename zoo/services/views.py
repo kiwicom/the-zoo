@@ -68,7 +68,7 @@ class ServiceDetail(ServiceMixin, generic_views.DetailView):
         }
 
     def get_checklists_context(self):
-        if self.object.status != models.Status.BETA.value:
+        if self.object.lifecycle != models.Lifecycle.BETA.value:
             return None
 
         return {
@@ -113,7 +113,7 @@ class ServiceList(generic_views.ListView):
                 queryset = queryset.filter(
                     Q(name__icontains=queryterm)
                     | Q(owner__icontains=queryterm)
-                    | Q(status__icontains=queryterm)
+                    | Q(lifecycle__icontains=queryterm)
                     | Q(impact__icontains=queryterm)
                 )
 

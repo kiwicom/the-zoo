@@ -163,9 +163,11 @@ def sync_entity_file():
     for project in itertools.chain(
         get_github_repositories(), get_gitlab_repositories()
     ):
+        log.info("repos.sync_entity_yml.processing", project=project["name"])
         if settings.SYNC_REPOS_SKIP_FORKS and project["is_fork"]:
+            log.info("repos.sync_entity_yml.skipping", project=project["name"])
             continue
-        update_project_from_entity_file.apply_async(args=project)
+        update_project_from_entity_file.apply_async(args=[project])
 
 
 @shared_task
@@ -182,11 +184,19 @@ def update_project_from_entity_file(proj: Dict) -> None:
 
 def update_or_create_components(data: List, proj: Dict) -> None:
     # Skip processing the entity file if the repository is not yet synced
+    log.info(
+        "repos.sync_entity_yml.update_or_create_components",
+        project=proj["name"],
+    )
     try:
         repository = Repository.objects.get(
-            remote_id=int(proj["id"]), provider=proj["provider"]
+            remote_id=int(proj["remote_id"]), provider=proj["provider"]
         )
     except Repository.DoesNotExist:
+        log.error(
+            "repos.sync_entity_yml.update_or_create_components.repository_not_found",
+            remote_id=proj["remote_id"],
+        )
         return
 
     def _do_cleanup():
@@ -204,7 +214,7 @@ def update_or_create_components(data: List, proj: Dict) -> None:
 
 def get_entity_file_content(proj: Dict) -> str:
     provider = get_scm_module(proj["provider"])
-    return provider.get_file_content(proj["id"], "entities.yaml")
+    return provider.get_file_content(proj["remote_id"], "entities.yaml")
 
 
 def sync_enviroments_from_gitlab(repo: Repository):

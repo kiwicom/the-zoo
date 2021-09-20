@@ -7,7 +7,7 @@ from zoo.entities.enums import Kind
 
 
 class Group(models.Model):
-    product_owner = models.CharField(max_length=100)
+    product_owner = models.CharField(max_length=100, null=True, blank=True)
     project_owner = models.CharField(max_length=100)
     maintainers = pg_fields.ArrayField(
         base_field=models.CharField(max_length=50),

@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("services", "0027_add_environment_type"),
+        ("services", "0027_auto_20210509_1900"),
     ]
 
     operations = [

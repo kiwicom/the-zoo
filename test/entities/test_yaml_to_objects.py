@@ -17,7 +17,12 @@ def test_create_base_component(mocker, repository_factory):
         url="https://github.com/john_doe1/test_proj1",
         provider="github",
     )
-    repository_dict = {"id": repository.remote_id, "provider": repository.provider}
+    repository_dict = {
+        "id": repository.id,
+        "remote_id": repository.remote_id,
+        "provider": repository.provider,
+        "name": repository.name,
+    }
 
     base_component = """
 apiVersion: v1alpha1
@@ -66,7 +71,12 @@ def test_create_base_component_and_service(mocker, repository_factory):
         url="https://github.co  m/john_doe1/test_proj1",
         provider="github",
     )
-    repository_dict = {"id": repository.remote_id, "provider": repository.provider}
+    repository_dict = {
+        "id": repository.id,
+        "remote_id": repository.remote_id,
+        "provider": repository.provider,
+        "name": repository.name,
+    }
 
     service_component = """
 apiVersion: v1alpha1
@@ -135,7 +145,12 @@ def test_create_base_component_and_library(mocker, repository_factory):
         url="https://github.co  m/john_doe1/test_proj1",
         provider="github",
     )
-    repository_dict = {"id": repository.remote_id, "provider": repository.provider}
+    repository_dict = {
+        "id": repository.id,
+        "remote_id": repository.remote_id,
+        "provider": repository.provider,
+        "name": repository.name,
+    }
 
     library_component = """
 apiVersion: v1alpha1
@@ -251,7 +266,12 @@ spec:
         url="https://github.com/john_doe1/test_proj1",
         provider="github",
     )
-    repository_dict = {"id": repository.remote_id, "provider": repository.provider}
+    repository_dict = {
+        "id": repository.id,
+        "remote_id": repository.remote_id,
+        "provider": repository.provider,
+        "name": repository.name,
+    }
     mocker.patch(
         "zoo.repos.tasks.get_entity_file_content", return_value=multiple_components
     )
@@ -366,7 +386,12 @@ spec:
         url="https://github.com/john_doe1/test_proj1",
         provider="github",
     )
-    repository_dict = {"id": repository.remote_id, "provider": repository.provider}
+    repository_dict = {
+        "id": repository.id,
+        "remote_id": repository.remote_id,
+        "provider": repository.provider,
+        "name": repository.name,
+    }
     mocker.patch(
         "zoo.repos.tasks.get_entity_file_content", return_value=multiple_components
     )
@@ -432,8 +457,10 @@ spec:
     """
 
     repository_dict = {
-        "id": component.source.remote_id,
+        "remote_id": component.source.remote_id,
+        "id": component.source.id,
         "provider": component.source.provider,
+        "name": component.source.name,
     }
     mocker.patch("zoo.repos.tasks.get_entity_file_content", return_value=base_component)
 
@@ -563,8 +590,10 @@ spec:
 """
 
     repository_dict = {
-        "id": repository.remote_id,
+        "remote_id": repository.remote_id,
+        "id": repository.id,
         "provider": repository.provider,
+        "name": repository.name,
     }
     mocker.patch(
         "zoo.repos.tasks.get_entity_file_content",
@@ -630,8 +659,10 @@ def test_delete_entities(
     component_service_and_library = ""
 
     repository_dict = {
-        "id": repository.remote_id,
+        "remote_id": repository.remote_id,
+        "id": repository.id,
         "provider": repository.provider,
+        "name": repository.name,
     }
     mocker.patch(
         "zoo.repos.tasks.get_entity_file_content",

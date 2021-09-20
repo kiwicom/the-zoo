@@ -10,11 +10,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ("services", "0028_rename_status_remove_link_alter_pds"),
-        ("repos", "0008_repositoryenvironment"),
-        ("libraries", "0004_rename_status_to_lifecycle"),
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(

@@ -1,6 +1,7 @@
-from zoo.entities.models import Entity, Group, Link
 from zoo.libraries.models import Library
 from zoo.services.models import Environment, Service
+
+from .models import Entity, Group, Link
 
 
 # TODO: refactor to registry pattern(or any better one)
@@ -18,7 +19,7 @@ class EntityBuilder:
     @staticmethod
     def _build_base_component(data, repository):
         group = Group.objects.create(
-            product_owner=data["metadata"]["group"]["product_owner"],
+            product_owner=data["metadata"].get("group", {}).get("product_owner"),
             project_owner=data["metadata"]["group"]["project_owner"],
             maintainers=data["metadata"]["group"]["maintainers"],
         )
@@ -68,10 +69,10 @@ class EntityBuilder:
         for env in data["spec"]["environments"]:
             Environment.objects.create(
                 service=service,
-                name=env["name"],
-                dashboard_url=env["dashboard_url"],
-                health_check_url=env["health_check_url"],
-                service_urls=env["service_urls"],
+                name=env.get("name"),
+                dashboard_url=env.get("dashboard_url"),
+                health_check_url=env.get("health_check_url"),
+                service_urls=env.get("service_urls"),
             )
 
         base_component.service = service

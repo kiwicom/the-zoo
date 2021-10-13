@@ -174,7 +174,7 @@ class Query(graphene.ObjectType):
             page_info=page_info, edges=edges, total_count=total
         )
 
-    def resolve_all_entites(self, info, **kwargs):
+    def resolve_all_entities(self, info, **kwargs):
         paginator = Paginator(**kwargs)
         total = Entity.objects.all().count()
         page_info = paginator.get_page_info(total)

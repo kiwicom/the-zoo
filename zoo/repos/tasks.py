@@ -7,6 +7,7 @@ from typing import Dict, List
 import structlog
 from celery import shared_task
 from django.conf import settings
+from django.db import transaction
 
 from ..analytics.tasks import repo_analyzers
 from ..auditing import runner
@@ -200,11 +201,12 @@ def update_or_create_components(data: List, proj: Dict) -> None:
         return
 
     def _do_cleanup():
-        affected_entities = Entity.objects.filter(source=repository)
-        Link.objects.filter(entity__in=affected_entities).delete()
-        Service.objects.filter(repository=repository).delete()
-        Library.objects.filter(repository=repository).delete()
-        Entity.objects.filter(source=repository).delete()
+        with transaction.atomic():
+            affected_entities = Entity.objects.filter(source=repository)
+            Link.objects.filter(entity__in=affected_entities).delete()
+            Service.objects.filter(repository=repository).delete()
+            Library.objects.filter(repository=repository).delete()
+            Entity.objects.filter(source=repository).delete()
 
     _do_cleanup()
     entity_builder = EntityBuilder()

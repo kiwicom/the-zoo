@@ -151,7 +151,7 @@ class LibraryConnection(relay.Connection):
 
 class Link(graphene.ObjectType):
     name = graphene.String()
-    url = graphene.List(graphene.String)
+    url = graphene.String()
     icon = graphene.String()
     entity = graphene.Field(lambda: Entity)
 
@@ -253,8 +253,8 @@ class Entity(graphene.ObjectType):
     @classmethod
     def get_node(cls, info, entity_id):
         try:
-            environment = services_models.Entity.objects.get(id=entity_id)
-            return cls.from_db(environment)
+            entity = entities_models.Entity.objects.get(id=entity_id)
+            return cls.from_db(entity)
         except ObjectDoesNotExist:
             return None
 

@@ -57,7 +57,8 @@ class Entity(models.Model):
     group = models.OneToOneField(
         "entities.Group",
         on_delete=models.CASCADE,
-        default=None,
+        null=True,
+        blank=True,
     )
     source = models.ForeignKey(
         "repos.Repository",

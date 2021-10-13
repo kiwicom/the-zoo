@@ -56,7 +56,7 @@ def parse(_yaml: str) -> Union[List, None]:
 
 def generate_component_base(component):
     component_base_document = {
-        "apiVersion": "v1alpha1",
+        "apiVersion": "v1alpha1",  # TODO: make it configurable?
         "kind": component.kind,
         "metadata": {
             "name": component.name,

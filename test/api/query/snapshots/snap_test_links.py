@@ -16,28 +16,7 @@ snapshots['test_all 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazox',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -45,28 +24,7 @@ snapshots['test_all 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazoy',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -74,28 +32,7 @@ snapshots['test_all 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazoz',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -103,28 +40,7 @@ snapshots['test_all 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazo0',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -132,28 +48,7 @@ snapshots['test_all 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazo1',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 }
             ],
@@ -187,28 +82,7 @@ snapshots['test_first 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazox',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -216,28 +90,7 @@ snapshots['test_first 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazoy',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -245,28 +98,7 @@ snapshots['test_first 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazoz',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 }
             ],
@@ -290,28 +122,7 @@ snapshots['test_first_after 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazoy',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -319,28 +130,7 @@ snapshots['test_first_after 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazoz',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 }
             ],
@@ -408,28 +198,7 @@ snapshots['test_with_entity 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazox',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -445,28 +214,7 @@ snapshots['test_with_entity 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazoy',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -482,28 +230,7 @@ snapshots['test_with_entity 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazoz',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -519,28 +246,7 @@ snapshots['test_with_entity 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazo0',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 },
                 {
@@ -556,28 +262,7 @@ snapshots['test_with_entity 1'] = {
                         'icon': 'smile',
                         'id': 'TGluazo1',
                         'name': 'link',
-                        'url': [
-                            'h',
-                            't',
-                            't',
-                            'p',
-                            's',
-                            ':',
-                            '/',
-                            '/',
-                            's',
-                            'o',
-                            'm',
-                            'e',
-                            '.',
-                            'u',
-                            'r',
-                            'l',
-                            '.',
-                            'c',
-                            'o',
-                            'm'
-                        ]
+                        'url': 'https://some.url.com'
                     }
                 }
             ],

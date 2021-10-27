@@ -258,6 +258,7 @@ def test_with_group(snapshot, call_api, generate_components):
             owner
             description
             group {
+              id
               productOwner
               projectOwner
               maintainers
@@ -292,6 +293,7 @@ def test_with_library(snapshot, call_api, generate_components):
             owner
             description
             library {
+                id
                 owner
                 name
                 lifecycle

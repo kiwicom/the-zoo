@@ -95,7 +95,7 @@ def schedule_pulls():
         pull.apply_async(
             args=(repo.remote_id, repo.provider),
             countdown=delay_s,
-            expires=delay_s + (60 * 60),
+            expires=delay_s + 60 ** 2,
         )
 
 

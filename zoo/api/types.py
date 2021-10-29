@@ -111,6 +111,7 @@ class Library(graphene.ObjectType):
     @classmethod
     def from_db(cls, library):
         return cls(
+            id=library.id,
             owner=library.owner,
             name=library.name,
             lifecycle=library.lifecycle,

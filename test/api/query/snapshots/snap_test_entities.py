@@ -219,10 +219,11 @@ snapshots['test_with_group 1'] = {
                     'node': {
                         'description': 'This is my fancy component',
                         'group': {
+                            'id': 'R3JvdXA6MTY=',
                             'maintainers': [
                             ],
-                            'productOwner': 'wallacebrian',
-                            'projectOwner': 'ktorres'
+                            'productOwner': 'joseph32',
+                            'projectOwner': 'omclean'
                         },
                         'id': 'RW50aXR5OjE=',
                         'kind': None,
@@ -236,10 +237,11 @@ snapshots['test_with_group 1'] = {
                     'node': {
                         'description': 'This is my fancy component 2',
                         'group': {
+                            'id': 'R3JvdXA6MTc=',
                             'maintainers': [
                             ],
-                            'productOwner': 'twatson',
-                            'projectOwner': 'cartermatthew'
+                            'productOwner': 'tateandrew',
+                            'projectOwner': 'mark24'
                         },
                         'id': 'RW50aXR5OjI=',
                         'kind': None,
@@ -253,10 +255,11 @@ snapshots['test_with_group 1'] = {
                     'node': {
                         'description': 'This is my fancy component 3',
                         'group': {
+                            'id': 'R3JvdXA6MTg=',
                             'maintainers': [
                             ],
-                            'productOwner': 'jason33',
-                            'projectOwner': 'gomezjonathan'
+                            'productOwner': 'anelson',
+                            'projectOwner': 'richard32'
                         },
                         'id': 'RW50aXR5OjMy',
                         'kind': None,
@@ -270,10 +273,11 @@ snapshots['test_with_group 1'] = {
                     'node': {
                         'description': 'This is my fancy service',
                         'group': {
+                            'id': 'R3JvdXA6MTk=',
                             'maintainers': [
                             ],
-                            'productOwner': 'jeffrey52',
-                            'projectOwner': 'kari29'
+                            'productOwner': 'ofowler',
+                            'projectOwner': 'qkline'
                         },
                         'id': 'RW50aXR5OjEyNDU=',
                         'kind': None,
@@ -287,10 +291,11 @@ snapshots['test_with_group 1'] = {
                     'node': {
                         'description': 'This is my fancy library',
                         'group': {
+                            'id': 'R3JvdXA6MjA=',
                             'maintainers': [
                             ],
-                            'productOwner': 'vmelendez',
-                            'projectOwner': 'wrivera'
+                            'productOwner': 'martha97',
+                            'projectOwner': 'susan27'
                         },
                         'id': 'RW50aXR5OjE1NTQ1',
                         'kind': None,
@@ -372,13 +377,14 @@ snapshots['test_with_library 1'] = {
                         'label': 'Library',
                         'library': {
                             'docsUrl': None,
-                            'impact': 'employees',
+                            'id': 'TGlicmFyeTo1',
+                            'impact': 'profit',
                             'libraryUrl': None,
                             'lifecycle': 'beta',
-                            'name': 'clark',
-                            'owner': 'carolyn61',
-                            'slackChannel': 'lewis',
-                            'sonarqubeProject': 'lin'
+                            'name': 'taylor',
+                            'owner': 'brownnathaniel',
+                            'slackChannel': 'robbins',
+                            'sonarqubeProject': 'sloan-cook'
                         },
                         'name': 'library',
                         'owner': 'platform',

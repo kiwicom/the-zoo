@@ -11,9 +11,7 @@ pytestmark = pytest.mark.django_db
 
 def _initialize(client, models):
     for model, index in models:
-        client.create_index(
-            uid=index, options={"name": model.__name__, "primaryKey": "id"}
-        )
+        client.create_index(uid=index, options={"primaryKey": "id"})
 
 
 def test_index_model():
